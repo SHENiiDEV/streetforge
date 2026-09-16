@@ -35,19 +35,19 @@ export default function MobileBottomNav() {
             icon: ShoppingBag 
         },
         { 
-            name: 'Leaderboard', 
+            name: 'Standings', 
             href: '/leaderboard', 
             icon: Trophy 
         },
         { 
-            name: 'News', 
+            name: 'Paddock', 
             href: '/news', 
             icon: Newspaper 
         },
     ];
 
     return (
-        <nav className="fixed bottom-0 inset-x-0 z-40 md:hidden bg-slate-950/92 backdrop-blur-2xl border-t border-slate-800/80 shadow-[0_-8px_32px_rgba(0,0,0,0.85)] px-2 py-1.5 safe-area-bottom">
+        <nav className="fixed bottom-0 inset-x-0 z-40 md:hidden bg-carbon-950/95 backdrop-blur-2xl border-t border-white/[0.07] shadow-[0_-8px_32px_rgba(0,0,0,0.9)] px-2 py-1.5 safe-area-bottom">
             <div className="flex items-center justify-around">
                 {navItems.map((item) => {
                     const Icon = item.icon;
@@ -65,8 +65,8 @@ export default function MobileBottomNav() {
                         >
                             {/* Icon with Active Glow Background */}
                             <div className={`relative p-1 rounded-xl transition-all duration-200 ${
-                                isActive 
-                                    ? 'bg-cyan-500/20 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)] scale-110' 
+                                isActive
+                                    ? 'text-cyan-300 scale-110'
                                     : 'group-hover:scale-105'
                             }`}>
                                 <Icon className="w-5 h-5" />
@@ -78,15 +78,15 @@ export default function MobileBottomNav() {
                             </div>
 
                             {/* Label */}
-                            <span className={`text-[10px] font-sans tracking-tight mt-1 leading-none ${
-                                isActive ? 'font-bold text-cyan-300' : 'font-medium text-slate-400'
+                            <span className={`label-tech mt-1.5 leading-none ${
+                                isActive ? 'text-cyan-300' : 'text-slate-500'
                             }`}>
                                 {item.name}
                             </span>
 
                             {/* Active Micro-Indicator Dot */}
                             {isActive && (
-                                <span className="absolute bottom-0.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#06b6d4]" />
+                                <span className="absolute top-0 w-8 h-[2px] bg-cyan-400" />
                             )}
                         </Link>
                     );

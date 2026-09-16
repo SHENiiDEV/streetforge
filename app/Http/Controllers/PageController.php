@@ -12,14 +12,20 @@ class PageController extends Controller
     public function landing(): Response
     {
         $featuredVehicles = Vehicle::with('skins')->get();
-        $tracksCount = RaceTrack::count();
+        $tracks = RaceTrack::orderBy('id')->get([
+            'id', 'name', 'slug', 'theme', 'difficulty', 'laps',
+            'length_meters', 'reward_currency_1st', 'description',
+        ]);
+        $tracksCount = $tracks->count();
         $totalRacers = 1420 + \App\Models\User::count();
 
         return Inertia::render('Landing', [
             'featuredVehicles' => $featuredVehicles,
+            'tracks' => $tracks,
             'stats' => [
                 'tracks' => $tracksCount ?: 3,
                 'racers' => $totalRacers,
+                'vehicles' => $featuredVehicles->count(),
                 'prizePool' => '500,000 CR',
             ],
         ]);

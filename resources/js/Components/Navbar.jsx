@@ -1,341 +1,309 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
-import { 
-    Flag, 
-    Warehouse, 
-    ShoppingBag, 
-    CreditCard, 
-    Trophy, 
-    Newspaper, 
-    LogOut, 
-    User as UserIcon, 
-    Menu, 
-    X,
-    PlusCircle,
-    Zap,
-    Shield,
-    ChevronDown,
-    FileText,
-    HelpCircle,
-    Sparkles,
-    Flame,
-    ArrowRight,
-    Wrench,
-    ExternalLink
+import {
+    Flag, Warehouse, ShoppingBag, CreditCard, Trophy, Newspaper,
+    LogOut, Menu, X, Plus, Zap, Shield, ChevronDown, FileText,
+    HelpCircle, ArrowRight,
 } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 
+function usePathname() {
+    const [path, setPath] = useState(typeof window !== 'undefined' ? window.location.pathname : '/');
+    const { url } = usePage();
+    useEffect(() => {
+        if (typeof window !== 'undefined') setPath(window.location.pathname);
+    }, [url]);
+    return path;
+}
+
+function useScrollProgress() {
+    const [state, setState] = useState({ progress: 0, scrolled: false });
+    useEffect(() => {
+        const onScroll = () => {
+            const h = document.documentElement.scrollHeight - window.innerHeight;
+            setState({
+                progress: h > 0 ? Math.min(1, window.scrollY / h) : 0,
+                scrolled: window.scrollY > 12,
+            });
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+    return state;
+}
+
 export default function Navbar() {
-    const { auth, company } = usePage().props;
+    const { auth } = usePage().props;
     const user = auth?.user;
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+    const [userOpen, setUserOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const pathname = usePathname();
+    const { progress, scrolled } = useScrollProgress();
 
-    // Prevent body scroll when mobile menu is open
     useEffect(() => {
-        if (mobileOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
+        document.body.style.overflow = mobileOpen ? 'hidden' : 'unset';
+        return () => { document.body.style.overflow = 'unset'; };
     }, [mobileOpen]);
 
-    // Close user dropdown when clicking outside
     useEffect(() => {
-        function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setUserDropdownOpen(false);
-            }
-        }
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        const onClick = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setUserOpen(false);
+        };
+        document.addEventListener('mousedown', onClick);
+        return () => document.removeEventListener('mousedown', onClick);
     }, []);
 
     const handleLogout = (e) => {
         e.preventDefault();
-        setUserDropdownOpen(false);
+        setUserOpen(false);
         setMobileOpen(false);
         router.post('/logout');
     };
 
-    // Authenticated Navigation Items
     const authNavLinks = [
-        { name: 'Race Lobby', href: '/race/lobby', icon: Flag, pulse: true },
+        { name: 'Race', href: '/race/lobby', icon: Flag, pulse: true },
         { name: 'Garage', href: '/garage', icon: Warehouse },
         { name: 'Showroom', href: '/shop', icon: ShoppingBag },
-        { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
-        { name: 'News', href: '/news', icon: Newspaper },
+        { name: 'Standings', href: '/leaderboard', icon: Trophy },
+        { name: 'Paddock', href: '/news', icon: Newspaper },
     ];
 
-    // Guest Navigation Items
     const guestNavLinks = [
-        { name: 'Race Lobby', href: '/race/lobby', icon: Flag },
+        { name: 'Circuits', href: '/race/lobby', icon: Flag },
         { name: 'Showroom', href: '/shop', icon: ShoppingBag },
-        { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
-        { name: 'News', href: '/news', icon: Newspaper },
+        { name: 'Standings', href: '/leaderboard', icon: Trophy },
+        { name: 'Paddock', href: '/news', icon: Newspaper },
         { name: 'How It Works', href: '/how-it-works', icon: HelpCircle },
     ];
 
     const activeLinks = user ? authNavLinks : guestNavLinks;
+    const isActive = (href) => pathname === href || (href !== '/' && pathname.startsWith(href));
 
     return (
         <header className="sticky top-0 z-50 w-full select-none">
-            {/* Top Glowing Micro-Border */}
-            <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-80" />
+            {/* Scroll progress */}
+            <div className="absolute top-0 left-0 h-px w-full bg-white/[0.06]">
+                <div
+                    className="h-full bg-gradient-to-r from-cyan-400 to-sky-500 transition-[width] duration-150 ease-out"
+                    style={{ width: `${progress * 100}%` }}
+                />
+            </div>
 
-            {/* Main Navigation Bar */}
-            <nav className="bg-slate-950/90 backdrop-blur-xl border-b border-slate-800/80 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16 sm:h-18">
-                        
-                        {/* Left: Brand Logo & Desktop Nav Links */}
-                        <div className="flex items-center gap-4 xl:gap-6 min-w-0">
+            <nav
+                className={`border-b transition-all duration-300 ${
+                    scrolled
+                        ? 'bg-carbon-950/92 backdrop-blur-xl border-white/[0.08] shadow-[0_14px_40px_-24px_rgba(0,0,0,1)]'
+                        : 'bg-carbon-950/70 backdrop-blur-md border-white/[0.05]'
+                }`}
+            >
+                <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between h-16 lg:h-[4.5rem]">
+
+                        {/* Brand + desktop links */}
+                        <div className="flex items-center gap-7 min-w-0">
                             <BrandLogo size="md" />
 
-                            {/* Desktop Navigation Links */}
-                            <div className="hidden lg:flex items-center gap-1 pl-4 border-l border-slate-800/80">
+                            <div className="hidden lg:flex items-stretch h-[4.5rem]">
                                 {activeLinks.map((link) => {
-                                    const Icon = link.icon;
-                                    const isActive = window.location.pathname.startsWith(link.href);
-                                    
+                                    const active = isActive(link.href);
                                     return (
                                         <Link
                                             key={link.name}
                                             href={link.href}
-                                            className={`relative flex items-center gap-2 px-3 py-1.5 rounded-xl text-[13px] font-medium whitespace-nowrap transition-all duration-200 group ${
-                                                isActive
-                                                    ? 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 shadow-[0_0_12px_rgba(6,182,212,0.15)] font-semibold'
-                                                    : 'text-slate-300 hover:text-white hover:bg-slate-900/80 border border-transparent'
+                                            className={`relative flex items-center gap-2 px-4 label-tech transition-colors duration-200 ${
+                                                active ? 'text-white' : 'text-slate-500 hover:text-slate-200'
                                             }`}
                                         >
-                                            <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 group-hover:scale-110 ${
-                                                isActive ? 'text-cyan-400' : 'text-slate-400 group-hover:text-cyan-400'
-                                            }`} />
+                                            <link.icon className={`w-3.5 h-3.5 ${active ? 'text-cyan-400' : ''}`} />
                                             <span>{link.name}</span>
-                                            
-                                            {/* Subtle Active Status Dot */}
-                                            {isActive && (
-                                                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#06b6d4] shrink-0" />
+                                            {link.pulse && !active && (
+                                                <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
                                             )}
-
-                                            {link.pulse && !isActive && (
-                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-                                            )}
+                                            <span
+                                                className={`absolute bottom-0 left-3 right-3 h-[2px] bg-cyan-400 transition-transform duration-300 origin-left ${
+                                                    active ? 'scale-x-100' : 'scale-x-0'
+                                                }`}
+                                            />
                                         </Link>
                                     );
                                 })}
                             </div>
                         </div>
 
-                        {/* Right Area: Balance Chip, User Profile, or Auth CTA */}
+                        {/* Right side */}
                         <div className="hidden md:flex items-center gap-3 shrink-0">
                             {user ? (
                                 <>
-                                    {/* Top-Up Credits Pill Button */}
                                     <Link
                                         href="/topup"
-                                        className="relative group flex items-center gap-2.5 bg-slate-900/90 hover:bg-slate-850 border border-cyan-500/30 hover:border-cyan-400/80 px-3.5 py-1.5 rounded-xl transition-all duration-300 shadow-[0_0_12px_rgba(6,182,212,0.08)] hover:shadow-[0_0_18px_rgba(6,182,212,0.2)] whitespace-nowrap"
-                                        title="Purchase Credits & Invoices"
+                                        title="Top up credits"
+                                        className="group flex items-center gap-3 border border-white/[0.08] hover:border-cyan-400/40 px-3.5 py-2 transition-colors"
                                     >
-                                        <div className="w-6 h-6 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:rotate-12 transition-transform shrink-0">
-                                            <Zap className="w-3.5 h-3.5 fill-cyan-400 text-cyan-400" />
-                                        </div>
-                                        <div className="text-left">
-                                            <div className="text-[9px] uppercase font-mono tracking-wider font-bold text-slate-400 leading-none">
-                                                Balance
-                                            </div>
-                                            <div className="font-orbitron font-extrabold text-xs text-cyan-300 leading-tight flex items-baseline gap-1">
+                                        <Zap className="w-3.5 h-3.5 text-cyan-400 fill-cyan-400" />
+                                        <span className="text-left leading-none">
+                                            <span className="block label-tech text-slate-600 mb-1">Balance</span>
+                                            <span className="numeric text-sm font-bold text-white">
                                                 {Number(user.game_balance).toLocaleString()}
-                                                <span className="text-[9px] text-slate-400 font-bold font-mono">CR</span>
-                                            </div>
-                                        </div>
-                                        <PlusCircle className="w-3.5 h-3.5 text-cyan-400 group-hover:text-white transition-colors ml-0.5 shrink-0" />
+                                                <span className="text-[10px] text-slate-600 ml-1">CR</span>
+                                            </span>
+                                        </span>
+                                        <Plus className="w-3.5 h-3.5 text-slate-600 group-hover:text-cyan-400 transition-colors" />
                                     </Link>
 
-                                    {/* User Profile Pill Dropdown */}
-                                    <div className="relative shrink-0" ref={dropdownRef}>
+                                    <div className="relative" ref={dropdownRef}>
                                         <button
-                                            onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                                            className="flex items-center gap-2.5 p-1.5 pr-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-850 border border-slate-800 hover:border-slate-700 transition-all group text-left focus:outline-none whitespace-nowrap"
+                                            onClick={() => setUserOpen(!userOpen)}
+                                            className="flex items-center gap-2.5 p-1.5 pr-3 border border-white/[0.08] hover:border-white/20 transition-colors focus:outline-none"
                                         >
-                                            <div 
-                                                className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-orbitron font-bold text-xs shadow-md border border-white/20 shrink-0"
+                                            <span
+                                                className="w-8 h-8 flex items-center justify-center text-white font-display font-bold text-sm"
                                                 style={{ backgroundColor: user.avatar_color || '#06b6d4' }}
                                             >
                                                 {user.name ? user.name[0].toUpperCase() : 'R'}
-                                            </div>
-
-                                            <div className="hidden lg:block text-left">
-                                                <div className="text-xs font-bold text-slate-200 leading-tight group-hover:text-white truncate max-w-[100px]">
-                                                    {user.name}
-                                                </div>
-                                                <div className="text-[10px] font-orbitron font-extrabold text-cyan-400 leading-none mt-0.5">
-                                                    LVL {user.level}
-                                                </div>
-                                            </div>
-
-                                            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 shrink-0 ${userDropdownOpen ? 'transform rotate-180 text-cyan-400' : ''}`} />
+                                            </span>
+                                            <span className="hidden xl:block text-left leading-none">
+                                                <span className="block text-xs font-semibold text-slate-200 truncate max-w-[92px]">{user.name}</span>
+                                                <span className="block label-tech text-cyan-400 mt-1">LVL {user.level}</span>
+                                            </span>
+                                            <ChevronDown className={`w-3.5 h-3.5 text-slate-600 transition-transform ${userOpen ? 'rotate-180 text-cyan-400' : ''}`} />
                                         </button>
 
-                                        {/* Profile Dropdown Menu */}
-                                        {userDropdownOpen && (
-                                            <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-slate-950 border border-slate-800 shadow-2xl p-2 space-y-1 z-50 backdrop-blur-2xl">
-                                                <div className="p-3 bg-slate-900/80 rounded-xl border border-slate-850 space-y-1">
-                                                    <div className="font-bold text-sm text-white truncate">
+                                        {userOpen && (
+                                            <div className="absolute right-0 mt-2 w-64 surface-raised p-2 z-50">
+                                                <div className="p-3.5 border border-white/[0.06] bg-carbon-900/60 space-y-2">
+                                                    <div className="font-display font-bold uppercase tracking-wide text-sm text-white truncate">
                                                         {user.name} {user.surname}
                                                     </div>
-                                                    <div className="text-[11px] text-slate-400 font-mono truncate">
-                                                        {user.email}
-                                                    </div>
-                                                    <div className="pt-2 flex items-center justify-between text-xs border-t border-slate-800 mt-2">
-                                                        <span className="text-slate-400">Driver License:</span>
-                                                        <span className="font-orbitron font-bold text-cyan-400">
-                                                            {user.level >= 10 ? 'Class A (Pro)' : 'Class B (Semi)'}
+                                                    <div className="text-[11px] text-slate-500 font-mono truncate">{user.email}</div>
+                                                    <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+                                                        <span className="label-tech text-slate-600">Licence</span>
+                                                        <span className="label-tech text-cyan-400">
+                                                            {user.level >= 10 ? 'Class A' : 'Class B'}
                                                         </span>
                                                     </div>
                                                 </div>
 
-                                                <div className="py-1">
-                                                    <Link
-                                                        href="/garage"
-                                                        onClick={() => setUserDropdownOpen(false)}
-                                                        className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
-                                                    >
-                                                        <Warehouse className="w-4 h-4 text-cyan-400 shrink-0" />
-                                                        <span>Garage & Vehicle Tuning</span>
-                                                    </Link>
-                                                    <Link
-                                                        href="/topup"
-                                                        onClick={() => setUserDropdownOpen(false)}
-                                                        className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
-                                                    >
-                                                        <FileText className="w-4 h-4 text-cyan-400 shrink-0" />
-                                                        <span>Top-Up & Invoices</span>
-                                                    </Link>
-                                                    <Link
-                                                        href="/leaderboard"
-                                                        onClick={() => setUserDropdownOpen(false)}
-                                                        className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
-                                                    >
-                                                        <Trophy className="w-4 h-4 text-amber-400 shrink-0" />
-                                                        <span>Seasonal Leaderboard</span>
-                                                    </Link>
-                                                    <Link
-                                                        href="/news"
-                                                        onClick={() => setUserDropdownOpen(false)}
-                                                        className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
-                                                    >
-                                                        <Newspaper className="w-4 h-4 text-cyan-400 shrink-0" />
-                                                        <span>Motorsport News</span>
-                                                    </Link>
+                                                <div className="py-1.5">
+                                                    {[
+                                                        { href: '/garage', icon: Warehouse, label: 'Garage & Tuning', tone: 'text-cyan-400' },
+                                                        { href: '/topup', icon: FileText, label: 'Top-Up & Invoices', tone: 'text-cyan-400' },
+                                                        { href: '/leaderboard', icon: Trophy, label: 'Seasonal Standings', tone: 'text-amber-400' },
+                                                        { href: '/news', icon: Newspaper, label: 'Paddock Wire', tone: 'text-cyan-400' },
+                                                    ].map((item) => (
+                                                        <Link
+                                                            key={item.href}
+                                                            href={item.href}
+                                                            onClick={() => setUserOpen(false)}
+                                                            className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition-colors"
+                                                        >
+                                                            <item.icon className={`w-4 h-4 ${item.tone}`} />
+                                                            {item.label}
+                                                        </Link>
+                                                    ))}
                                                 </div>
 
-                                                <div className="pt-1 border-t border-slate-850">
-                                                    <button
-                                                        onClick={handleLogout}
-                                                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-red-400 hover:bg-red-950/40 transition-colors"
-                                                    >
-                                                        <LogOut className="w-4 h-4 text-red-400 shrink-0" />
-                                                        <span>Sign Out Account</span>
-                                                    </button>
-                                                </div>
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-red-400 hover:bg-red-500/10 border-t border-white/[0.06] transition-colors"
+                                                >
+                                                    <LogOut className="w-4 h-4" />
+                                                    Sign Out
+                                                </button>
                                             </div>
                                         )}
                                     </div>
                                 </>
                             ) : (
-                                /* Guest CTA Buttons */
-                                <div className="flex items-center gap-2 shrink-0">
-                                    <Link
-                                        href="/login"
-                                        className="px-3.5 py-2 text-xs font-semibold text-slate-300 hover:text-white whitespace-nowrap transition-colors"
-                                    >
+                                <div className="flex items-center gap-2">
+                                    <Link href="/login" className="px-4 py-2.5 label-tech text-slate-400 hover:text-white transition-colors">
                                         Sign In
                                     </Link>
                                     <Link
                                         href="/register"
-                                        className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-400 via-sky-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-bold text-xs whitespace-nowrap shadow-md shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all flex items-center gap-1.5"
+                                        className="group inline-flex items-center gap-2 px-5 py-2.5 bg-white text-carbon-950 font-display font-bold uppercase tracking-wider text-xs hover:bg-cyan-300 transition-colors"
                                     >
-                                        <Sparkles className="w-3.5 h-3.5 shrink-0" />
-                                        <span>Create Account</span>
+                                        Start Racing
+                                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
                                     </Link>
                                 </div>
                             )}
                         </div>
 
-                        {/* Mobile Right: Balance Badge + Menu Hamburger */}
+                        {/* Mobile */}
                         <div className="flex lg:hidden items-center gap-2 shrink-0">
                             {user && (
                                 <Link
                                     href="/topup"
-                                    className="flex items-center gap-1 bg-slate-900 border border-cyan-500/30 px-2.5 py-1 rounded-lg text-xs font-orbitron font-bold text-cyan-400 shadow-sm whitespace-nowrap"
+                                    className="flex items-center gap-1.5 border border-white/[0.08] px-2.5 py-1.5 numeric text-xs font-bold text-cyan-300"
                                 >
-                                    <Zap className="w-3 h-3 fill-cyan-400 shrink-0" />
-                                    <span>{Number(user.game_balance).toLocaleString()} CR</span>
+                                    <Zap className="w-3 h-3 fill-cyan-400 text-cyan-400" />
+                                    {Number(user.game_balance).toLocaleString()}
                                 </Link>
                             )}
                             <button
                                 onClick={() => setMobileOpen(!mobileOpen)}
-                                className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-850 transition-colors focus:outline-none"
-                                aria-label="Toggle Navigation Menu"
+                                aria-label="Toggle navigation"
+                                className="p-2.5 border border-white/[0.08] text-slate-300 hover:text-white hover:border-white/20 transition-colors"
                             >
                                 {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                             </button>
                         </div>
-
                     </div>
                 </div>
             </nav>
 
-            {/* Mobile Navigation Drawer / Overlay */}
+            {/* Mobile drawer */}
             {mobileOpen && (
-                <div className="lg:hidden fixed inset-x-0 top-[66px] bottom-0 z-50 bg-slate-950/95 backdrop-blur-2xl overflow-y-auto border-t border-slate-800">
-                    <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
-                        
-                        {/* Mobile User Header or Welcome CTA */}
+                <div className="lg:hidden fixed inset-x-0 top-16 bottom-0 z-50 bg-carbon-950/97 backdrop-blur-2xl overflow-y-auto border-t border-white/[0.06]">
+                    <div className="max-w-lg mx-auto px-5 py-7 space-y-7">
+
                         {user ? (
-                            <div className="p-4 bg-gradient-to-r from-slate-900 via-slate-900 to-cyan-950/40 rounded-2xl border border-cyan-500/30 shadow-lg flex items-center justify-between">
+                            <div className="surface p-4 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <div 
-                                        className="w-11 h-11 rounded-xl flex items-center justify-center text-white font-orbitron font-bold text-base shadow-md border border-white/20 shrink-0"
+                                    <span
+                                        className="w-11 h-11 flex items-center justify-center text-white font-display font-bold text-lg"
                                         style={{ backgroundColor: user.avatar_color || '#06b6d4' }}
                                     >
                                         {user.name ? user.name[0].toUpperCase() : 'R'}
-                                    </div>
+                                    </span>
                                     <div>
-                                        <div className="font-bold text-sm text-white truncate max-w-[150px]">{user.name} {user.surname}</div>
-                                        <div className="text-xs text-cyan-400 font-orbitron font-bold mt-0.5">LVL {user.level} Driver</div>
+                                        <div className="font-display font-bold uppercase tracking-wide text-sm text-white truncate max-w-[140px]">
+                                            {user.name} {user.surname}
+                                        </div>
+                                        <div className="label-tech text-cyan-400 mt-1">Level {user.level}</div>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="text-[10px] uppercase font-mono text-slate-400 font-bold">Credits</div>
-                                    <div className="font-orbitron font-extrabold text-sm text-cyan-300">
-                                        {Number(user.game_balance).toLocaleString()} CR
+                                    <div className="label-tech text-slate-600 mb-1">Credits</div>
+                                    <div className="numeric text-base font-bold text-white">
+                                        {Number(user.game_balance).toLocaleString()}
                                     </div>
                                 </div>
                             </div>
                         ) : (
-                            <div className="p-4 bg-gradient-to-r from-cyan-950/60 via-slate-900 to-slate-900 rounded-2xl border border-cyan-500/30 space-y-3">
+                            <div className="surface p-5 space-y-4">
                                 <div>
-                                    <div className="font-orbitron font-bold text-sm text-white">Join StreetForge Championship</div>
-                                    <div className="text-xs text-slate-300 mt-0.5">Unlock your complimentary sports car & 1,000 CR starting bonus.</div>
+                                    <div className="font-display font-bold uppercase tracking-wide text-base text-white">
+                                        Join the Season &rsquo;26 grid
+                                    </div>
+                                    <div className="text-xs text-slate-500 mt-1.5 leading-relaxed">
+                                        Free starter car and 1,000 CR the moment you sign up.
+                                    </div>
                                 </div>
-                                <div className="grid grid-cols-2 gap-2 pt-1">
+                                <div className="grid grid-cols-2 gap-2">
                                     <Link
                                         href="/register"
                                         onClick={() => setMobileOpen(false)}
-                                        className="py-2.5 text-center text-xs font-bold text-slate-950 bg-cyan-400 rounded-xl shadow-md"
+                                        className="py-3 text-center label-tech text-carbon-950 bg-white hover:bg-cyan-300 transition-colors"
                                     >
                                         Create Account
                                     </Link>
                                     <Link
                                         href="/login"
                                         onClick={() => setMobileOpen(false)}
-                                        className="py-2.5 text-center text-xs font-semibold text-white bg-slate-800 rounded-xl border border-slate-700"
+                                        className="py-3 text-center label-tech text-slate-200 border border-white/15"
                                     >
                                         Sign In
                                     </Link>
@@ -343,52 +311,46 @@ export default function Navbar() {
                             </div>
                         )}
 
-                        {/* Primary Fast Race Action */}
                         <Link
                             href="/race/lobby"
                             onClick={() => setMobileOpen(false)}
-                            className="w-full flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 text-slate-950 font-orbitron font-black text-sm shadow-xl shadow-cyan-500/20"
+                            className="w-full flex items-center justify-between p-5 bg-white text-carbon-950 font-display font-bold uppercase tracking-wider text-sm"
                         >
                             <span className="flex items-center gap-2.5">
-                                <Flag className="w-5 h-5 fill-slate-950" />
-                                <span>ENTER RACE CIRCUIT</span>
+                                <Flag className="w-5 h-5" />
+                                Enter Race Circuit
                             </span>
                             <ArrowRight className="w-5 h-5" />
                         </Link>
 
-                        {/* Navigation Grid */}
-                        <div className="space-y-2">
-                            <div className="text-[11px] font-orbitron font-bold uppercase tracking-wider text-slate-400 px-1">
-                                Game Hub & Navigation
-                            </div>
-                            <div className="grid grid-cols-2 gap-2.5">
+                        <div className="space-y-3">
+                            <div className="label-tech text-slate-600">Navigation</div>
+                            <div className="grid grid-cols-2 gap-2">
                                 {[
                                     { name: 'Race Lobby', href: '/race/lobby', icon: Flag },
                                     { name: 'Garage & Dyno', href: '/garage', icon: Warehouse },
-                                    { name: 'Vehicle Showroom', href: '/shop', icon: ShoppingBag },
+                                    { name: 'Showroom', href: '/shop', icon: ShoppingBag },
                                     { name: 'Top-Up Credits', href: '/topup', icon: CreditCard, highlight: true },
-                                    { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
-                                    { name: 'News & Patches', href: '/news', icon: Newspaper },
+                                    { name: 'Standings', href: '/leaderboard', icon: Trophy },
+                                    { name: 'Paddock Wire', href: '/news', icon: Newspaper },
                                     { name: 'How It Works', href: '/how-it-works', icon: HelpCircle },
                                     { name: 'About Studio', href: '/about', icon: Shield },
                                 ].map((item) => {
-                                    const Icon = item.icon;
-                                    const isActive = window.location.pathname.startsWith(item.href);
-
+                                    const active = isActive(item.href);
                                     return (
                                         <Link
                                             key={item.name}
                                             href={item.href}
                                             onClick={() => setMobileOpen(false)}
-                                            className={`flex items-center gap-2.5 p-3.5 rounded-xl text-xs font-medium transition-all ${
-                                                isActive
-                                                    ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/40 font-semibold'
+                                            className={`flex items-center gap-2.5 p-4 label-tech border transition-colors ${
+                                                active
+                                                    ? 'text-cyan-300 border-cyan-400/30 bg-cyan-400/[0.06]'
                                                     : item.highlight
-                                                    ? 'bg-cyan-950/40 text-cyan-400 border border-cyan-800/60 font-semibold'
-                                                    : 'bg-slate-900/80 text-slate-200 border border-slate-800'
+                                                    ? 'text-cyan-300 border-white/[0.08]'
+                                                    : 'text-slate-400 border-white/[0.06]'
                                             }`}
                                         >
-                                            <Icon className={`w-4 h-4 shrink-0 ${isActive || item.highlight ? 'text-cyan-400' : 'text-slate-400'}`} />
+                                            <item.icon className={`w-4 h-4 ${active || item.highlight ? 'text-cyan-400' : 'text-slate-600'}`} />
                                             <span className="truncate">{item.name}</span>
                                         </Link>
                                     );
@@ -396,27 +358,36 @@ export default function Navbar() {
                             </div>
                         </div>
 
-                        {/* Legal & Compliance quick footer */}
-                        <div className="pt-2 border-t border-slate-850 space-y-3">
-                            <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-400">
-                                <Link href="/terms" onClick={() => setMobileOpen(false)} className="hover:text-cyan-400">Terms</Link>
-                                <Link href="/privacy" onClick={() => setMobileOpen(false)} className="hover:text-cyan-400">Privacy</Link>
-                                <Link href="/refund-policy" onClick={() => setMobileOpen(false)} className="hover:text-cyan-400">Refunds</Link>
-                                <Link href="/aml-sanctions" onClick={() => setMobileOpen(false)} className="hover:text-cyan-400">Sanctions</Link>
-                                <Link href="/faq" onClick={() => setMobileOpen(false)} className="hover:text-cyan-400">FAQ</Link>
+                        <div className="pt-5 border-t border-white/[0.06] space-y-5">
+                            <div className="flex flex-wrap gap-x-5 gap-y-2.5">
+                                {[
+                                    ['Terms', '/terms'],
+                                    ['Privacy', '/privacy'],
+                                    ['Refunds', '/refund-policy'],
+                                    ['Sanctions', '/aml-sanctions'],
+                                    ['FAQ', '/faq'],
+                                ].map(([label, href]) => (
+                                    <Link
+                                        key={href}
+                                        href={href}
+                                        onClick={() => setMobileOpen(false)}
+                                        className="label-tech text-slate-600 hover:text-cyan-400 transition-colors"
+                                    >
+                                        {label}
+                                    </Link>
+                                ))}
                             </div>
 
                             {user && (
                                 <button
                                     onClick={handleLogout}
-                                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-950/30 text-red-400 border border-red-900/40 text-xs font-semibold hover:bg-red-900/30 transition-colors"
+                                    className="w-full flex items-center justify-center gap-2 py-3.5 label-tech text-red-400 border border-red-500/20 hover:bg-red-500/10 transition-colors"
                                 >
                                     <LogOut className="w-4 h-4" />
-                                    <span>Sign Out Driver Profile</span>
+                                    Sign Out
                                 </button>
                             )}
                         </div>
-
                     </div>
                 </div>
             )}

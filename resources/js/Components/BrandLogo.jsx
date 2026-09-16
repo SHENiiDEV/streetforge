@@ -23,7 +23,7 @@ export default function BrandLogo({
             {/* Aerodynamic SF Forge Emblem */}
             <div className={`relative ${currentSize.icon} shrink-0 transition-transform duration-300 ${animated ? 'group-hover:scale-105' : ''}`}>
                 {/* Outer Glow Halo */}
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-cyan-500/40 via-sky-500/20 to-blue-600/40 blur-md group-hover:blur-lg opacity-70 group-hover:opacity-100 transition-all duration-300" />
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-cyan-500/25 via-sky-500/10 to-blue-600/25 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
                 {/* SVG Shield / Turbine Icon */}
                 <svg 
@@ -78,17 +78,17 @@ export default function BrandLogo({
             {/* Typography */}
             {showText && (
                 <div className="flex flex-col whitespace-nowrap leading-none">
-                    <div className={`font-orbitron font-extrabold ${currentSize.text} tracking-wider text-white flex items-center leading-none`}>
+                    <div className={`font-orbitron font-extrabold ${currentSize.text} tracking-tight text-white flex items-center leading-none`}>
                         <span className="text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">STREET</span>
                         <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-cyan-400 bg-clip-text text-transparent ml-1 font-black drop-shadow-[0_0_10px_rgba(6,182,212,0.3)]">
                             FORGE
                         </span>
                     </div>
                     {showSubtitle && (
-                        <div className="flex items-center gap-1.5 mt-1">
-                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
-                            <span className={`font-mono uppercase tracking-widest text-slate-400 font-semibold ${currentSize.sub}`}>
-                                Dyno &bull; Motorsport
+                        <div className="flex items-center gap-1.5 mt-1.5">
+                            <span className="inline-block w-1 h-1 rounded-full bg-cyan-400 shrink-0" />
+                            <span className={`label-tech text-slate-600 ${currentSize.sub}`}>
+                                Motorsport Simulation
                             </span>
                         </div>
                     )}

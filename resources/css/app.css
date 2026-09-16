@@ -3,55 +3,248 @@
 @source '../views/**/*.blade.php';
 @source '../js/**/*.{jsx,js,ts,tsx}';
 
+/* ═══════════════════════════════════════════════════════════════
+   StreetForge — Premium Motorsport Design System
+   ═══════════════════════════════════════════════════════════════ */
+
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Orbitron', 'Rajdhani', sans-serif;
+  --font-display: 'Barlow Condensed', 'Oswald', sans-serif;
   --font-tech: 'Rajdhani', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Carbon base — warm-neutral blacks, not blue slate */
+  --color-carbon-950: #07080b;
+  --color-carbon-925: #0a0b0f;
+  --color-carbon-900: #0d0f14;
+  --color-carbon-850: #12141b;
+  --color-carbon-800: #181b23;
+  --color-carbon-750: #1f232d;
+  --color-carbon-700: #282d39;
+  --color-carbon-600: #3a4150;
+
+  /* Signal accents */
+  --color-signal-300: #7dd3fc;
+  --color-signal-400: #38bdf8;
+  --color-signal-500: #06b6d4;
+  --color-signal-600: #0891b2;
+  --color-ember-400: #fb923c;
+  --color-ember-500: #f97316;
+  --color-ember-600: #ea580c;
 }
 
-/* Custom Racing & Neon Utilities */
-.font-orbitron {
-  font-family: 'Orbitron', sans-serif;
+/* ─────────────── Typography ─────────────── */
+.font-orbitron { font-family: 'Orbitron', sans-serif; }
+.font-tech     { font-family: 'Rajdhani', sans-serif; }
+
+.font-display {
+  font-family: 'Barlow Condensed', 'Oswald', sans-serif;
+  letter-spacing: -0.005em;
 }
 
-.font-tech {
+/* Giant editorial headline treatment */
+.headline {
+  font-family: 'Barlow Condensed', 'Oswald', sans-serif;
+  font-weight: 800;
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* Small technical label — the connective tissue of the whole design */
+.label-tech {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.numeric {
   font-family: 'Rajdhani', sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
 }
 
-.text-glow-cyan {
-  text-shadow: 0 0 10px rgba(6, 182, 212, 0.6), 0 0 20px rgba(6, 182, 212, 0.3);
+.text-balance { text-wrap: balance; }
+
+/* ─────────────── Surfaces & lines ─────────────── */
+.hairline      { border-color: rgba(255, 255, 255, 0.07); }
+.hairline-t    { border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.hairline-b    { border-bottom: 1px solid rgba(255, 255, 255, 0.07); }
+
+.surface {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0) 45%),
+    #0d0f14;
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.text-glow-orange {
-  text-shadow: 0 0 10px rgba(249, 115, 22, 0.6), 0 0 20px rgba(249, 115, 22, 0.3);
+.surface-raised {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 40%),
+    #12141b;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
 }
 
-.box-glow-cyan {
-  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.4);
+/* Notched corner — motorsport panel detail */
+.notch-tr {
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+}
+.notch-bl {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+}
+.notch-both {
+  clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
 }
 
-.box-glow-orange {
-  box-shadow: 0 0 25px -5px rgba(249, 115, 22, 0.4);
+/* ─────────────── Backgrounds ─────────────── */
+.bg-carbon-weave {
+  background-color: #07080b;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 64px 64px;
 }
+
+.bg-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* Perspective road grid for the hero */
+.road-grid {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 62%;
+  perspective: 240px;
+  perspective-origin: 50% 0%;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 92%);
+  mask-image: linear-gradient(to top, #000 0%, transparent 92%);
+}
+.road-grid__plane {
+  position: absolute;
+  inset: -60% -50% -40% -50%;
+  transform: rotateX(72deg);
+  transform-origin: 50% 0%;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.20) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.10) 1px, transparent 1px);
+  background-size: 100px 100px;
+  animation: road-scroll 3.2s linear infinite;
+}
+@keyframes road-scroll {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 0 100px, 0 0; }
+}
+
+.checkers {
+  background-image:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.045) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.045) 75%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.045) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.045) 75%);
+  background-size: 22px 22px;
+  background-position: 0 0, 11px 11px;
+}
+
+.vignette {
+  background: radial-gradient(120% 80% at 50% 0%, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
+}
+
+/* ─────────────── Glow (used sparingly) ─────────────── */
+.text-glow-cyan   { text-shadow: 0 0 24px rgba(56, 189, 248, 0.45); }
+.text-glow-orange { text-shadow: 0 0 24px rgba(249, 115, 22, 0.45); }
+.box-glow-cyan    { box-shadow: 0 0 40px -12px rgba(6, 182, 212, 0.55); }
+.box-glow-orange  { box-shadow: 0 0 40px -12px rgba(249, 115, 22, 0.55); }
 
 .bg-cyber-grid {
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.022) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
+  background-size: 64px 64px;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* ─────────────── Motion ─────────────── */
+@keyframes marquee-x {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
-::-webkit-scrollbar-track {
-  background: #090d16;
+.animate-marquee { animation: marquee-x 38s linear infinite; }
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
-::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+
+@keyframes sweep {
+  0%   { transform: translateX(-120%) skewX(-18deg); opacity: 0; }
+  35%  { opacity: 1; }
+  100% { transform: translateX(320%) skewX(-18deg); opacity: 0; }
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #0891b2;
+.animate-sweep { animation: sweep 6s ease-in-out infinite; }
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+.animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lift {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.35s ease,
+              box-shadow 0.35s ease;
+}
+.lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 70px -40px rgba(0, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-sweep,
+  .animate-float-slow,
+  .road-grid__plane { animation: none !important; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* ─────────────── Utilities ─────────────── */
+.scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #07080b; }
+::-webkit-scrollbar-thumb { background: #232833; border-radius: 999px; border: 3px solid #07080b; }
+::-webkit-scrollbar-thumb:hover { background: #3a4150; }
+
+html { scroll-behavior: smooth; }
+
+/* ─────────────── Vehicle visualizer ─────────────── */
+@keyframes wheel-spin { to { transform: rotate(360deg); } }
+.animate-wheel { animation: wheel-spin 1.15s linear infinite; }
+
+@keyframes streak {
+  0%   { transform: translateX(0); opacity: 0; }
+  20%  { opacity: 0.9; }
+  100% { transform: translateX(-90px); opacity: 0; }
+}
+.animate-streak { animation: streak 0.9s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wheel, .animate-streak { animation: none !important; }
 }
