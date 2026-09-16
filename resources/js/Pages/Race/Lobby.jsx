@@ -25,7 +25,12 @@ import {
     Sparkles,
     CircleDot,
     Compass,
-    Radio
+    Radio,
+    Building2,
+    Mountain,
+    Wind,
+    Route,
+    Timer
 } from 'lucide-react';
 
 export default function Lobby({ tracks = [], activeCar, recentResults = [], leaderboard = [], opponentsPool = [] }) {

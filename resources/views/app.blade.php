@@ -11,6 +11,7 @@
         <link rel="icon" type="image/svg+xml" href="/favicon.svg">
         <link rel="alternate icon" href="/favicon.ico">
         <meta name="theme-color" content="#07080b">
+        <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="StreetForge">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
