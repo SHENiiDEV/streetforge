@@ -292,185 +292,325 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
     return (
         <PublicLayout>
 
-            {/* ═════════════════════ HERO ═════════════════════ */}
-            <section ref={heroRef} className="relative isolate overflow-hidden bg-grain">
-                {/* Ambient light */}
+            {/* ═════════════════════ HERO: HORIZON PADDOCK STAGE ═════════════════════ */}
+            <section ref={heroRef} className="relative isolate overflow-hidden bg-grain pt-8 pb-16 lg:pt-14 lg:pb-24">
+                {/* Ambient dynamic glows & cyber grid */}
                 <div className="absolute inset-0 -z-10 bg-carbon-weave" />
-                <div className="absolute top-[-18rem] left-1/2 -translate-x-1/2 w-[70rem] h-[48rem] -z-10 rounded-full bg-cyan-500/[0.07] blur-[140px]" />
-                <div className="absolute top-24 right-[-16rem] w-[36rem] h-[36rem] -z-10 rounded-full bg-orange-600/[0.05] blur-[120px]" />
+                <div className="absolute top-[-14rem] left-1/2 -translate-x-1/2 w-[85rem] h-[38rem] -z-10 rounded-full bg-cyan-500/[0.08] blur-[140px]" />
+                <div className="absolute top-32 -left-20 w-[35rem] h-[35rem] -z-10 rounded-full bg-blue-600/[0.06] blur-[120px]" />
+                <div className="absolute top-32 -right-20 w-[35rem] h-[35rem] -z-10 rounded-full bg-orange-500/[0.05] blur-[120px]" />
                 <div className="road-grid -z-10">
                     <div className="road-grid__plane" />
                 </div>
                 <div className="absolute inset-0 -z-10 vignette" />
 
-                <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 pt-16 pb-20 lg:pt-24 lg:pb-28">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-10 items-center">
-
-                        {/* ── Copy ── */}
-                        <div className={`lg:col-span-5 space-y-8 reveal ${heroIn ? 'reveal-in' : ''}`}>
-                            <Eyebrow>
-                                <LiveDot />
-                                Season &rsquo;26 &mdash; Championship Live
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
+                    {/* ── Top Centered Hero Header ── */}
+                    <div className={`text-center max-w-4xl mx-auto space-y-6 reveal ${heroIn ? 'reveal-in' : ''}`}>
+                        <div className="inline-flex items-center justify-center">
+                            <Eyebrow tone="cyan" className="shadow-lg shadow-cyan-500/10">
+                                <LiveDot color="bg-cyan-400" />
+                                <span className="font-semibold tracking-wider">SEASON ’26 CHAMPIONSHIP</span>
+                                <span className="text-slate-600">•</span>
+                                <span className="text-slate-400">540+ ACTIVE RACERS ON GRID</span>
                             </Eyebrow>
-
-                            <div className="space-y-4">
-                                <h1 className="headline text-[3.4rem] sm:text-7xl lg:text-[5.4rem] text-white">
-                                    Engineered
-                                    <br />
-                                    for the{' '}
-                                    <span className="relative inline-block">
-                                        <span className="bg-gradient-to-br from-cyan-300 via-sky-400 to-blue-600 bg-clip-text text-transparent">
-                                            apex
-                                        </span>
-                                        <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-gradient-to-r from-cyan-400 to-transparent" />
-                                    </span>
-                                </h1>
-                                <p className="text-slate-400 text-[15px] sm:text-base leading-relaxed max-w-md">
-                                    A deterministic 60&nbsp;FPS motorsport simulation that runs entirely in your browser.
-                                    Own the machine, tune it on the dyno, and take it to the grid.
-                                </p>
-                            </div>
-
-                            {/* CTA */}
-                            <div className="flex flex-col sm:flex-row gap-3">
-                                {user ? (
-                                    <Link
-                                        href="/race/lobby"
-                                        className="group relative overflow-hidden inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white text-carbon-950 font-display font-bold uppercase tracking-wider text-sm hover:bg-cyan-300 transition-colors duration-300"
-                                    >
-                                        <Flag className="w-4 h-4" />
-                                        Enter Race Lobby
-                                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                                    </Link>
-                                ) : (
-                                    <>
-                                        <Link
-                                            href="/register"
-                                            className="group relative overflow-hidden inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white text-carbon-950 font-display font-bold uppercase tracking-wider text-sm hover:bg-cyan-300 transition-colors duration-300"
-                                        >
-                                            <span className="absolute inset-y-0 w-14 bg-white/60 animate-sweep" aria-hidden="true" />
-                                            <span className="relative flex items-center gap-2.5">
-                                                Start Racing
-                                                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                                            </span>
-                                        </Link>
-                                        <Link
-                                            href="/login"
-                                            className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-white/15 hover:border-cyan-400/50 text-slate-200 hover:text-white font-display font-bold uppercase tracking-wider text-sm backdrop-blur-sm transition-colors"
-                                        >
-                                            Sign In
-                                        </Link>
-                                    </>
-                                )}
-                            </div>
-
-                            {/* Inline trust rail */}
-                            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-2">
-                                {[
-                                    { icon: Flame, text: '60 FPS Canvas', tone: 'text-orange-400' },
-                                    { icon: FileText, text: 'Instant VAT Invoices', tone: 'text-cyan-400' },
-                                    { icon: ShieldCheck, text: 'UK Compliant', tone: 'text-emerald-400' },
-                                ].map((t) => (
-                                    <div key={t.text} className="flex items-center gap-2">
-                                        <t.icon className={`w-3.5 h-3.5 ${t.tone}`} />
-                                        <span className="label-tech text-slate-500">{t.text}</span>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
 
-                        {/* ── Spec card ── */}
-                        <div className={`lg:col-span-7 reveal ${heroIn ? 'reveal-in' : ''}`} style={{ transitionDelay: '140ms' }}>
-                            <div className="relative">
-                                {/* Corner ticks */}
-                                <span className="absolute -top-px -left-px w-10 h-10 border-t border-l border-cyan-400/50 pointer-events-none" />
-                                <span className="absolute -bottom-px -right-px w-10 h-10 border-b border-r border-cyan-400/25 pointer-events-none" />
+                        <h1 className="headline text-4xl sm:text-6xl lg:text-7xl xl:text-[5.2rem] text-white tracking-tight leading-[1.05]">
+                            PRECISION MOTORSPORT.
+                            <br />
+                            <span className="bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-500 bg-clip-text text-transparent">
+                                DOMINATE THE CIRCUIT.
+                            </span>
+                        </h1>
 
-                                <div className="surface-raised notch-tr p-6 sm:p-8">
-                                    {/* Header */}
-                                    <div className="flex items-start justify-between gap-4 mb-6">
-                                        <div className="space-y-2">
-                                            <div className="flex items-center gap-2.5">
-                                                <span className="label-tech text-cyan-300">{activeCar?.class_type || 'Sport'} Class</span>
-                                                <span className="h-3 w-px bg-white/15" />
-                                                <span className="label-tech text-slate-600">
-                                                    {String(carIdx + 1).padStart(2, '0')} / {String(featuredVehicles.length || 1).padStart(2, '0')}
+                        <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl mx-auto">
+                            A high-fidelity 60&nbsp;FPS motorsport engine running natively in your browser.
+                            Forge your machine on the dyno, dial in gear ratios, and race for championship prize pools.
+                        </p>
+
+                        {/* High-Octane Action CTAs */}
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                            {user ? (
+                                <Link
+                                    href="/race/lobby"
+                                    className="w-full sm:w-auto group relative overflow-hidden inline-flex items-center justify-center gap-2.5 px-9 py-4 bg-cyan-400 hover:bg-cyan-300 text-carbon-950 font-display font-black uppercase tracking-wider text-sm shadow-xl shadow-cyan-400/20 transition-all duration-300"
+                                >
+                                    <span className="absolute inset-y-0 w-16 bg-white/40 animate-sweep" aria-hidden="true" />
+                                    <Flag className="w-4 h-4" />
+                                    <span className="relative">Enter Race Lobby</span>
+                                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link
+                                        href="/register"
+                                        className="w-full sm:w-auto group relative overflow-hidden inline-flex items-center justify-center gap-2.5 px-9 py-4 bg-cyan-400 hover:bg-cyan-300 text-carbon-950 font-display font-black uppercase tracking-wider text-sm shadow-xl shadow-cyan-400/20 transition-all duration-300"
+                                    >
+                                        <span className="absolute inset-y-0 w-16 bg-white/40 animate-sweep" aria-hidden="true" />
+                                        <Zap className="w-4 h-4" />
+                                        <span className="relative">Claim Starter Car &amp; 1,000 CR</span>
+                                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                                    </Link>
+                                    <Link
+                                        href="/garage"
+                                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 border border-white/15 hover:border-cyan-400/40 text-slate-200 hover:text-white font-display font-bold uppercase tracking-wider text-sm backdrop-blur-md bg-white/[0.02] transition-colors"
+                                    >
+                                        <Wrench className="w-4 h-4 text-cyan-400" />
+                                        <span>Dyno Tuning Bay</span>
+                                    </Link>
+                                </>
+                            )}
+                        </div>
+
+                        {/* Quick Trust Badges */}
+                        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-1 text-xs">
+                            <span className="inline-flex items-center gap-1.5 text-slate-400">
+                                <Flame className="w-3.5 h-3.5 text-orange-400" /> 60 FPS Canvas Physics
+                            </span>
+                            <span className="text-slate-700">•</span>
+                            <span className="inline-flex items-center gap-1.5 text-slate-400">
+                                <Cpu className="w-3.5 h-3.5 text-cyan-400" /> Zero Downloads Required
+                            </span>
+                            <span className="text-slate-700">•</span>
+                            <span className="inline-flex items-center gap-1.5 text-slate-400">
+                                <Trophy className="w-3.5 h-3.5 text-amber-400" /> 500,000 CR Season Purse
+                            </span>
+                            <span className="text-slate-700">•</span>
+                            <span className="inline-flex items-center gap-1.5 text-slate-400">
+                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> UK Tax &amp; Invoices
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* ── Panoramic Interactive Paddock Stage (Horizon Deck) ── */}
+                    <div className={`mt-10 lg:mt-14 reveal ${heroIn ? 'reveal-in' : ''}`} style={{ transitionDelay: '120ms' }}>
+                        <div className="relative surface-raised border border-white/10 rounded-none overflow-hidden">
+                            {/* Accent corners */}
+                            <span className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400 pointer-events-none z-20" />
+                            <span className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyan-400 pointer-events-none z-20" />
+                            <span className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-400 pointer-events-none z-20" />
+                            <span className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400 pointer-events-none z-20" />
+
+                            {/* Top Command Bar */}
+                            <div className="px-5 py-3.5 bg-carbon-950/90 border-b border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono font-semibold">
+                                        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                                        DYNO TELEMETRY ACTIVE
+                                    </div>
+                                    <span className="text-xs text-slate-500 hidden sm:inline font-mono">
+                                        CHASSIS ID: SF-{(activeCar?.id || 1).toString().padStart(4, '0')}
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-4 text-xs font-mono">
+                                    <span className="text-slate-400">CLASS: <strong className="text-white font-bold">{activeCar?.class_type || 'SPORT'}</strong></span>
+                                    <span className="text-slate-600">|</span>
+                                    <span className="text-slate-400">TIER: <strong className="text-cyan-400 font-bold">STAGE 3 TUNED</strong></span>
+                                </div>
+                            </div>
+
+                            {/* 3-Column Cockpit Deck */}
+                            <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-white/[0.08] bg-carbon-900/40">
+                                
+                                {/* ─ Left Column: Telemetry Gauge Cluster ─ */}
+                                <div className="lg:col-span-3 p-6 flex flex-col justify-between space-y-6 bg-carbon-950/40">
+                                    <div>
+                                        <div className="flex items-center justify-between mb-4">
+                                            <span className="label-tech text-cyan-400/90">DYNO OUTPUT</span>
+                                            <span className="label-tech text-slate-500">REAL-TIME</span>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="p-3.5 bg-carbon-925 border border-white/[0.06]">
+                                                <div className="text-[11px] font-mono text-slate-400 uppercase">Estimated Power</div>
+                                                <div className="numeric text-3xl font-black text-white mt-0.5 flex items-baseline gap-1.5">
+                                                    {Math.round((activeCar?.base_speed || 220) * 2.45)}
+                                                    <span className="text-xs font-mono text-cyan-400">BHP</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-3.5 pt-2">
+                                                <Meter label="Top Velocity" value={activeCar?.base_speed || 210} max={340} unit="KM/H" tone="cyan" animate={heroIn} />
+                                                <Meter label="Acceleration" value={activeCar?.base_acceleration || 70} max={100} unit="PTS" tone="ember" animate={heroIn} />
+                                                <Meter label="Cornering Grip" value={activeCar?.base_handling || 75} max={100} unit="PTS" tone="mint" animate={heroIn} />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs">
+                                        <span className="text-slate-400 font-mono">WEIGHT DIST.</span>
+                                        <span className="numeric text-white font-bold">48 : 52 %</span>
+                                    </div>
+                                </div>
+
+                                {/* ─ Center Column: Horizon Vehicle Stage ─ */}
+                                <div className="lg:col-span-6 relative p-6 sm:p-10 flex flex-col justify-between items-center min-h-[380px] sm:min-h-[440px] bg-gradient-to-b from-carbon-900/60 to-carbon-950 overflow-hidden">
+                                    {/* Horizon platform styling */}
+                                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_75%_55%_at_50%_65%,rgba(6,182,212,0.12),transparent_75%)] pointer-events-none" />
+                                    <div className="absolute inset-x-12 bottom-20 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent pointer-events-none" />
+                                    <div className="absolute inset-0 bg-cyber-grid opacity-35 pointer-events-none" />
+
+                                    {/* Car Headline & Specs */}
+                                    <div className="w-full flex items-start justify-between z-10">
+                                        <div>
+                                            <span className="label-tech text-cyan-300 font-semibold">{activeCar?.class_type || 'Sport'} Class Machine</span>
+                                            <h2 className="headline text-2xl sm:text-4xl text-white tracking-wide mt-1">
+                                                {activeCar?.name || 'Apex Pulse GT'}
+                                            </h2>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="label-tech text-slate-500">VALUATION</div>
+                                            <div className="numeric text-xl font-bold text-white mt-0.5">
+                                                {activeCar?.price > 0 ? (
+                                                    <>{Number(activeCar.price).toLocaleString()} <span className="text-xs text-cyan-400 font-mono">CR</span></>
+                                                ) : (
+                                                    <span className="text-emerald-400 font-mono">STARTER FREE</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Interactive Visualizer Canvas */}
+                                    <div className="w-full my-auto py-4 relative z-10 flex items-center justify-center">
+                                        <CarVisualizer vehicle={activeCar} size="large" animated showUnderglow />
+                                    </div>
+
+                                    {/* Quick Next/Prev Carousel Controls */}
+                                    {featuredVehicles.length > 1 && (
+                                        <>
+                                            <button
+                                                onClick={prevCar}
+                                                aria-label="Previous vehicle"
+                                                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2.5 border border-white/10 bg-carbon-950/80 hover:bg-carbon-900 text-slate-300 hover:text-white hover:border-cyan-400 transition-all"
+                                            >
+                                                <ChevronLeft className="w-5 h-5" />
+                                            </button>
+                                            <button
+                                                onClick={nextCar}
+                                                aria-label="Next vehicle"
+                                                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2.5 border border-white/10 bg-carbon-950/80 hover:bg-carbon-900 text-slate-300 hover:text-white hover:border-cyan-400 transition-all"
+                                            >
+                                                <ChevronRight className="w-5 h-5" />
+                                            </button>
+                                        </>
+                                    )}
+
+                                    {/* Quick direct links */}
+                                    <div className="w-full flex items-center justify-between z-10 pt-4 border-t border-white/[0.06] text-xs">
+                                        <span className="text-slate-400 font-mono">
+                                            SELECTION: <span className="text-white font-bold">{carIdx + 1}</span> / {featuredVehicles.length || 1}
+                                        </span>
+                                        <Link
+                                            href="/garage"
+                                            className="inline-flex items-center gap-1.5 text-cyan-300 hover:text-cyan-200 font-mono uppercase tracking-wider font-semibold transition-colors"
+                                        >
+                                            <Wrench className="w-3.5 h-3.5" />
+                                            Tune Setup
+                                            <ArrowUpRight className="w-3.5 h-3.5" />
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                {/* ─ Right Column: Live Circuit Radar & Matchmaking ─ */}
+                                <div className="lg:col-span-3 p-6 flex flex-col justify-between space-y-6 bg-carbon-950/40">
+                                    <div>
+                                        <div className="flex items-center justify-between mb-4">
+                                            <span className="label-tech text-cyan-400/90">LIVE CIRCUIT RADAR</span>
+                                            <span className="label-tech text-emerald-400 flex items-center gap-1">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                                                QUALIFYING
+                                            </span>
+                                        </div>
+
+                                        {/* Mini track layout */}
+                                        <div className="p-4 bg-carbon-925 border border-white/[0.06] mb-4">
+                                            <div className="h-28 relative">
+                                                <TrackMap theme={tracks[0]?.theme || 'cyber_city'} />
+                                            </div>
+                                            <div className="mt-3 flex items-center justify-between">
+                                                <span className="font-display text-sm font-bold text-white uppercase truncate">
+                                                    {tracks[0]?.name || 'Neon City Grand Prix'}
+                                                </span>
+                                                <span className="text-xs font-mono text-cyan-400 shrink-0">
+                                                    {tracks[0]?.length_meters ? `${(tracks[0].length_meters / 1000).toFixed(1)} KM` : '2.8 KM'}
                                                 </span>
                                             </div>
-                                            <h3 className="headline text-3xl sm:text-4xl text-white">
-                                                {activeCar?.name || 'Apex Pulse GT'}
-                                            </h3>
                                         </div>
-                                        <div className="text-right shrink-0">
-                                            <div className="label-tech text-slate-600 mb-1">Acquisition</div>
-                                            <div className="numeric text-xl text-white font-bold leading-none">
-                                                {activeCar?.price > 0
-                                                    ? <>{Number(activeCar.price).toLocaleString()}<span className="text-slate-600 text-xs ml-1">CR</span></>
-                                                    : <span className="text-emerald-400">INCLUDED</span>}
+
+                                        {/* Circuit Session Stats */}
+                                        <div className="space-y-2 text-xs font-mono">
+                                            <div className="flex justify-between py-1.5 border-b border-white/[0.04]">
+                                                <span className="text-slate-500">SESSION PURSE</span>
+                                                <span className="text-amber-400 font-bold">550 CR</span>
+                                            </div>
+                                            <div className="flex justify-between py-1.5 border-b border-white/[0.04]">
+                                                <span className="text-slate-500">LAP RECORD</span>
+                                                <span className="text-white font-bold">1:14.288</span>
+                                            </div>
+                                            <div className="flex justify-between py-1.5">
+                                                <span className="text-slate-500">DIFFICULTY</span>
+                                                <span className="text-cyan-400 font-bold">PRO-TIER</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* Car stage */}
-                                    <div className="relative bg-carbon-950/60 border border-white/[0.05] overflow-hidden">
-                                        {/* Studio floor */}
-                                        <div className="absolute inset-0 bg-[radial-gradient(60%_70%_at_50%_58%,rgba(255,255,255,0.055),transparent_70%)] pointer-events-none" />
-                                        <div className="absolute inset-0 bg-cyber-grid opacity-60 pointer-events-none" />
-                                        <div className="absolute inset-x-8 bottom-[28%] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
-                                        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-carbon-950 to-transparent pointer-events-none" />
-                                        <div className="relative py-8 px-4">
-                                            <CarVisualizer vehicle={activeCar} size="large" animated showUnderglow />
-                                        </div>
+                                    {/* Action button in radar column */}
+                                    <Link
+                                        href="/race/lobby"
+                                        className="w-full group inline-flex items-center justify-center gap-2 py-3 bg-white hover:bg-cyan-300 text-carbon-950 font-display font-bold uppercase tracking-wider text-xs transition-colors"
+                                    >
+                                        <Flag className="w-3.5 h-3.5" />
+                                        <span>Join Matchmaking</span>
+                                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                                    </Link>
+                                </div>
 
-                                        {featuredVehicles.length > 1 && (
-                                            <>
-                                                <button
-                                                    onClick={prevCar}
-                                                    aria-label="Previous vehicle"
-                                                    className="absolute left-3 top-1/2 -translate-y-1/2 p-2 border border-white/10 bg-carbon-900/80 text-slate-400 hover:text-white hover:border-cyan-400/50 backdrop-blur-sm transition-colors"
-                                                >
-                                                    <ChevronLeft className="w-4 h-4" />
-                                                </button>
-                                                <button
-                                                    onClick={nextCar}
-                                                    aria-label="Next vehicle"
-                                                    className="absolute right-3 top-1/2 -translate-y-1/2 p-2 border border-white/10 bg-carbon-900/80 text-slate-400 hover:text-white hover:border-cyan-400/50 backdrop-blur-sm transition-colors"
-                                                >
-                                                    <ChevronRight className="w-4 h-4" />
-                                                </button>
-                                            </>
-                                        )}
+                            </div>
+
+                            {/* ─ Pit Lane Dock: Machine Selector Ribbon ─ */}
+                            {featuredVehicles.length > 1 && (
+                                <div className="p-4 bg-carbon-950 border-t border-white/[0.08]">
+                                    <div className="flex items-center justify-between mb-2 px-1">
+                                        <span className="label-tech text-slate-500">PIT LANE SHOWROOM &bull; SELECT VEHICLE</span>
+                                        <span className="label-tech text-slate-600 hidden sm:inline">CLICK TO INSPECT</span>
                                     </div>
-
-                                    {/* Telemetry */}
-                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-7 mt-7">
-                                        <Meter label="Top Speed" value={activeCar?.base_speed || 210} max={340} unit="KM/H" tone="cyan" animate={heroIn} />
-                                        <Meter label="Acceleration" value={activeCar?.base_acceleration || 70} max={100} unit="PTS" tone="ember" animate={heroIn} />
-                                        <Meter label="Handling" value={activeCar?.base_handling || 75} max={100} unit="PTS" tone="mint" animate={heroIn} />
-                                    </div>
-
-                                    {/* Selector */}
-                                    {featuredVehicles.length > 1 && (
-                                        <div className="mt-7 pt-5 border-t border-white/[0.06] flex gap-2 overflow-x-auto scrollbar-none">
-                                            {featuredVehicles.map((car, idx) => (
+                                    <div className="flex gap-2.5 overflow-x-auto scrollbar-none pb-1">
+                                        {featuredVehicles.map((car, idx) => {
+                                            const isActive = carIdx === idx;
+                                            return (
                                                 <button
                                                     key={car.id}
                                                     onClick={() => setCarIdx(idx)}
-                                                    className={`shrink-0 px-3.5 py-2 label-tech transition-colors border ${
-                                                        carIdx === idx
-                                                            ? 'bg-cyan-400 text-carbon-950 border-cyan-400'
-                                                            : 'text-slate-500 border-white/[0.07] hover:text-white hover:border-white/20'
+                                                    className={`shrink-0 px-4 py-3 flex items-center gap-3 text-left transition-all border ${
+                                                        isActive
+                                                            ? 'bg-cyan-500/15 border-cyan-400 text-white shadow-lg shadow-cyan-500/10'
+                                                            : 'bg-carbon-900/60 border-white/[0.06] text-slate-400 hover:text-white hover:border-white/20'
                                                     }`}
                                                 >
-                                                    {car.name.split(' ').slice(0, 2).join(' ')}
+                                                    <span className={`font-mono text-xs font-bold ${isActive ? 'text-cyan-400' : 'text-slate-600'}`}>
+                                                        0{idx + 1}
+                                                    </span>
+                                                    <div>
+                                                        <div className="font-display font-bold uppercase text-xs tracking-wider whitespace-nowrap text-white">
+                                                            {car.name}
+                                                        </div>
+                                                        <div className="text-[10px] font-mono text-slate-500 flex items-center gap-2">
+                                                            <span>{car.class_type}</span>
+                                                            <span>&bull;</span>
+                                                            <span className="text-cyan-400">{car.base_speed} KM/H</span>
+                                                        </div>
+                                                    </div>
                                                 </button>
-                                            ))}
-                                        </div>
-                                    )}
+                                            );
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
+
                 </div>
             </section>
 
