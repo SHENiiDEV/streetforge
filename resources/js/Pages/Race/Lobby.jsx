@@ -127,19 +127,138 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
         const ctx = canvas.getContext('2d');
         let animationFrameId;
 
-        // Waypoints defining the race track circuit
-        const waypoints = [
-            { x: 160, y: 480 },
-            { x: 160, y: 220 },
-            { x: 260, y: 120 },
-            { x: 500, y: 100 },
-            { x: 740, y: 150 },
-            { x: 840, y: 280 },
-            { x: 780, y: 440 },
-            { x: 580, y: 500 },
-            { x: 420, y: 400 },
-            { x: 300, y: 480 },
-        ];
+        // Complete Track Configuration definitions for all 3 circuits
+        const TRACK_CONFIGS = {
+            cyber_city: {
+                name: 'Neon City Grand Prix',
+                theme: 'cyber_city',
+                bg: '#080c14',
+                grid: 'rgba(6, 182, 212, 0.04)',
+                asphalt: '#141d2e',
+                kerbOuter: '#0891b2',
+                kerbInner: '#22d3ee',
+                lineColor: 'rgba(34, 211, 238, 0.35)',
+                trackWidth: 80,
+                kerbWidth: 94,
+                startPos: { x: 160, y: 480, angle: -Math.PI / 2 },
+                gridSlots: [
+                    { x: 135, y: 510 },
+                    { x: 185, y: 525 },
+                    { x: 140, y: 550 },
+                    { x: 180, y: 565 },
+                    { x: 155, y: 590 },
+                ],
+                waypoints: [
+                    { x: 160, y: 480 },
+                    { x: 160, y: 210 },
+                    { x: 260, y: 110 },
+                    { x: 520, y: 100 },
+                    { x: 750, y: 140 },
+                    { x: 850, y: 270 },
+                    { x: 780, y: 430 },
+                    { x: 590, y: 490 },
+                    { x: 420, y: 390 },
+                    { x: 290, y: 480 },
+                ],
+                decorations: [
+                    { type: 'building', x: 280, y: 220, w: 120, h: 100, color: 'rgba(6, 182, 212, 0.08)', stroke: 'rgba(6, 182, 212, 0.3)' },
+                    { type: 'building', x: 620, y: 210, w: 110, h: 120, color: 'rgba(59, 130, 246, 0.08)', stroke: 'rgba(59, 130, 246, 0.3)' },
+                    { type: 'tower', x: 490, y: 250, r: 35, color: 'rgba(14, 165, 233, 0.15)', stroke: '#38bdf8' },
+                    { type: 'neon_sign', x: 520, y: 80, text: 'CYBER TUNNEL', color: '#22d3ee' },
+                    { type: 'neon_sign', x: 860, y: 250, text: 'APEX CORRIDOR', color: '#38bdf8' },
+                ]
+            },
+            neon_highway: {
+                name: 'Cyber Highway Sprint',
+                theme: 'neon_highway',
+                bg: '#0e0818',
+                grid: 'rgba(168, 85, 247, 0.04)',
+                asphalt: '#1d142d',
+                kerbOuter: '#7c3aed',
+                kerbInner: '#c084fc',
+                lineColor: 'rgba(192, 132, 252, 0.4)',
+                trackWidth: 88,
+                kerbWidth: 104,
+                startPos: { x: 140, y: 470, angle: -Math.PI / 2 },
+                gridSlots: [
+                    { x: 115, y: 505 },
+                    { x: 165, y: 520 },
+                    { x: 120, y: 545 },
+                    { x: 160, y: 560 },
+                    { x: 135, y: 585 },
+                ],
+                waypoints: [
+                    { x: 140, y: 470 },
+                    { x: 140, y: 170 },
+                    { x: 300, y: 90 },
+                    { x: 710, y: 90 },
+                    { x: 870, y: 180 },
+                    { x: 870, y: 320 },
+                    { x: 690, y: 390 },
+                    { x: 500, y: 350 },
+                    { x: 350, y: 430 },
+                    { x: 590, y: 520 },
+                    { x: 840, y: 520 },
+                    { x: 500, y: 560 },
+                    { x: 250, y: 520 },
+                ],
+                decorations: [
+                    { type: 'gantry', x: 500, y: 90, w: 90, color: '#a855f7' },
+                    { type: 'gantry', x: 870, y: 250, w: 90, color: '#ec4899' },
+                    { type: 'speed_zone', x: 420, y: 90, text: 'MAX VELOCITY ZONE', color: '#c084fc' },
+                    { type: 'building', x: 380, y: 200, w: 90, h: 90, color: 'rgba(168, 85, 247, 0.07)', stroke: 'rgba(168, 85, 247, 0.25)' },
+                    { type: 'building', x: 690, y: 220, w: 100, h: 90, color: 'rgba(236, 72, 153, 0.07)', stroke: 'rgba(236, 72, 153, 0.25)' },
+                ]
+            },
+            canyon_drift: {
+                name: 'Canyon Drift Pass',
+                theme: 'canyon_drift',
+                bg: '#140c06',
+                grid: 'rgba(249, 115, 22, 0.04)',
+                asphalt: '#241a12',
+                kerbOuter: '#c2410c',
+                kerbInner: '#fb923c',
+                lineColor: 'rgba(251, 146, 60, 0.4)',
+                trackWidth: 76,
+                kerbWidth: 90,
+                startPos: { x: 180, y: 510, angle: -Math.PI / 2 },
+                gridSlots: [
+                    { x: 155, y: 540 },
+                    { x: 205, y: 555 },
+                    { x: 160, y: 575 },
+                    { x: 200, y: 590 },
+                    { x: 175, y: 610 },
+                ],
+                waypoints: [
+                    { x: 180, y: 510 },
+                    { x: 150, y: 390 },
+                    { x: 270, y: 310 },
+                    { x: 170, y: 200 },
+                    { x: 330, y: 110 },
+                    { x: 520, y: 160 },
+                    { x: 420, y: 290 },
+                    { x: 580, y: 370 },
+                    { x: 750, y: 280 },
+                    { x: 870, y: 150 },
+                    { x: 880, y: 350 },
+                    { x: 760, y: 490 },
+                    { x: 520, y: 520 },
+                    { x: 330, y: 470 },
+                ],
+                decorations: [
+                    { type: 'rock', x: 210, y: 260, r: 28, color: '#451a03', stroke: '#78350f' },
+                    { type: 'rock', x: 490, y: 230, r: 35, color: '#451a03', stroke: '#78350f' },
+                    { type: 'rock', x: 670, y: 330, r: 30, color: '#451a03', stroke: '#78350f' },
+                    { type: 'rock', x: 810, y: 210, r: 24, color: '#451a03', stroke: '#78350f' },
+                    { type: 'drift_zone', x: 170, y: 200, text: 'TOUGE HAIRPIN' },
+                    { type: 'drift_zone', x: 880, y: 330, text: 'CLIFF PASS' },
+                ]
+            }
+        };
+
+        const currentTrackTheme = selectedTrack?.theme || 'cyber_city';
+        const activeTrackCfg = TRACK_CONFIGS[currentTrackTheme] || TRACK_CONFIGS.cyber_city;
+        const waypoints = activeTrackCfg.waypoints;
 
         // Player physics derived directly from upgraded vehicle stats!
         const playerColor = activeCar?.skin?.color_hex || activeCar?.vehicle?.primary_color || '#06b6d4';
@@ -154,9 +273,9 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             id: 0,
             name: `${user?.name || 'You'} (P1)`,
             color: playerColor,
-            x: 160,
-            y: 460,
-            angle: -Math.PI / 2,
+            x: activeTrackCfg.startPos.x,
+            y: activeTrackCfg.startPos.y,
+            angle: activeTrackCfg.startPos.angle,
             speed: 0,
             nitro: nitroBoostCapacity,
             isPlayer: true,
@@ -167,17 +286,11 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             lapStartTime: performance.now(),
         };
 
-        // 5 AI Grid Competitors with distinct starting positions and speeds
-        const gridPositions = [
-            { x: 135, y: 490 },
-            { x: 185, y: 505 },
-            { x: 140, y: 530 },
-            { x: 180, y: 545 },
-            { x: 155, y: 570 },
-        ];
+        // 5 AI Grid Competitors placed at track-specific grid slots
+        const gridPositions = activeTrackCfg.gridSlots;
 
         let aiRivals = selectedOpponents.map((bot, i) => {
-            const pos = gridPositions[i] || { x: 150, y: 500 + i * 25 };
+            const pos = gridPositions[i] || { x: activeTrackCfg.startPos.x, y: activeTrackCfg.startPos.y + (i + 1) * 25 };
             const speedMod = 0.90 + (bot.skill * 0.08); // AI speed proportional to skill
             return {
                 id: i + 1,
@@ -187,7 +300,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                 color: bot.color,
                 x: pos.x,
                 y: pos.y,
-                angle: -Math.PI / 2,
+                angle: activeTrackCfg.startPos.angle,
                 speed: 0,
                 maxSpeed: maxCarSpeed * speedMod,
                 accel: accelRate * 0.95,
@@ -282,7 +395,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                     y: player.y - Math.sin(player.angle) * 16,
                     vx: (Math.random() - 0.5) * 2 - Math.cos(player.angle) * 3,
                     vy: (Math.random() - 0.5) * 2 - Math.sin(player.angle) * 3,
-                    color: '#38bdf8',
+                    color: activeTrackCfg.kerbInner,
                     size: Math.random() * 4 + 2,
                     alpha: 1,
                 });
@@ -310,7 +423,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                         y: player.y,
                         vx: (Math.random() - 0.5),
                         vy: (Math.random() - 0.5),
-                        color: '#64748b',
+                        color: currentTrackTheme === 'canyon_drift' ? '#92400e' : '#64748b',
                         size: Math.random() * 3 + 2,
                         alpha: 0.6,
                     });
@@ -349,7 +462,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             }
 
             // 2. AI RIVALS UPDATE
-            aiRivals.forEach((ai, idx) => {
+            aiRivals.forEach((ai) => {
                 const targetWp = waypoints[ai.wpIdx];
                 const dx = targetWp.x - ai.x;
                 const dy = targetWp.y - ai.y;
@@ -377,12 +490,12 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             // 3. RENDER CANVAS
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Background asphalt & grid
-            ctx.fillStyle = '#090d16';
+            // Background asphalt & world theme
+            ctx.fillStyle = activeTrackCfg.bg;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Subtle neon track grid
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            ctx.strokeStyle = activeTrackCfg.grid;
             ctx.lineWidth = 1;
             for (let x = 0; x < canvas.width; x += 40) {
                 ctx.beginPath();
@@ -397,9 +510,35 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                 ctx.stroke();
             }
 
+            // Render Track Environment / Ambient Decorations
+            if (activeTrackCfg.decorations) {
+                activeTrackCfg.decorations.forEach(dec => {
+                    if (dec.type === 'building') {
+                        ctx.fillStyle = dec.color;
+                        ctx.strokeStyle = dec.stroke;
+                        ctx.lineWidth = 1.5;
+                        ctx.fillRect(dec.x, dec.y, dec.w, dec.h);
+                        ctx.strokeRect(dec.x, dec.y, dec.w, dec.h);
+                    } else if (dec.type === 'tower' || dec.type === 'rock') {
+                        ctx.fillStyle = dec.color;
+                        ctx.strokeStyle = dec.stroke;
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.arc(dec.x, dec.y, dec.r, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.stroke();
+                    } else if (dec.type === 'neon_sign' || dec.type === 'drift_zone' || dec.type === 'speed_zone') {
+                        ctx.font = 'bold 10px Orbitron, sans-serif';
+                        ctx.fillStyle = dec.color || '#f97316';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(dec.text, dec.x, dec.y);
+                    }
+                });
+            }
+
             // Outer Track Border Kerbs
-            ctx.strokeStyle = '#0891b2';
-            ctx.lineWidth = 92;
+            ctx.strokeStyle = activeTrackCfg.kerbOuter;
+            ctx.lineWidth = activeTrackCfg.kerbWidth;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             ctx.beginPath();
@@ -410,9 +549,20 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             ctx.closePath();
             ctx.stroke();
 
+            // Inner Kerb Accent
+            ctx.strokeStyle = activeTrackCfg.kerbInner;
+            ctx.lineWidth = activeTrackCfg.kerbWidth - 6;
+            ctx.beginPath();
+            waypoints.forEach((wp, i) => {
+                if (i === 0) ctx.moveTo(wp.x, wp.y);
+                else ctx.lineTo(wp.x, wp.y);
+            });
+            ctx.closePath();
+            ctx.stroke();
+
             // Main Track Asphalt
-            ctx.strokeStyle = '#1e293b';
-            ctx.lineWidth = 78;
+            ctx.strokeStyle = activeTrackCfg.asphalt;
+            ctx.lineWidth = activeTrackCfg.trackWidth;
             ctx.beginPath();
             waypoints.forEach((wp, i) => {
                 if (i === 0) ctx.moveTo(wp.x, wp.y);
@@ -422,7 +572,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             ctx.stroke();
 
             // Racing Line Dash
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.strokeStyle = activeTrackCfg.lineColor;
             ctx.lineWidth = 2;
             ctx.setLineDash([12, 12]);
             ctx.beginPath();
@@ -434,11 +584,11 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // Start / Finish Line
+            // Start / Finish Checkered Line
             ctx.save();
-            ctx.translate(160, 480);
+            ctx.translate(activeTrackCfg.startPos.x, activeTrackCfg.startPos.y);
             ctx.fillStyle = '#ffffff';
-            for (let i = -38; i < 38; i += 10) {
+            for (let i = -36; i < 36; i += 10) {
                 ctx.fillRect(i, -3, 8, 6);
             }
             ctx.restore();
@@ -545,7 +695,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
 
             // Top HUD Bar
             ctx.fillStyle = 'rgba(9, 13, 22, 0.85)';
-            ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+            ctx.strokeStyle = activeTrackCfg.kerbOuter;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.roundRect(20, 20, 340, 75, 14);
@@ -568,12 +718,12 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             ctx.fillText(`LAP ${Math.min(player.lap, totalLaps)}/${totalLaps}`, 160, 54);
 
             ctx.font = 'bold 13px Rajdhani, monospace';
-            ctx.fillStyle = '#38bdf8';
+            ctx.fillStyle = activeTrackCfg.kerbInner;
             ctx.fillText(`TIME: ${elapsedSec.toFixed(1)}s`, 160, 74);
 
             // Speedometer & Nitro Bar (Right HUD)
             ctx.fillStyle = 'rgba(9, 13, 22, 0.85)';
-            ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+            ctx.strokeStyle = activeTrackCfg.kerbOuter;
             ctx.beginPath();
             ctx.roundRect(canvas.width - 240, 20, 220, 75, 14);
             ctx.fill();
@@ -581,7 +731,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
 
             const speedKmh = Math.round((Math.abs(player.speed) / maxCarSpeed) * baseSpeed);
             ctx.font = 'bold 24px Orbitron, sans-serif';
-            ctx.fillStyle = '#22d3ee';
+            ctx.fillStyle = activeTrackCfg.kerbInner;
             ctx.fillText(`${speedKmh}`, canvas.width - 225, 54);
             ctx.font = 'bold 11px Orbitron, sans-serif';
             ctx.fillStyle = '#94a3b8';
@@ -590,7 +740,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             // Nitro Fill Bar
             ctx.fillStyle = 'rgba(30, 41, 59, 0.8)';
             ctx.fillRect(canvas.width - 225, 64, 190, 8);
-            ctx.fillStyle = isUsingNitro ? '#f59e0b' : '#06b6d4';
+            ctx.fillStyle = isUsingNitro ? '#f59e0b' : activeTrackCfg.kerbInner;
             ctx.fillRect(canvas.width - 225, 64, (player.nitro / nitroBoostCapacity) * 190, 8);
 
             // Live Grid Leaderboard on Bottom Left
@@ -602,12 +752,12 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             ctx.stroke();
 
             ctx.font = 'bold 9px Orbitron, sans-serif';
-            ctx.fillStyle = '#38bdf8';
+            ctx.fillStyle = activeTrackCfg.kerbInner;
             ctx.fillText('LIVE RACE STANDINGS', 32, canvas.height - 132);
 
             allRacers.forEach((r, idx) => {
                 ctx.font = r.isPlayer ? 'bold 10px Orbitron, sans-serif' : '10px Rajdhani, sans-serif';
-                ctx.fillStyle = r.isPlayer ? '#22d3ee' : '#94a3b8';
+                ctx.fillStyle = r.isPlayer ? activeTrackCfg.kerbInner : '#94a3b8';
                 ctx.fillText(`${idx + 1}. ${r.name}`, 32, canvas.height - 112 + idx * 18);
             });
 
@@ -696,53 +846,99 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                 
                                 {/* Left: Tracks Selection */}
                                 <div className="lg:col-span-8 space-y-6">
-                                    <h3 className="font-orbitron font-bold text-base text-white">
-                                        Select Championship Track
-                                    </h3>
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2">
+                                            <span>Select Championship Circuit</span>
+                                            <span className="text-xs font-mono font-normal text-slate-500">({tracks.length} Available)</span>
+                                        </h3>
+                                        <span className="text-xs text-cyan-400 font-mono">Real-Time Canvas Physics</span>
+                                    </div>
 
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                         {tracks.map(track => {
                                             const isSelected = selectedTrack?.id === track.id;
+                                            const trackMeta = {
+                                                cyber_city: { icon: Building2, tone: '#38bdf8', label: 'Urban Street' },
+                                                neon_highway: { icon: Wind, tone: '#a78bfa', label: 'High Speed' },
+                                                canyon_drift: { icon: Mountain, tone: '#fb923c', label: 'Mountain Pass' },
+                                            }[track.theme] || { icon: Building2, tone: '#38bdf8', label: 'Circuit' };
+                                            const Icon = trackMeta.icon;
+
                                             return (
                                                 <div
                                                     key={track.id}
                                                     onClick={() => setSelectedTrack(track)}
-                                                    className={`p-5 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between ${
+                                                    className={`p-5 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between group ${
                                                         isSelected
-                                                            ? 'bg-gradient-to-b from-cyan-950/80 to-slate-900 border-cyan-400 shadow-xl shadow-cyan-500/20 scale-102'
-                                                            : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+                                                            ? 'bg-gradient-to-b from-cyan-950/90 to-slate-900 border-cyan-400 shadow-xl shadow-cyan-500/20 ring-1 ring-cyan-400/50 scale-102'
+                                                            : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900/80'
                                                     }`}
                                                 >
                                                     <div>
-                                                        <div className="flex items-center justify-between mb-2">
+                                                        <div className="flex items-center justify-between mb-3">
                                                             <span className={`text-[10px] font-orbitron font-bold uppercase px-2 py-0.5 rounded border ${
-                                                                track.difficulty === 'Easy' ? 'bg-emerald-950 text-emerald-400 border-emerald-900' :
-                                                                track.difficulty === 'Medium' ? 'bg-cyan-950 text-cyan-400 border-cyan-900' :
-                                                                'bg-red-950 text-red-400 border-red-900'
+                                                                track.difficulty === 'Easy' ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800' :
+                                                                track.difficulty === 'Medium' ? 'bg-cyan-950/80 text-cyan-400 border-cyan-800' :
+                                                                'bg-orange-950/80 text-orange-400 border-orange-800'
                                                             }`}>
                                                                 {track.difficulty}
                                                             </span>
                                                             <span className="text-xs text-slate-400 font-mono font-bold">
-                                                                {track.laps} Laps
+                                                                {track.laps} LAPS
                                                             </span>
                                                         </div>
 
-                                                        <h4 className="font-orbitron font-bold text-base text-white mt-2">
+                                                        {/* Mini SVG Track Silhouette Map */}
+                                                        <div className="h-28 my-3 px-2 py-1 bg-slate-950/60 rounded-xl border border-slate-800/80 flex items-center justify-center">
+                                                            <svg viewBox="0 0 240 150" className="w-full h-full overflow-visible" fill="none">
+                                                                <path
+                                                                    d={
+                                                                        track.theme === 'neon_highway'
+                                                                            ? 'M24 122 L 70 122 C 104 122 104 76 72 72 L 52 68 C 26 62 30 20 60 20 L 196 20 C 224 20 228 58 202 66 L 170 76 C 146 84 152 118 178 122 L 214 128'
+                                                                        : track.theme === 'canyon_drift'
+                                                                            ? 'M30 24 C 58 12 78 40 62 60 C 46 80 74 96 96 84 C 122 70 146 92 130 112 C 116 130 144 142 166 130 L 206 108 C 226 96 236 70 216 54 L 176 26'
+                                                                            : 'M40 130 C 20 130 18 96 40 92 L 96 84 C 120 80 118 48 96 44 L 62 38 C 40 34 42 12 66 12 L 186 12 C 214 12 216 44 190 50 L 150 60 C 128 66 132 92 154 96 L 200 104 C 224 108 222 134 196 134 Z'
+                                                                    }
+                                                                    stroke={trackMeta.tone}
+                                                                    strokeWidth={isSelected ? "4" : "3"}
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    className="transition-all"
+                                                                />
+                                                            </svg>
+                                                        </div>
+
+                                                        <div className="flex items-center gap-1.5 text-slate-400 text-[11px] mb-1">
+                                                            <Icon className="w-3.5 h-3.5" style={{ color: trackMeta.tone }} />
+                                                            <span>{trackMeta.label}</span>
+                                                        </div>
+
+                                                        <h4 className="font-orbitron font-bold text-base text-white group-hover:text-cyan-300 transition-colors">
                                                             {track.name}
                                                         </h4>
-                                                        <p className="text-xs text-slate-400 mt-1 line-clamp-2">
+                                                        <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
                                                             {track.description}
                                                         </p>
                                                     </div>
 
-                                                    <div className="pt-4 mt-4 border-t border-slate-800/80 space-y-1 text-xs">
-                                                        <div className="flex justify-between text-slate-400">
-                                                            <span>1st Prize:</span>
-                                                            <span className="font-orbitron font-bold text-cyan-400">+{track.reward_currency_1st} CR</span>
+                                                    <div className="pt-3 mt-4 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center text-xs">
+                                                        <div>
+                                                            <div className="text-[10px] text-slate-500 uppercase font-bold">Length</div>
+                                                            <div className="font-mono font-bold text-slate-200">
+                                                                {(track.length_meters / 1000).toFixed(1)} <span className="text-[9px] text-slate-500">KM</span>
+                                                            </div>
                                                         </div>
-                                                        <div className="flex justify-between text-slate-400">
-                                                            <span>XP Reward:</span>
-                                                            <span className="font-orbitron font-bold text-purple-400">+{track.reward_xp_1st} XP</span>
+                                                        <div>
+                                                            <div className="text-[10px] text-slate-500 uppercase font-bold">1st Prize</div>
+                                                            <div className="font-mono font-bold text-cyan-400">
+                                                                +{Math.round(track.reward_currency_1st)} <span className="text-[9px] text-slate-500">CR</span>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div className="text-[10px] text-slate-500 uppercase font-bold">XP Gain</div>
+                                                            <div className="font-mono font-bold text-purple-400">
+                                                                +{track.reward_xp_1st} <span className="text-[9px] text-slate-500">XP</span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
