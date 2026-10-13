@@ -1,100 +1,107 @@
 import React from 'react';
-import PublicLayout from '../../Layouts/PublicLayout';
-import { usePage, Link } from '@inertiajs/react';
-import { 
-    Cookie, 
-    ShieldCheck, 
-    Sliders, 
-    Lock, 
-    CheckCircle2, 
-    FileText 
-} from 'lucide-react';
+import LegalShell, { P, List, Table, A, Code } from '../../Components/Legal/LegalShell';
 
 export default function CookiePolicy() {
-    const { company } = usePage().props;
+    const sections = [
+        {
+            id: 'what',
+            title: 'What cookies are',
+            content: (
+                <>
+                    <P>
+                        Cookies are small text files placed on your device when you visit a website. Similar technologies include local storage, session storage
+                        and pixels. Together we call them "cookies" in this policy. They let a site remember that you are logged in, keep forms secure and
+                        remember your preferences between visits.
+                    </P>
+                    <P>
+                        Under the Privacy and Electronic Communications Regulations 2003 (PECR) we may set cookies that are strictly necessary for the service you
+                        request without consent. All other cookies require your consent, which you can give or refuse in the cookie banner and change at any time.
+                    </P>
+                </>
+            ),
+        },
+        {
+            id: 'necessary',
+            title: 'Strictly necessary cookies',
+            content: (
+                <>
+                    <P>These are always active. The game cannot log you in, protect forms or remember your session without them.</P>
+                    <Table
+                        head={['Name', 'Purpose', 'Duration']}
+                        rows={[
+                            [<Code>streetforge-session</Code>, 'Keeps you logged in and links requests to your session', '2 hours (rolling)'],
+                            [<Code>XSRF-TOKEN</Code>, 'Protects forms and actions against cross-site request forgery', '2 hours'],
+                            [<Code>remember_web_*</Code>, 'Keeps you signed in if you tick "remember me"', 'Up to 400 days'],
+                        ]}
+                    />
+                </>
+            ),
+        },
+        {
+            id: 'functional',
+            title: 'Functional preferences',
+            content: (
+                <P>
+                    StreetForge currently does not use separate preference cookies. Your active vehicle, liveries and garage set-up are stored server-side
+                    against your account, so they follow you to any device you log in from. If we introduce optional preference storage in future (for
+                    example audio or graphics settings kept in your browser), we will list it here before it goes live.
+                </P>
+            ),
+        },
+        {
+            id: 'analytics',
+            title: 'Analytics cookies (optional)',
+            content: (
+                <P>
+                    StreetForge does not currently set analytics, advertising or cross-site tracking cookies. If we decide to measure usage in future — for
+                    example which pages are used or how the game performs on different devices — we will only do so with privacy-friendly, aggregated tools,
+                    only after you give consent in a cookie banner, and we will update this policy first. Analytics would never be used for advertising.
+                </P>
+            ),
+        },
+        {
+            id: 'payment',
+            title: 'Cookies on the payment page',
+            content: (
+                <P>
+                    When you are redirected to pay, the hosted payment page belongs to our PCI DSS Level 1 Payment Provider, not StreetForge. That provider and
+                    your card issuer (during 3-D Secure) may set their own cookies for security and fraud prevention. Those cookies are governed by their own
+                    policies. See <A href="/payment-security">Payment Security</A> for how the redirect works.
+                </P>
+            ),
+        },
+        {
+            id: 'control',
+            title: 'Managing your choices',
+            content: (
+                <>
+                    <List
+                        items={[
+                            'If we ask for consent to optional cookies, you can withdraw it at any time and the cookies will no longer be set.',
+                            'Most browsers let you block or delete cookies in their settings — search your browser\'s help for "cookies".',
+                            'Blocking strictly necessary cookies will stop you logging in to the Garage, Shop and Race Lobby.',
+                            'Logging out ends your session; deleting cookies also signs you out of "remember me" on that device.',
+                        ]}
+                    />
+                    <P muted>
+                        Questions? Email <A href="mailto:privacy@streetforge.co.uk">privacy@streetforge.co.uk</A>. For how we use personal data more generally,
+                        read the <A href="/privacy">Privacy Policy</A>.
+                    </P>
+                </>
+            ),
+        },
+    ];
 
     return (
-        <PublicLayout>
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 space-y-10">
-                
-                {/* Header */}
-                <div className="text-center space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                        <Cookie className="w-3.5 h-3.5" />
-                        Privacy & Tracking Disclosure
-                    </div>
-                    <h1 className="text-4xl sm:text-5xl font-orbitron font-extrabold text-white tracking-tight">
-                        Cookie <span className="text-cyan-400">Policy</span>
-                    </h1>
-                    <p className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
-                        Last Updated: September 16, 2026 &bull; Explaining how StreetForge uses essential and functional cookies for secure gameplay.
-                    </p>
-                </div>
-
-                {/* Content Container */}
-                <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-8 text-sm text-slate-300 leading-relaxed backdrop-blur-xl shadow-2xl">
-                    
-                    {/* Section 1 */}
-                    <section className="space-y-3 pb-6 border-b border-slate-800">
-                        <h2 className="text-base font-orbitron font-bold text-white uppercase tracking-wide flex items-center gap-2">
-                            <span className="text-cyan-400">1.</span> What Are Cookies?
-                        </h2>
-                        <p>
-                            Cookies are small text files placed on your computer or mobile device when you visit <code>streetforge.co.uk</code>. They enable the browser to remember your authentication state, security tokens, and user preferences across multiple page visits.
-                        </p>
-                    </section>
-
-                    {/* Section 2 */}
-                    <section className="space-y-3 pb-6 border-b border-slate-800">
-                        <h2 className="text-base font-orbitron font-bold text-white uppercase tracking-wide flex items-center gap-2">
-                            <span className="text-cyan-400">2.</span> Cookies We Utilize
-                        </h2>
-                        <div className="space-y-4">
-                            <div className="p-4 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <span className="font-orbitron font-bold text-white text-xs">Strictly Essential & Security Cookies</span>
-                                    <span className="text-[10px] font-bold text-emerald-400 uppercase bg-emerald-950 px-2 py-0.5 rounded border border-emerald-900">Always Active</span>
-                                </div>
-                                <p className="text-xs text-slate-400">
-                                    Required for secure login authentication, CSRF cross-site request forgery prevention, and user session management. The game cannot operate without these cookies.
-                                </p>
-                            </div>
-
-                            <div className="p-4 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-2">
-                                <div className="flex items-center justify-between">
-                                    <span className="font-orbitron font-bold text-white text-xs">Functional & Audio Preferences</span>
-                                    <span className="text-[10px] font-bold text-cyan-400 uppercase bg-cyan-950 px-2 py-0.5 rounded border border-cyan-900">Functional</span>
-                                </div>
-                                <p className="text-xs text-slate-400">
-                                    Remembers your chosen active vehicle, sound synthesizer mute preferences, and dyno category filter choices.
-                                </p>
-                            </div>
-                        </div>
-                    </section>
-
-                    {/* Section 3 */}
-                    <section className="space-y-3 pb-6 border-b border-slate-800">
-                        <h2 className="text-base font-orbitron font-bold text-white uppercase tracking-wide flex items-center gap-2">
-                            <span className="text-cyan-400">3.</span> Managing Cookie Preferences
-                        </h2>
-                        <p>
-                            You can configure your browser to reject or alert you about cookies. Please note that disabling essential session cookies will prevent login to the Garage and Race Lobby.
-                        </p>
-                    </section>
-
-                    {/* Section 4 */}
-                    <section className="space-y-2 pt-2 text-xs text-slate-400">
-                        <h3 className="font-orbitron font-bold text-white uppercase text-xs">
-                            4. Inquiries
-                        </h3>
-                        <p>
-                            For questions regarding our cookie practices, contact <a href="mailto:privacy@streetforge.co.uk" className="text-cyan-400 underline">privacy@streetforge.co.uk</a>.
-                        </p>
-                    </section>
-
-                </div>
-
-            </div>
-        </PublicLayout>
+        <LegalShell
+            href="/cookie-policy"
+            eyebrow="PECR · Tracking disclosure"
+            title="Cookie"
+            accent="Policy"
+            lead="Which cookies and similar technologies StreetForge uses, why, for how long, and how you can control them."
+            version="2.0"
+            sections={sections}
+            related={['/privacy', '/payment-security', '/security', '/terms']}
+        />
     );
 }

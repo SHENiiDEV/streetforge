@@ -30,6 +30,20 @@ Route::get('/refund-policy', [PageController::class, 'refunds'])->name('refunds'
 Route::get('/aml-sanctions', [PageController::class, 'sanctionsPolicy'])->name('sanctions.policy');
 Route::get('/cookie-policy', [PageController::class, 'cookiePolicy'])->name('cookie-policy');
 
+// Extended legal & static pages (rendered from the shared Legal Centre registry)
+Route::get('/legal', [PageController::class, 'legalCentre'])->name('legal');
+Route::get('/payment-security', [PageController::class, 'paymentSecurity'])->name('payment-security');
+Route::get('/billing-terms', [PageController::class, 'billingTerms'])->name('billing-terms');
+Route::get('/chargeback-policy', [PageController::class, 'chargebackPolicy'])->name('chargeback-policy');
+Route::get('/virtual-credits', [PageController::class, 'virtualCredits'])->name('virtual-credits');
+Route::get('/fair-play', [PageController::class, 'fairPlay'])->name('fair-play');
+Route::get('/responsible-play', [PageController::class, 'responsiblePlay'])->name('responsible-play');
+Route::get('/complaints', [PageController::class, 'complaints'])->name('complaints');
+Route::get('/security', [PageController::class, 'security'])->name('security');
+Route::get('/accessibility', [PageController::class, 'accessibility'])->name('accessibility');
+Route::get('/intellectual-property', [PageController::class, 'intellectualProperty'])->name('intellectual-property');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+
 // Global Seasonal Leaderboard (500+ Participants & Hall of Fame)
 Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
 
