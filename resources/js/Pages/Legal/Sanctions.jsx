@@ -1,126 +1,127 @@
 import React from 'react';
-import PublicLayout from '../../Layouts/PublicLayout';
-import { usePage, Link } from '@inertiajs/react';
-import { 
-    ShieldAlert, 
-    ShieldCheck, 
-    Globe2, 
-    Ban, 
-    FileText, 
-    AlertTriangle,
-    Lock
-} from 'lucide-react';
+import { usePage } from '@inertiajs/react';
+import { ShieldAlert } from 'lucide-react';
+import LegalShell, { P, List, Callout, KV, Cards, A, useCompany } from '../../Components/Legal/LegalShell';
+import { Globe2, CreditCard, UserCheck } from 'lucide-react';
 
 export default function Sanctions() {
-    const { company, sanctions } = usePage().props;
+    const { sanctions } = usePage().props;
+    const c = useCompany();
     const countries = sanctions?.blacklisted_countries || [
-        'Afghanistan', 'Belarus', 'Central African Republic', 'Cuba',
-        'Democratic Republic of the Congo', 'Haiti', 'Iran', 'Iraq',
-        'Mali', 'Myanmar (Burma)', 'North Korea', 'Russia',
-        'Somalia', 'South Sudan', 'Sudan', 'Syria', 'Venezuela', 'Zimbabwe'
+        'Afghanistan', 'Belarus', 'Central African Republic', 'Cuba', 'Democratic Republic of the Congo', 'Haiti', 'Iran', 'Iraq',
+        'Mali', 'Myanmar (Burma)', 'North Korea', 'Russia', 'Somalia', 'South Sudan', 'Sudan', 'Syria', 'Venezuela', 'Zimbabwe',
+    ];
+
+    const sections = [
+        {
+            id: 'purpose',
+            title: 'Purpose & legal framework',
+            content: (
+                <>
+                    <P>
+                        {c.name} is committed to preventing its platform from being used to breach financial sanctions or to launder money. Although StreetForge
+                        Credits have no cash value and cannot be withdrawn, we apply controls proportionate to the risks of an online service that accepts card
+                        payments from many countries.
+                    </P>
+                    <P>
+                        This policy is based on the Sanctions and Anti-Money Laundering Act 2018 (SAMLA), regulations made under it, guidance from the Office of
+                        Financial Sanctions Implementation (OFSI), the Proceeds of Crime Act 2002, and the recommendations of the Financial Action Task Force
+                        (FATF). We also take into account EU, UN and US (OFAC) measures where they affect our Payment Provider or card networks.
+                    </P>
+                </>
+            ),
+        },
+        {
+            id: 'jurisdictions',
+            title: `Restricted jurisdictions (${countries.length})`,
+            content: (
+                <>
+                    <P>
+                        Registration, gameplay and payments are not available to persons resident or located in, or using payment cards issued in, the following
+                        jurisdictions:
+                    </P>
+                    <div className="surface p-5 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-2">
+                        {countries.map((r) => (
+                            <span key={r} className="flex items-center gap-2 text-sm text-slate-400">
+                                <span className="w-1 h-1 bg-red-400/80 shrink-0" /> {r}
+                            </span>
+                        ))}
+                    </div>
+                    <P muted>We review this list at least quarterly and whenever sanctions regimes change.</P>
+                </>
+            ),
+        },
+        {
+            id: 'controls',
+            title: 'Screening controls',
+            content: (
+                <>
+                    <Cards
+                        items={[
+                            { icon: UserCheck, title: 'At registration', text: 'Country of residence is validated against the restricted list, and names can be screened against the UK consolidated list of designated persons.' },
+                            { icon: Globe2, title: 'Connection checks', text: 'IP geolocation and detection of commercial VPNs, Tor exit nodes and anonymising proxies at registration and checkout.', tone: 'text-orange-300' },
+                            { icon: CreditCard, title: 'At payment', text: 'Our PCI DSS Level 1 Payment Provider screens the card\'s issuing country (BIN) and blocks cards from restricted jurisdictions on the hosted payment page.', tone: 'text-emerald-400' },
+                        ]}
+                    />
+                    <P>
+                        Because payment is taken on the Payment Provider's hosted page, card-level screening happens in the Provider's environment. We receive only
+                        the result and the card's issuing country, never the card number.
+                    </P>
+                </>
+            ),
+        },
+        {
+            id: 'aml',
+            title: 'Anti-money-laundering measures',
+            content: (
+                <List
+                    items={[
+                        'Per-account daily and monthly top-up limits.',
+                        'Credits cannot be transferred between accounts, withdrawn or exchanged for money, which removes the main laundering route.',
+                        'Monitoring for unusual patterns such as many cards on one account, rapid repeated top-ups or many accounts from one device.',
+                        'Enhanced checks — identity verification and source-of-funds questions — when risk indicators are present.',
+                        'Staff training on recognising suspicious activity and on our internal reporting procedure.',
+                        'Retention of screening records for five years after the end of the relationship.',
+                    ]}
+                />
+            ),
+        },
+        {
+            id: 'consequences',
+            title: 'Circumvention & consequences',
+            content: (
+                <Callout title="Zero tolerance" tone="red" icon={ShieldAlert}>
+                    Supplying false address details, using another person's identity or card, or masking your location to bypass these controls will result in
+                    immediate account closure. Where the law requires, we will freeze any balances and report to OFSI, the National Crime Agency or other competent
+                    authorities. We may be legally prohibited from telling you that a report has been made.
+                </Callout>
+            ),
+        },
+        {
+            id: 'contact',
+            title: 'Compliance contact',
+            content: (
+                <KV
+                    rows={[
+                        ['Department', `${c.name} — Compliance`],
+                        ['Email', <A href="mailto:compliance@streetforge.co.uk">compliance@streetforge.co.uk</A>],
+                        ['Post', c.address],
+                    ]}
+                />
+            ),
+        },
     ];
 
     return (
-        <PublicLayout>
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 space-y-10">
-                
-                {/* Header */}
-                <div className="text-center space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-950/80 border border-red-800 text-red-400 text-xs font-semibold uppercase tracking-wider">
-                        <ShieldAlert className="w-3.5 h-3.5" />
-                        Regulatory Compliance Bulletin
-                    </div>
-                    <h1 className="text-4xl sm:text-5xl font-orbitron font-extrabold text-white tracking-tight">
-                        Anti-Money Laundering & <span className="text-red-400">Sanctions Policy</span>
-                    </h1>
-                    <p className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
-                        Strict compliance with UK OFSI, European Union, United Nations, and international FATF trade restrictions.
-                    </p>
-                </div>
-
-                {/* Content Box */}
-                <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-8 text-sm text-slate-300 leading-relaxed backdrop-blur-xl shadow-2xl">
-                    
-                    {/* Section 1 */}
-                    <section className="space-y-3 pb-6 border-b border-slate-800">
-                        <h2 className="text-base font-orbitron font-bold text-white uppercase tracking-wide flex items-center gap-2">
-                            <span className="text-cyan-400">1.</span> Policy Purpose & Regulatory Scope
-                        </h2>
-                        <p>
-                            <strong>{company?.name || 'StreetForge Ltd'}</strong> maintains a zero-tolerance policy towards the evasion of international trade sanctions, money laundering (AML), and terrorism financing (CFT). 
-                        </p>
-                        <p>
-                            As a registered entity in the United Kingdom, StreetForge complies strictly with the Sanctions and Anti-Money Laundering Act 2018 (SAMLA), statutory guidelines published by the Office of Financial Sanctions Implementation (OFSI), and Financial Action Task Force (FATF) High-Risk Jurisdictions.
-                        </p>
-                    </section>
-
-                    {/* Section 2 - Blacklist */}
-                    <section className="space-y-4 pb-6 border-b border-slate-800">
-                        <h2 className="text-base font-orbitron font-bold text-red-400 uppercase tracking-wide flex items-center gap-2">
-                            <Ban className="w-4 h-4" />
-                            <span>2.</span> Comprehensive List of Sanctioned Jurisdictions ({countries.length})
-                        </h2>
-                        <p>
-                            Registration, account creation, gameplay, and payment processing are strictly embargoed for users residing in, holding citizenship in, or utilizing payment instruments issued in the following countries:
-                        </p>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            {countries.map((country, idx) => (
-                                <div key={idx} className="p-3 bg-slate-950/80 rounded-xl border border-red-900/50 flex items-center gap-2 text-xs font-mono text-slate-200">
-                                    <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
-                                    <span>{country}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-
-                    {/* Section 3 */}
-                    <section className="space-y-3 pb-6 border-b border-slate-800">
-                        <h2 className="text-base font-orbitron font-bold text-white uppercase tracking-wide flex items-center gap-2">
-                            <span className="text-cyan-400">3.</span> Automated Compliance Screening Mechanisms
-                        </h2>
-                        <p>
-                            To prevent unauthorized access from sanctioned zones, our platform employs layered automated screening:
-                        </p>
-                        <ul className="list-disc pl-5 space-y-2 text-xs text-slate-400">
-                            <li><strong>Registration Validation:</strong> Form input validation automatically rejects country selections that match our sanctions database.</li>
-                            <li><strong>IP Geo-Location & Proxy Filtering:</strong> Automated detection of commercial VPNs, Tor exit nodes, and proxy servers attempting to obscure connection origin.</li>
-                            <li><strong>Payment Gateway Bin Checking:</strong> Bank Identification Numbers (BINs) of debit and credit cards are screened to ensure cards issued in sanctioned jurisdictions cannot settle top-up orders.</li>
-                        </ul>
-                    </section>
-
-                    {/* Section 4 */}
-                    <section className="space-y-3 pb-6 border-b border-slate-800">
-                        <h2 className="text-base font-orbitron font-bold text-white uppercase tracking-wide flex items-center gap-2">
-                            <span className="text-cyan-400">4.</span> Penalties for Circumvention
-                        </h2>
-                        <p>
-                            Any attempt by a user to supply fraudulent address data, forged identification, or proxy IP masking to bypass sanctions will result in:
-                        </p>
-                        <ul className="list-disc pl-5 space-y-1 text-xs text-red-300">
-                            <li>Immediate and irrevocable account termination.</li>
-                            <li>Immediate freeze and forfeiture of all virtual game balances and in-game assets.</li>
-                            <li>Reporting to relevant regulatory and financial enforcement authorities where mandated by law.</li>
-                        </ul>
-                    </section>
-
-                    {/* Section 5 */}
-                    <section className="space-y-2 pt-2 text-xs text-slate-400">
-                        <h3 className="font-orbitron font-bold text-white uppercase text-xs">
-                            5. Compliance Office Contact
-                        </h3>
-                        <p>
-                            For compliance auditing inquiries or regulatory requests:
-                        </p>
-                        <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-1">
-                            <div className="font-bold text-slate-200">StreetForge Ltd Compliance Department</div>
-                            <div>Email: <a href="mailto:compliance@streetforge.co.uk" className="text-cyan-400 hover:underline">compliance@streetforge.co.uk</a></div>
-                            <div>{company?.address || '128 City Road, London, EC1V 2NX, United Kingdom'}</div>
-                        </div>
-                    </section>
-
-                </div>
-
-            </div>
-        </PublicLayout>
+        <LegalShell
+            href="/aml-sanctions"
+            eyebrow="OFSI · SAMLA · FATF"
+            title="Sanctions &"
+            accent="AML Policy"
+            lead="The controls StreetForge applies to keep the platform out of reach of sanctioned persons and jurisdictions, and to prevent money laundering."
+            version="2.0"
+            sections={sections}
+            related={['/terms', '/payment-security', '/chargeback-policy', '/privacy']}
+        />
     );
 }

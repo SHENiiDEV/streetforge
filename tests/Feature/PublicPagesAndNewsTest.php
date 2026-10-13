@@ -28,6 +28,30 @@ class PublicPagesAndNewsTest extends TestCase
         $this->get('/cookie-policy')->assertStatus(200);
     }
 
+    public function test_extended_legal_pages_are_accessible(): void
+    {
+        $pages = [
+            '/legal' => 'Legal/LegalCentre',
+            '/payment-security' => 'Legal/PaymentSecurity',
+            '/billing-terms' => 'Legal/BillingTerms',
+            '/chargeback-policy' => 'Legal/ChargebackPolicy',
+            '/virtual-credits' => 'Legal/VirtualCredits',
+            '/fair-play' => 'Legal/FairPlay',
+            '/responsible-play' => 'Legal/ResponsiblePlay',
+            '/complaints' => 'Legal/Complaints',
+            '/security' => 'Legal/Security',
+            '/accessibility' => 'Legal/Accessibility',
+            '/intellectual-property' => 'Legal/IntellectualProperty',
+            '/contact' => 'Legal/Contact',
+        ];
+
+        foreach ($pages as $url => $component) {
+            $this->get($url)
+                ->assertStatus(200)
+                ->assertInertia(fn ($page) => $page->component($component));
+        }
+    }
+
     public function test_news_index_and_articles_are_accessible(): void
     {
         $response = $this->get('/news');

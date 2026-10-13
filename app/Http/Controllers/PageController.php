@@ -70,4 +70,64 @@ class PageController extends Controller
     {
         return Inertia::render('Legal/CookiePolicy');
     }
+
+    public function legalCentre(): Response
+    {
+        return Inertia::render('Legal/LegalCentre');
+    }
+
+    public function paymentSecurity(): Response
+    {
+        return Inertia::render('Legal/PaymentSecurity');
+    }
+
+    public function billingTerms(): Response
+    {
+        return Inertia::render('Legal/BillingTerms');
+    }
+
+    public function chargebackPolicy(): Response
+    {
+        return Inertia::render('Legal/ChargebackPolicy');
+    }
+
+    public function virtualCredits(): Response
+    {
+        return Inertia::render('Legal/VirtualCredits');
+    }
+
+    public function fairPlay(): Response
+    {
+        return Inertia::render('Legal/FairPlay');
+    }
+
+    public function responsiblePlay(): Response
+    {
+        return Inertia::render('Legal/ResponsiblePlay');
+    }
+
+    public function complaints(): Response
+    {
+        return Inertia::render('Legal/Complaints');
+    }
+
+    public function security(): Response
+    {
+        return Inertia::render('Legal/Security');
+    }
+
+    public function accessibility(): Response
+    {
+        return Inertia::render('Legal/Accessibility');
+    }
+
+    public function intellectualProperty(): Response
+    {
+        return Inertia::render('Legal/IntellectualProperty');
+    }
+
+    public function contact(): Response
+    {
+        return Inertia::render('Legal/Contact');
+    }
 }

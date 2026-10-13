@@ -363,9 +363,11 @@ export default function Navbar() {
                                 {[
                                     ['Terms', '/terms'],
                                     ['Privacy', '/privacy'],
+                                    ['Payments', '/payment-security'],
                                     ['Refunds', '/refund-policy'],
-                                    ['Sanctions', '/aml-sanctions'],
+                                    ['Contact', '/contact'],
                                     ['FAQ', '/faq'],
+                                    ['Legal Centre', '/legal'],
                                 ].map(([label, href]) => (
                                     <Link
                                         key={href}
