@@ -14,10 +14,10 @@ class InvoiceService
     public function generate(Transaction $transaction): string
     {
         $company = [
-            'name' => config('company.name', 'Apex Racing Ltd'),
+            'name' => config('company.name', 'StreetForge Ltd'),
             'number' => config('company.number', 'HE-428910'),
             'address' => config('company.address', '14 Spyrou Kyprianou Ave, Silver House, 3070 Limassol, Cyprus'),
-            'email' => config('company.email', 'support@apexracing.game'),
+            'email' => config('company.email', 'support@streetforge.co.uk'),
         ];
 
         $customer = $transaction->customer_snapshot ?? [
@@ -36,8 +36,8 @@ class InvoiceService
             'customer' => $customer,
         ])->setPaper('a4', 'portrait');
 
-        $fileName = 'invoices/invoice_' . ($transaction->invoice_number ?: $transaction->id) . '.pdf';
-        
+        $fileName = 'invoices/invoice_'.($transaction->invoice_number ?: $transaction->id).'.pdf';
+
         Storage::disk('public')->put($fileName, $pdf->output());
 
         $transaction->update([
@@ -53,10 +53,10 @@ class InvoiceService
     public function downloadResponse(Transaction $transaction)
     {
         $company = [
-            'name' => config('company.name', 'Apex Racing Ltd'),
+            'name' => config('company.name', 'StreetForge Ltd'),
             'number' => config('company.number', 'HE-428910'),
             'address' => config('company.address', '14 Spyrou Kyprianou Ave, Silver House, 3070 Limassol, Cyprus'),
-            'email' => config('company.email', 'support@apexracing.game'),
+            'email' => config('company.email', 'support@streetforge.co.uk'),
         ];
 
         $customer = $transaction->customer_snapshot ?? [
@@ -75,7 +75,7 @@ class InvoiceService
             'customer' => $customer,
         ])->setPaper('a4', 'portrait');
 
-        $filename = 'ApexRacing_Invoice_' . ($transaction->invoice_number ?: $transaction->transaction_ref) . '.pdf';
+        $filename = 'StreetForge_Invoice_'.($transaction->invoice_number ?: $transaction->transaction_ref).'.pdf';
 
         return $pdf->download($filename);
     }

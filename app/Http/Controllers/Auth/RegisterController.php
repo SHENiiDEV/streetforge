@@ -102,6 +102,6 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('garage.index')->with('success', 'Welcome to Apex Racing! We credited your garage with your first vehicle and 1,000 Starter Credits.');
+        return redirect()->route('garage.index')->with('success', 'Welcome to StreetForge! We credited your garage with your first vehicle and 1,000 Starter Credits.');
     }
 }

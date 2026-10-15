@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use App\Models\Transaction;
-use App\Services\InvoiceService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -17,14 +16,12 @@ class PaymentReceiptMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public Transaction $transaction)
-    {
-    }
+    public function __construct(public Transaction $transaction) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Receipt for your Apex Racing Top-Up (' . $this->transaction->invoice_number . ')',
+            subject: 'Receipt for your StreetForge Top-Up ('.$this->transaction->invoice_number.')',
         );
     }
 
@@ -50,7 +47,7 @@ class PaymentReceiptMail extends Mailable implements ShouldQueue
         if ($this->transaction->invoice_path && Storage::disk('public')->exists($this->transaction->invoice_path)) {
             return [
                 Attachment::fromStorageDisk('public', $this->transaction->invoice_path)
-                    ->as('Invoice_' . $this->transaction->invoice_number . '.pdf')
+                    ->as('Invoice_'.$this->transaction->invoice_number.'.pdf')
                     ->withMime('application/pdf'),
             ];
         }

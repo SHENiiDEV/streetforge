@@ -46,7 +46,7 @@ export default function Login() {
                                     required
                                     value={data.email}
                                     onChange={e => setData('email', e.target.value)}
-                                    placeholder="racer@apex.game"
+                                    placeholder="racer@streetforge.co.uk"
                                     className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-600"
                                 />
                             </div>

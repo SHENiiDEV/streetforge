@@ -14,14 +14,12 @@ class WelcomeUserMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public User $user)
-    {
-    }
+    public function __construct(public User $user) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome to Apex Racing Championship!',
+            subject: 'Welcome to StreetForge Championship!',
         );
     }
 
