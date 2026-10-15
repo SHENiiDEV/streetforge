@@ -4,29 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Mail\PaymentReceiptMail;
 use App\Models\Transaction;
-use App\Models\User;
 use App\Services\InvoiceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TopupController extends Controller
 {
     private array $packages = [
-        [
-            'id' => 'starter_pack',
-            'name' => 'Pitstop Starter Pack',
-            'fiat_amount' => 10.00,
-            'currency' => 'USD',
-            'game_credits' => 1000,
-            'bonus_percent' => 0,
-            'badge' => null,
-            'popular' => false,
-        ],
         [
             'id' => 'racer_pack',
             'name' => 'Pro Racer Pack',
@@ -36,16 +26,6 @@ class TopupController extends Controller
             'bonus_percent' => 10,
             'badge' => '+10% BONUS',
             'popular' => true,
-        ],
-        [
-            'id' => 'champion_pack',
-            'name' => 'Championship Turbo Bundle',
-            'fiat_amount' => 50.00,
-            'currency' => 'USD',
-            'game_credits' => 6000,
-            'bonus_percent' => 20,
-            'badge' => '+20% BONUS',
-            'popular' => false,
         ],
         [
             'id' => 'hyper_pack',
@@ -59,6 +39,12 @@ class TopupController extends Controller
         ],
     ];
 
+    private array $customTopup = [
+        'min_credits' => 100,
+        'credits_per_usd' => 100,
+        'currency' => 'USD',
+    ];
+
     public function index(Request $request): Response
     {
         $user = $request->user();
@@ -70,6 +56,7 @@ class TopupController extends Controller
 
         return Inertia::render('Topup/Index', [
             'packages' => $this->packages,
+            'customTopup' => $this->customTopup,
             'transactions' => $transactions,
         ]);
     }
@@ -77,23 +64,32 @@ class TopupController extends Controller
     public function createOrder(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'package_id' => ['required', 'string'],
-            'gateway' => ['required', 'string', 'in:credit_card,bank_transfer,crypto_pay'],
+            'package_id' => ['required', 'string', Rule::in([...array_column($this->packages, 'id'), 'custom'])],
+            'gateway' => ['required', 'string', 'in:credit_card'],
+            'custom_credits' => [
+                'exclude_unless:package_id,custom',
+                'required',
+                'integer',
+                'min:'.$this->customTopup['min_credits'],
+            ],
         ]);
 
-        $pkg = collect($this->packages)->firstWhere('id', $validated['package_id']);
-        if (!$pkg) {
-            return back()->with('error', 'Invalid top-up package selected.');
-        }
+        $pkg = $validated['package_id'] === 'custom'
+            ? [
+                'fiat_amount' => (int) $validated['custom_credits'] / $this->customTopup['credits_per_usd'],
+                'currency' => $this->customTopup['currency'],
+                'game_credits' => (int) $validated['custom_credits'],
+            ]
+            : collect($this->packages)->firstWhere('id', $validated['package_id']);
 
         $user = $request->user();
-        $ref = 'TOP-' . strtoupper(Str::random(10));
-        $invoiceNumber = 'INV-' . date('Y') . '-' . str_pad((string) (Transaction::count() + 1001), 6, '0', STR_PAD_LEFT);
+        $ref = 'TOP-'.strtoupper(Str::random(10));
+        $invoiceNumber = 'INV-'.date('Y').'-'.str_pad((string) (Transaction::count() + 1001), 6, '0', STR_PAD_LEFT);
 
         $transaction = Transaction::create([
             'user_id' => $user->id,
             'transaction_ref' => $ref,
-            'gateway' => $validated['gateway'],
+            'gateway' => 'credit_card',
             'fiat_amount' => $pkg['fiat_amount'],
             'currency' => $pkg['currency'],
             'game_credits' => $pkg['game_credits'],
@@ -146,7 +142,7 @@ class TopupController extends Controller
             'status' => 'success',
             'completed_at' => now(),
             'gateway_response' => [
-                'payment_intent_id' => 'mock_pi_' . Str::random(16),
+                'payment_intent_id' => 'mock_pi_'.Str::random(16),
                 'status' => 'succeeded',
                 'captured_amount' => $transaction->fiat_amount,
                 'payment_method' => $transaction->gateway,
@@ -170,7 +166,7 @@ class TopupController extends Controller
             // mail logging
         }
 
-        return redirect()->route('topup.index')->with('success', 'Payment successful! +' . number_format($transaction->game_credits) . ' CR added to your wallet.');
+        return redirect()->route('topup.index')->with('success', 'Payment successful! +'.number_format($transaction->game_credits).' CR added to your wallet.');
     }
 
     /**
@@ -185,17 +181,17 @@ class TopupController extends Controller
         $secret = config('services.payment_webhook_secret', 'apex_secret_key_2026');
         $expectedSignature = hash_hmac('sha256', (string) $request->getContent(), $secret);
 
-        if ($signature && !hash_equals($expectedSignature, $signature)) {
+        if ($signature && ! hash_equals($expectedSignature, $signature)) {
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
         $ref = $payload['transaction_ref'] ?? null;
-        if (!$ref) {
+        if (! $ref) {
             return response()->json(['error' => 'Missing transaction reference'], 422);
         }
 
         $transaction = Transaction::where('transaction_ref', $ref)->first();
-        if (!$transaction) {
+        if (! $transaction) {
             return response()->json(['error' => 'Transaction not found'], 404);
         }
 

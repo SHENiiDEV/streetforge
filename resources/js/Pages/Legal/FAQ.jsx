@@ -59,7 +59,7 @@ export default function FAQ() {
         {
             category: 'billing',
             q: 'How do top-up credit purchases work?',
-            a: 'Drivers can purchase in-game credits at any time via the Top-Up section. We offer multiple bundles ranging from £4.99 to £99.99 with bonus currency incentives. Transactions are processed instantaneously with 256-bit TLS encryption, and your game balance updates in real time upon successful checkout.',
+            a: 'Buy credits in the Top-Up section by credit or debit card. Top Values includes 2,750 CR for $25 and 15,000 CR for $100, with bonus credits included. You can also choose a custom quantity from 100 CR with no upper limit at $1 per 100 CR, without a bonus. Your balance updates after successful payment.',
         },
         {
             category: 'billing',
@@ -242,4 +242,3 @@ export default function FAQ() {
         </PublicLayout>
     );
 }
-

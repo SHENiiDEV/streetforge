@@ -1,203 +1,140 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AppLayout from '../../Layouts/AppLayout';
-import { usePage, useForm, Link } from '@inertiajs/react';
-import { 
-    CreditCard, 
-    Zap, 
-    ShieldCheck, 
-    FileText, 
-    Download, 
-    Clock, 
-    CheckCircle2, 
-    AlertCircle, 
-    ChevronRight,
-    Sparkles
-} from 'lucide-react';
+import { usePage, useForm } from '@inertiajs/react';
+import { CreditCard, Zap, FileText, Download, Clock, CheckCircle2, ChevronRight, SlidersHorizontal, Wallet } from 'lucide-react';
 
-export default function Topup({ packages = [], transactions = [] }) {
+export default function Topup({ packages = [], transactions = [], customTopup }) {
     const { auth, company } = usePage().props;
-    const user = auth?.user;
-
-    const [selectedPackage, setSelectedPackage] = useState(packages[1]?.id || packages[0]?.id);
-    const [selectedGateway, setSelectedGateway] = useState('credit_card');
-
-    const { data, setData, post, processing } = useForm({
-        package_id: selectedPackage,
-        gateway: selectedGateway,
+    const { data, setData, post, processing, errors, clearErrors } = useForm({
+        package_id: packages[0]?.id || 'custom',
+        custom_credits: 1000,
+        gateway: 'credit_card',
     });
-
-    const handleSelectPackage = (pkgId) => {
-        setSelectedPackage(pkgId);
-        setData('package_id', pkgId);
+    const isCustom = data.package_id === 'custom';
+    const selectedPackage = packages.find(pkg => pkg.id === data.package_id);
+    const customCredits = Number(data.custom_credits);
+    const validCustomCredits = /^\d+$/.test(String(data.custom_credits))
+        && Number.isInteger(customCredits)
+        && customCredits >= customTopup.min_credits;
+    const credits = isCustom ? (validCustomCredits ? customCredits : 0) : Number(selectedPackage?.game_credits || 0);
+    const amount = isCustom ? credits / customTopup.credits_per_usd : Number(selectedPackage?.fiat_amount || 0);
+    const selectPackage = (id) => {
+        setData('package_id', id);
+        clearErrors();
     };
-
-    const handleSelectGateway = (gw) => {
-        setSelectedGateway(gw);
-        setData('gateway', gw);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (isCustom && !validCustomCredits) return;
         post('/topup/order');
     };
 
     return (
         <AppLayout>
-            <div className="space-y-10">
-                
-                {/* Header Banner */}
-                <div className="text-center max-w-3xl mx-auto space-y-3">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                        <Zap className="w-3.5 h-3.5" /> Instant Account Top-Up
+            <div className="max-w-6xl mx-auto space-y-10">
+                <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-8">
+                    <div className="space-y-3">
+                        <p className="label-tech text-cyan-400 flex items-center gap-2"><Zap className="w-4 h-4" /> StreetForge credits</p>
+                        <h1 className="font-display font-extrabold uppercase text-5xl sm:text-6xl text-white leading-none">Fuel your next upgrade.</h1>
+                        <p className="text-sm text-slate-400 max-w-lg">Choose a bonus bundle or buy exactly the credits you need.</p>
                     </div>
-                    <h1 className="text-3xl sm:text-4xl font-orbitron font-black text-white">
-                        Digital Game <span className="text-cyan-400">Credits Store</span>
-                    </h1>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                        Purchase in-game credits to unlock supercars and install performance tuning stages. Instant delivery with pixel-perfect tax PDF invoice.
-                    </p>
-                </div>
+                    <div className="border-l-2 border-cyan-400 pl-4 shrink-0">
+                        <p className="label-tech text-slate-400 flex items-center gap-2"><Wallet className="w-3.5 h-3.5" /> Your balance</p>
+                        <p className="numeric font-bold text-3xl text-white">{Number(auth?.user?.game_balance || 0).toLocaleString()} <span className="text-sm text-slate-400">CR</span></p>
+                    </div>
+                </header>
 
-                {/* Package Selector Cards */}
-                <form onSubmit={handleSubmit} className="space-y-8">
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="flex flex-wrap items-end justify-between gap-2">
+                        <h2 className="font-display font-bold uppercase text-3xl text-white">Top Values</h2>
+                        <p className="text-xs text-slate-400">Bonus credits included in every bundle</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {packages.map(pkg => {
-                            const isSelected = selectedPackage === pkg.id;
-
+                            const selected = data.package_id === pkg.id;
+                            const baseCredits = Number(pkg.fiat_amount) * customTopup.credits_per_usd;
                             return (
-                                <div
+                                <button
                                     key={pkg.id}
-                                    onClick={() => handleSelectPackage(pkg.id)}
-                                    className={`relative cursor-pointer rounded-3xl p-6 border transition-all flex flex-col justify-between ${
-                                        isSelected
-                                            ? 'bg-gradient-to-b from-cyan-950/80 to-slate-900 border-cyan-400 shadow-2xl shadow-cyan-500/20 scale-105 z-10'
-                                            : 'bg-slate-900/60 border-slate-800 hover:border-slate-700 hover:bg-slate-900/90'
-                                    }`}
+                                    type="button"
+                                    aria-pressed={selected}
+                                    onClick={() => selectPackage(pkg.id)}
+                                    className={`relative overflow-hidden text-left rounded-2xl border p-6 flex flex-col gap-6 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-400 ${selected ? 'bg-cyan-950/30 border-cyan-400' : 'bg-carbon-900 border-white/10 hover:border-white/30'}`}
                                 >
-                                    {/* Bonus Badge */}
-                                    {pkg.badge && (
-                                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-slate-950 text-[10px] font-orbitron font-extrabold uppercase tracking-wider shadow-md">
-                                            {pkg.badge}
-                                        </div>
-                                    )}
-
-                                    <div className="space-y-3">
-                                        <div className="text-xs font-semibold text-slate-400">
-                                            {pkg.name}
-                                        </div>
-
-                                        <div className="flex items-baseline gap-1">
-                                            <span className="font-orbitron font-black text-3xl text-white">
-                                                ${Number(pkg.fiat_amount).toFixed(2)}
-                                            </span>
-                                            <span className="text-xs text-slate-500 font-mono">USD</span>
-                                        </div>
-
-                                        <div className="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 flex items-center justify-between">
-                                            <span className="text-xs text-slate-400">Credits</span>
-                                            <span className="font-orbitron font-bold text-sm text-cyan-400">
-                                                +{Number(pkg.game_credits).toLocaleString()} CR
-                                            </span>
-                                        </div>
+                                    <div className="flex flex-wrap items-center justify-between gap-2">
+                                        <span className="label-tech text-slate-400">{pkg.popular ? 'Popular pick' : 'Best value'}</span>
+                                        <span className="text-xs font-bold text-orange-300 bg-orange-400/10 rounded-md px-2 py-1">+{pkg.bonus_percent}% bonus</span>
                                     </div>
-
-                                    <div className="pt-6 mt-4 border-t border-slate-800/80">
-                                        <div className={`w-full py-2.5 rounded-xl font-orbitron font-bold text-xs text-center transition-all ${
-                                            isSelected
-                                                ? 'bg-cyan-400 text-slate-950'
-                                                : 'bg-slate-800 text-slate-300'
-                                        }`}>
-                                            {isSelected ? 'Selected Package' : 'Select'}
-                                        </div>
+                                    <div>
+                                        <p className="numeric text-5xl font-bold text-white leading-none">{Number(pkg.game_credits).toLocaleString()} <span className="text-lg text-cyan-400">CR</span></p>
+                                        <p className="text-xs text-slate-400 mt-3">{baseCredits.toLocaleString()} + <span className="text-orange-300">{(Number(pkg.game_credits) - baseCredits).toLocaleString()} bonus CR</span></p>
+                                        <p className="text-sm text-slate-300 mt-4">{pkg.name}</p>
                                     </div>
-                                </div>
+                                    <div className="border-t border-white/10 pt-5 mt-auto flex items-center justify-between gap-3">
+                                        <p className="numeric text-3xl font-bold text-white">${Number(pkg.fiat_amount).toFixed(2)} <span className="text-xs font-sans font-normal text-slate-400">USD</span></p>
+                                        <span className={`inline-flex items-center gap-2 text-xs font-semibold ${selected ? 'text-cyan-400' : 'text-slate-400'}`}>
+                                            {selected ? <CheckCircle2 className="w-4 h-4" /> : <span className="w-4 h-4 rounded-full border border-slate-600" />}
+                                            {selected ? 'Selected' : 'Select'}
+                                        </span>
+                                    </div>
+                                </button>
                             );
                         })}
+                        <div className={`rounded-2xl border p-6 flex flex-col gap-5 ${isCustom ? 'bg-cyan-950/30 border-cyan-400' : 'bg-carbon-900 border-white/10'}`}>
+                            <button type="button" aria-pressed={isCustom} onClick={() => selectPackage('custom')} className="flex items-center justify-between gap-3 text-left rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-400">
+                                <span className="label-tech text-cyan-400 flex items-center gap-2"><SlidersHorizontal className="w-4 h-4" /> Custom amount</span>
+                                {isCustom ? <CheckCircle2 className="w-4 h-4 text-cyan-400" /> : <span className="w-4 h-4 rounded-full border border-slate-600" />}
+                            </button>
+                            <div className="space-y-3">
+                                <label htmlFor="custom-credits" className="block text-sm text-white font-semibold">How many credits?</label>
+                                <div className="relative">
+                                    <input
+                                        id="custom-credits"
+                                        type="number"
+                                        inputMode="numeric"
+                                        min={isCustom ? customTopup.min_credits : undefined}
+                                        step={isCustom ? '1' : 'any'}
+                                        required={isCustom}
+                                        disabled={processing}
+                                        value={data.custom_credits}
+                                        onFocus={() => { if (!isCustom) selectPackage('custom'); }}
+                                        onChange={event => { setData({ ...data, package_id: 'custom', custom_credits: event.target.value }); clearErrors(); }}
+                                        aria-describedby="custom-help custom-error"
+                                        aria-invalid={isCustom && (!!errors.custom_credits || !validCustomCredits)}
+                                        className="w-full rounded-xl bg-carbon-950 border border-white/15 pl-4 pr-12 py-3 numeric text-3xl font-bold text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 disabled:opacity-50"
+                                    />
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">CR</span>
+                                </div>
+                                <p id="custom-help" className="text-xs text-slate-400 leading-relaxed">From {customTopup.min_credits.toLocaleString()} CR · No upper limit<br />$1 = {customTopup.credits_per_usd} CR · No bonus credits.</p>
+                                <p id="custom-error" className="text-xs text-red-400" role="status">{isCustom && (errors.custom_credits || (!validCustomCredits ? `Enter a whole number of at least ${customTopup.min_credits} credits.` : ''))}</p>
+                            </div>
+                            <div className="border-t border-white/10 pt-5 mt-auto flex items-center justify-between gap-3">
+                                <p className="numeric text-3xl font-bold text-white">${(validCustomCredits ? customCredits / customTopup.credits_per_usd : 0).toFixed(2)} <span className="text-xs font-sans font-normal text-slate-400">USD</span></p>
+                                <span className="text-xs text-slate-400">Your choice</span>
+                            </div>
+                        </div>
                     </div>
+                    {errors.package_id && <p role="alert" className="text-sm text-red-400">{errors.package_id}</p>}
+                    {errors.gateway && <p role="alert" className="text-sm text-red-400">{errors.gateway}</p>}
 
-                    {/* Payment Gateways & Checkout Button */}
-                    <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-xl max-w-3xl mx-auto space-y-6">
-                        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-                            <div>
-                                <h3 className="font-orbitron font-bold text-base text-white">
-                                    Select Payment Method
-                                </h3>
-                                <p className="text-xs text-slate-400">Secure end-to-end payment processing</p>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-xs text-emerald-400">
-                                <ShieldCheck className="w-4 h-4" /> 256-Bit SSL Encrypted
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {[
-                                { id: 'credit_card', label: 'Credit / Debit Card', desc: 'Visa, MasterCard, Amex', icon: CreditCard },
-                                { id: 'bank_transfer', label: 'Instant Bank Wire', desc: 'SEPA, ACH, Wire Transfer', icon: Zap },
-                                { id: 'crypto_pay', label: 'Crypto Currency', desc: 'BTC, ETH, USDT Instant', icon: Sparkles },
-                            ].map(gw => {
-                                const isSelected = selectedGateway === gw.id;
-                                const Icon = gw.icon;
-
-                                return (
-                                    <div
-                                        key={gw.id}
-                                        onClick={() => handleSelectGateway(gw.id)}
-                                        className={`p-4 rounded-2xl border cursor-pointer transition-all ${
-                                            isSelected
-                                                ? 'bg-cyan-950/40 border-cyan-500 shadow-md'
-                                                : 'bg-slate-950/60 border-slate-800 hover:border-slate-750'
-                                        }`}
-                                    >
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <Icon className={`w-4 h-4 ${isSelected ? 'text-cyan-400' : 'text-slate-400'}`} />
-                                            <span className="font-semibold text-xs text-white">{gw.label}</span>
-                                        </div>
-                                        <div className="text-[10px] text-slate-400">{gw.desc}</div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-
-                        {/* Payment Logos & Compliance Strip */}
-                        <div className="pt-2 flex flex-wrap items-center justify-between gap-4 p-4 bg-slate-950/60 rounded-2xl border border-slate-850">
+                    <div className="rounded-2xl border border-white/10 bg-carbon-900 p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-3 text-white font-semibold text-sm"><CreditCard className="w-5 h-5 text-cyan-400" /> Credit / debit card</div>
                             <div className="flex items-center gap-3">
-                                <img
-                                    src="/images/payments/visa.png"
-                                    alt="Visa"
-                                    className="h-5 w-auto object-contain brightness-110"
-                                />
-                                <img
-                                    src="/images/payments/mastercard.png"
-                                    alt="Mastercard"
-                                    className="h-6 w-auto object-contain brightness-110"
-                                />
-                                <img
-                                    src="/images/payments/pci-dss.png"
-                                    alt="PCI DSS Compliant"
-                                    className="h-5 w-auto object-contain brightness-110"
-                                />
-                            </div>
-                            <div className="text-[11px] text-slate-400 font-mono flex items-center gap-1.5">
-                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                                3D Secure 2.0 Protected
+                                <img src="/images/payments/visa.png" alt="Visa" className="h-5 w-auto object-contain" />
+                                <img src="/images/payments/mastercard.png" alt="Mastercard" className="h-6 w-auto object-contain" />
+                                <span className="text-xs text-slate-400">PDF receipt after payment</span>
                             </div>
                         </div>
-
-                        {/* Order Action */}
-                        <div className="pt-2">
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-orbitron font-extrabold text-sm tracking-wide shadow-xl shadow-cyan-500/25 transition-all flex items-center justify-center gap-2"
-                            >
-                                <CreditCard className="w-4 h-4" />
-                                Proceed to Checkout Portal
-                                <ChevronRight className="w-4 h-4" />
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-5">
+                            <div aria-live="polite" className="sm:text-right">
+                                <p className="text-sm text-white font-semibold">{credits.toLocaleString()} CR</p>
+                                <p className="text-xs text-slate-400 mt-1">Total: ${amount.toFixed(2)} USD</p>
+                            </div>
+                            <button type="submit" disabled={processing || (isCustom && !validCustomCredits)} className="rounded-xl bg-cyan-400 hover:bg-cyan-300 px-6 py-4 text-carbon-950 text-sm font-bold flex items-center justify-center gap-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-400 disabled:opacity-40 disabled:cursor-not-allowed">
+                                {processing ? 'Opening checkout…' : `Continue · $${amount.toFixed(2)}`}<ChevronRight className="w-4 h-4" />
                             </button>
                         </div>
                     </div>
-
                 </form>
 
                 {/* Transaction & PDF Invoice History Table */}
