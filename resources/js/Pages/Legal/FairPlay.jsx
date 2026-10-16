@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React from 'react';
 import { Cpu, Bug, Users, ShieldAlert } from 'lucide-react';
 import LegalShell, { P, List, Cards, Table, A } from '../../Components/Legal/LegalShell';
@@ -9,10 +10,8 @@ export default function FairPlay() {
             title: 'Our principles',
             content: (
                 <>
-                    <P>
-                        Every lap time on a StreetForge leaderboard should be the result of driving skill and tuning knowledge — nothing else. This policy explains
-                        what counts as cheating or abuse, how we detect it and what happens when someone breaks the rules. It forms part of our{' '}
-                        <A href="/terms">Terms of Service</A>.
+                    <P>{t("Every lap time on a StreetForge leaderboard should be the result of driving skill and tuning knowledge — nothing else. This policy explains what counts as cheating or abuse, how we detect it and what happens when someone breaks the rules. It forms part of our")}{t(' ')}
+                        <A href="/terms">{t("Terms of Service")}</A>.
                     </P>
                     <Cards
                         items={[
@@ -73,7 +72,7 @@ export default function FairPlay() {
             title: 'Enforcement ladder',
             content: (
                 <>
-                    <P>Sanctions depend on severity, intent and history. Serious cases can skip directly to a permanent ban.</P>
+                    <P>{t("Sanctions depend on severity, intent and history. Serious cases can skip directly to a permanent ban.")}</P>
                     <Table
                         head={['Level', 'Measure', 'Typical cause']}
                         rows={[
@@ -83,10 +82,7 @@ export default function FairPlay() {
                             ['4', 'Permanent ban, Credits forfeited', 'Cheat software, fraud, sanctions circumvention, severe abuse'],
                         ]}
                     />
-                    <P>
-                        Automated detection only flags accounts. A member of staff reviews the evidence before any suspension or ban, and you will be told which
-                        rule was broken.
-                    </P>
+                    <P>{t("Automated detection only flags accounts. A member of staff reviews the evidence before any suspension or ban, and you will be told which rule was broken. ")}</P>
                 </>
             ),
         },
@@ -94,21 +90,14 @@ export default function FairPlay() {
             id: 'appeals',
             title: 'Appeals',
             content: (
-                <P>
-                    You can appeal any enforcement decision within 30 days by emailing <A href="mailto:fairplay@streetforge.co.uk">fairplay@streetforge.co.uk</A>{' '}
-                    with your username and why you think the decision is wrong. A different staff member reviews the appeal and replies within 10 business days.
-                </P>
+                <P>{t("You can appeal any enforcement decision within 30 days by emailing ")}<A href="mailto:fairplay@streetforge.co.uk">{t("fairplay@streetforge.co.uk")}</A>{t(' ')}{t("with your username and why you think the decision is wrong. A different staff member reviews the appeal and replies within 10 business days. ")}</P>
             ),
         },
         {
             id: 'report',
             title: 'Reporting cheaters & bugs',
             content: (
-                <P>
-                    Report suspected cheating or abuse to <A href="mailto:fairplay@streetforge.co.uk">fairplay@streetforge.co.uk</A> with the username, track
-                    and approximate time. Report exploitable bugs privately to the same address — publicly sharing an exploit before it is fixed is itself a
-                    breach. Valid reports of advantage-giving bugs may receive a Credits reward.
-                </P>
+                <P>{t("Report suspected cheating or abuse to ")}<A href="mailto:fairplay@streetforge.co.uk">{t("fairplay@streetforge.co.uk")}</A>{t(" with the username, track and approximate time. Report exploitable bugs privately to the same address — publicly sharing an exploit before it is fixed is itself a breach. Valid reports of advantage-giving bugs may receive a Credits reward. ")}</P>
             ),
         },
     ];
@@ -117,7 +106,7 @@ export default function FairPlay() {
         <LegalShell
             href="/fair-play"
             eyebrow="Anti-cheat · Code of conduct"
-            title="Fair Play &"
+            title={t("Fair Play &")}
             accent="Acceptable Use"
             lead="The rules that keep StreetForge leaderboards clean and the paddock respectful, how we enforce them, and how to appeal."
             version="1.0"

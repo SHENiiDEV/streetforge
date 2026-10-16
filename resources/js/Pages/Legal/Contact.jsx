@@ -69,10 +69,10 @@ export default function Contact() {
                 <KV
                     rows={[
                         ['Company', c.name],
-                        ['Company number', <span className="numeric">{t(c.number)}</span>],
+                        ['Company number', <span className="numeric">{c.number}</span>],
                         ['Registered in', 'England & Wales'],
                         ['Address', c.address],
-                        ['General email', <A href={`mailto:${c.email}`}>{t(c.email)}</A>],
+                        ['General email', <A href={`mailto:${c.email}`}>{c.email}</A>],
                     ]}
                 />
             ),

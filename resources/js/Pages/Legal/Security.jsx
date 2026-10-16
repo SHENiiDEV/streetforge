@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React from 'react';
 import { Lock, KeyRound, ServerCog, ShieldCheck } from 'lucide-react';
 import LegalShell, { P, List, Cards, KV, A } from '../../Components/Legal/LegalShell';
@@ -9,11 +10,7 @@ export default function Security() {
             title: 'How we protect StreetForge',
             content: (
                 <>
-                    <P>
-                        Security is built into how StreetForge is designed, not added afterwards. The most sensitive data in any online purchase — card
-                        details — never reaches our systems at all, because payments are made on a hosted page run by a PCI DSS Level 1 provider after a
-                        redirect. That lets us focus our controls on your account, gameplay and personal data.
-                    </P>
+                    <P>{t("Security is built into how StreetForge is designed, not added afterwards. The most sensitive data in any online purchase — card details — never reaches our systems at all, because payments are made on a hosted page run by a PCI DSS Level 1 provider after a redirect. That lets us focus our controls on your account, gameplay and personal data. ")}</P>
                     <Cards
                         cols={2}
                         items={[
@@ -45,10 +42,7 @@ export default function Security() {
             title: 'Responsible disclosure',
             content: (
                 <>
-                    <P>
-                        If you believe you have found a security vulnerability in StreetForge, please report it to us privately. We welcome good-faith research
-                        and will not pursue legal action against researchers who follow these rules:
-                    </P>
+                    <P>{t("If you believe you have found a security vulnerability in StreetForge, please report it to us privately. We welcome good-faith research and will not pursue legal action against researchers who follow these rules: ")}</P>
                     <List
                         items={[
                             'Only test against your own account; never access, modify or delete other players\' data.',
@@ -59,7 +53,7 @@ export default function Security() {
                     />
                     <KV
                         rows={[
-                            ['Report to', <A href="mailto:security@streetforge.co.uk">security@streetforge.co.uk</A>],
+                            ['Report to', <A href="mailto:security@streetforge.co.uk">{t("security@streetforge.co.uk")}</A>],
                             ['Include', 'Affected URL or feature, steps to reproduce, impact, and your contact details'],
                             ['Our response', 'Acknowledgement within 3 business days; status updates at least every 14 days'],
                             ['In scope', 'streetforge.co.uk and its subdomains, the game client and our APIs'],
@@ -72,10 +66,8 @@ export default function Security() {
             id: 'incidents',
             title: 'Incident response',
             content: (
-                <P>
-                    We maintain an incident response plan covering detection, containment, investigation and recovery. If a personal data breach is likely to
-                    result in a high risk to you, we will notify you without undue delay and report to the ICO within 72 hours, as set out in our{' '}
-                    <A href="/privacy">Privacy Policy</A>.
+                <P>{t("We maintain an incident response plan covering detection, containment, investigation and recovery. If a personal data breach is likely to result in a high risk to you, we will notify you without undue delay and report to the ICO within 72 hours, as set out in our")}{t(' ')}
+                    <A href="/privacy">{t("Privacy Policy")}</A>.
                 </P>
             ),
         },
@@ -85,7 +77,7 @@ export default function Security() {
         <LegalShell
             href="/security"
             eyebrow="Platform security"
-            title="Security &"
+            title={t("Security &")}
             accent="Disclosure"
             lead="How we protect the StreetForge platform and your account, what you can do to stay safe, and how to report a vulnerability."
             version="1.0"

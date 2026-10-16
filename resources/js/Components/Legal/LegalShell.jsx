@@ -1,4 +1,4 @@
-import { t } from '../../localization';
+import { t, locale } from '../../localization';
 import React, { useEffect, useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowUpRight, ChevronRight, Mail, Printer, FileText } from 'lucide-react';
@@ -23,15 +23,10 @@ export function useCompany() {
    Prose primitives — keep every policy page visually identical
    ═══════════════════════════════════════════════════════════════ */
 
-function legalText(value) {
-    const doc = typeof window === 'undefined' ? null : findDoc(window.location.pathname);
-    return t(value, {}, doc && doc.group !== 'Company & Support' ? 'en' : undefined);
-}
-
 export function P({ children, muted = false }) {
     return (
         <p className={`text-[15px] leading-[1.75] ${muted ? 'text-slate-500' : 'text-slate-300'}`}>
-            {legalText(children)}
+            {t(children)}
         </p>
     );
 }
@@ -39,7 +34,7 @@ export function P({ children, muted = false }) {
 export function H3({ children }) {
     return (
         <h3 className="font-display font-bold uppercase tracking-wide text-lg text-white pt-2">
-            {legalText(children)}
+            {t(children)}
         </h3>
     );
 }
@@ -53,7 +48,7 @@ export function List({ items, ordered = false }) {
                     <span className={`shrink-0 mt-[0.15rem] ${ordered ? 'numeric text-cyan-400 text-sm w-5' : ''}`}>
                         {ordered ? String(i + 1).padStart(2, '0') : <span className="block w-1.5 h-1.5 mt-[0.45rem] bg-cyan-400/70 rotate-45" />}
                     </span>
-                    <span>{legalText(item)}</span>
+                    <span>{t(item)}</span>
                 </li>
             ))}
         </Tag>
@@ -74,10 +69,10 @@ export function Callout({ title, children, tone = 'cyan', icon: Icon }) {
             {title && (
                 <div className="flex items-center gap-2 label-tech opacity-90">
                     {Icon && <Icon className="w-3.5 h-3.5" />}
-                    {legalText(title)}
+                    {t(title)}
                 </div>
             )}
-            <div className="text-[14px] leading-relaxed opacity-90">{legalText(children)}</div>
+            <div className="text-[14px] leading-relaxed opacity-90">{t(children)}</div>
         </div>
     );
 }
@@ -87,8 +82,8 @@ export function KV({ rows }) {
         <dl className="surface divide-y divide-white/[0.06]">
             {rows.map(([k, v]) => (
                 <div key={k} className="grid sm:grid-cols-[13rem_1fr] gap-1 sm:gap-6 px-5 py-3.5">
-                    <dt className="label-tech text-slate-500 pt-0.5">{legalText(k)}</dt>
-                    <dd className="text-sm text-slate-300 leading-relaxed">{legalText(v)}</dd>
+                    <dt className="label-tech text-slate-500 pt-0.5">{t(k)}</dt>
+                    <dd className="text-sm text-slate-300 leading-relaxed">{t(v)}</dd>
                 </div>
             ))}
         </dl>
@@ -102,7 +97,7 @@ export function Table({ head, rows }) {
                 <thead>
                     <tr className="border-b border-white/[0.08]">
                         {head.map((h) => (
-                            <th key={h} className="label-tech text-slate-500 px-5 py-3 font-bold">{legalText(h)}</th>
+                            <th key={h} className="label-tech text-slate-500 px-5 py-3 font-bold">{t(h)}</th>
                         ))}
                     </tr>
                 </thead>
@@ -111,7 +106,7 @@ export function Table({ head, rows }) {
                         <tr key={i}>
                             {r.map((c, j) => (
                                 <td key={j} className={`px-5 py-3.5 align-top leading-relaxed ${j === 0 ? 'text-slate-200 font-medium' : 'text-slate-400'}`}>
-                                    {legalText(c)}
+                                    {t(c)}
                                 </td>
                             ))}
                         </tr>
@@ -129,11 +124,11 @@ export function Steps({ steps }) {
             {steps.map((s, i) => (
                 <li key={i} className="bg-carbon-900 p-5 space-y-2.5 relative">
                     <div className="flex items-center justify-between">
-                        <span className="numeric text-2xl font-bold text-cyan-400">{legalText(String(i + 1).padStart(2, '0'))}</span>
-                        {s.tag && <span className="label-tech text-slate-600">{legalText(s.tag)}</span>}
+                        <span className="numeric text-2xl font-bold text-cyan-400">{t(String(i + 1).padStart(2, '0'))}</span>
+                        {s.tag && <span className="label-tech text-slate-600">{t(s.tag)}</span>}
                     </div>
-                    <div className="font-display font-bold uppercase tracking-wide text-white">{legalText(s.title)}</div>
-                    <p className="text-[13.5px] text-slate-400 leading-relaxed">{legalText(s.text)}</p>
+                    <div className="font-display font-bold uppercase tracking-wide text-white">{t(s.title)}</div>
+                    <p className="text-[13.5px] text-slate-400 leading-relaxed">{t(s.text)}</p>
                 </li>
             ))}
         </ol>
@@ -151,8 +146,8 @@ export function Cards({ items, cols = 3 }) {
                             <Icon className="w-4 h-4" />
                         </div>
                     )}
-                    <div className="font-display font-bold uppercase tracking-wide text-white">{legalText(title)}</div>
-                    <p className="text-[13.5px] text-slate-400 leading-relaxed">{legalText(text)}</p>
+                    <div className="font-display font-bold uppercase tracking-wide text-white">{t(title)}</div>
+                    <p className="text-[13.5px] text-slate-400 leading-relaxed">{t(text)}</p>
                 </div>
             ))}
         </div>
@@ -162,11 +157,11 @@ export function Cards({ items, cols = 3 }) {
 export function A({ href, children }) {
     const external = href.startsWith('mailto:') || href.startsWith('http');
     const cls = 'text-cyan-300 underline decoration-cyan-400/30 underline-offset-4 hover:decoration-cyan-300 transition-colors';
-    return external ? <a href={href} className={cls}>{legalText(children)}</a> : <Link href={href} className={cls}>{legalText(children)}</Link>;
+    return external ? <a href={href} className={cls}>{t(children)}</a> : <Link href={href} className={cls}>{t(children)}</Link>;
 }
 
 export function Code({ children }) {
-    return <code className="font-mono text-[0.85em] text-cyan-200 bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5">{legalText(children)}</code>;
+    return <code className="font-mono text-[0.85em] text-cyan-200 bg-white/[0.04] border border-white/[0.06] px-1.5 py-0.5">{t(children)}</code>;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -212,8 +207,9 @@ export default function LegalShell({
     children,
 }) {
     const company = useCompany();
-    const englishDocument = !['/about', '/contact', '/how-it-works', '/faq', '/legal'].includes(href);
     const doc = findDoc(href);
+    const localizedHeading = doc && doc.group !== 'Company & Support' && locale() !== 'en' ? t(doc.label) : null;
+    const headingSplit = localizedHeading?.lastIndexOf(' ') ?? -1;
     const ids = sections.map((s) => s.id);
     const active = useActiveSection(ids);
     const words = sections.length * 180;
@@ -247,7 +243,7 @@ export default function LegalShell({
                                 <span className="label-tech text-cyan-300/90">{t(eyebrow)}</span>
                             </div>
                             <h1 className="headline text-5xl sm:text-6xl lg:text-7xl text-white text-balance">
-                                {t(title)} {accent && <span className="text-cyan-400">{t(accent)}</span>}
+                                {localizedHeading ? <>{headingSplit >= 0 ? localizedHeading.slice(0, headingSplit + 1) : ''}<span className="text-cyan-400">{localizedHeading.slice(headingSplit + 1)}</span></> : <>{t(title)} {accent && <span className="text-cyan-400">{t(accent)}</span>}</>}
                             </h1>
                             {lead && <p className="text-slate-400 text-[15px] sm:text-base leading-relaxed max-w-2xl">{t(lead)}</p>}
                         </div>
@@ -292,7 +288,7 @@ export default function LegalShell({
                                                     <span className={`numeric shrink-0 ${active === s.id ? 'text-cyan-400' : 'text-slate-700'}`}>
                                                         {t(String(i + 1).padStart(2, '0'))}
                                                     </span>
-                                                    {englishDocument ? s.title : t(s.title)}
+                                                    {t(s.title)}
                                                 </a>
                                             </li>
                                         ))}
@@ -312,8 +308,7 @@ export default function LegalShell({
                         </aside>
                     )}
 
-                    <article lang={englishDocument ? 'en' : undefined} className={`${hideToc || !sections.length ? 'lg:col-span-12' : 'lg:col-span-9'} min-w-0`}>
-                        {englishDocument && <p className="mb-8 border-l-2 border-cyan-400 pl-4 text-sm text-slate-400" lang={document.documentElement.lang}>{t('This document is available in English.')}</p>}
+                    <article className={`${hideToc || !sections.length ? 'lg:col-span-12' : 'lg:col-span-9'} min-w-0`}>
                         {intro && <div className="space-y-5 mb-14 max-w-3xl">{t(intro)}</div>}
 
                         <div className="space-y-16">
@@ -323,7 +318,7 @@ export default function LegalShell({
                                         <span className="label-tech text-cyan-400 numeric">§ {t(String(i + 1).padStart(2, '0'))}</span>
                                         <span className="h-px flex-1 bg-white/[0.07]" />
                                     </div>
-                                    <h2 className="headline text-3xl sm:text-4xl text-white mb-6 text-balance">{englishDocument ? s.title : t(s.title)}</h2>
+                                    <h2 className="headline text-3xl sm:text-4xl text-white mb-6 text-balance">{t(s.title)}</h2>
                                     <div className="space-y-5">{t(s.content)}</div>
                                 </section>
                             ))}

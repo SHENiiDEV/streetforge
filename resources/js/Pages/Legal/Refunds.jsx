@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React from 'react';
 import { Info, Clock } from 'lucide-react';
 import LegalShell, { P, List, Callout, Table, Steps, A, Code } from '../../Components/Legal/LegalShell';
@@ -9,15 +10,9 @@ export default function Refunds() {
             title: 'What this policy covers',
             content: (
                 <>
-                    <P>
-                        This policy applies to every purchase of StreetForge Credits ("CR") made through the Top-Up section. Credits are digital content
-                        supplied immediately after your payment is confirmed by our PCI DSS Level 1 Payment Provider. Spending Credits in the Showroom or Garage
-                        is not a separate purchase for money and is covered by the <A href="/virtual-credits">Virtual Credits Policy</A>.
+                    <P>{t("This policy applies to every purchase of StreetForge Credits (\"CR\") made through the Top-Up section. Credits are digital content supplied immediately after your payment is confirmed by our PCI DSS Level 1 Payment Provider. Spending Credits in the Showroom or Garage is not a separate purchase for money and is covered by the ")}<A href="/virtual-credits">{t("Virtual Credits Policy")}</A>.
                     </P>
-                    <Callout title="Your statutory rights" tone="neutral" icon={Info}>
-                        Nothing in this policy affects your rights under the Consumer Rights Act 2015. If digital content is faulty, not as described or not
-                        supplied, you are always entitled to a remedy.
-                    </Callout>
+                    <Callout title={t("Your statutory rights")} tone="neutral" icon={Info}>{t("Nothing in this policy affects your rights under the Consumer Rights Act 2015. If digital content is faulty, not as described or not supplied, you are always entitled to a remedy. ")}</Callout>
                 </>
             ),
         },
@@ -26,19 +21,9 @@ export default function Refunds() {
             title: 'The 14-day cancellation right',
             content: (
                 <>
-                    <P>
-                        For distance contracts, the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013 normally give you
-                        14 days to change your mind. For digital content, that right ends once delivery begins, provided you have expressly asked for immediate
-                        delivery and acknowledged that you will lose the right to cancel.
-                    </P>
-                    <P>
-                        Before you are redirected to the payment page, our checkout asks you to confirm exactly that. Because Credits are added to your wallet
-                        within seconds of payment confirmation, the 14-day cancellation right no longer applies once your Credits appear.
-                    </P>
-                    <P>
-                        If you change your mind <strong className="text-white">before</strong> completing payment on the hosted page — for example you close the
-                        page or press "cancel" — no payment is taken and the order simply expires.
-                    </P>
+                    <P>{t("For distance contracts, the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013 normally give you 14 days to change your mind. For digital content, that right ends once delivery begins, provided you have expressly asked for immediate delivery and acknowledged that you will lose the right to cancel. ")}</P>
+                    <P>{t("Before you are redirected to the payment page, our checkout asks you to confirm exactly that. Because Credits are added to your wallet within seconds of payment confirmation, the 14-day cancellation right no longer applies once your Credits appear. ")}</P>
+                    <P>{t("If you change your mind ")}<strong className="text-white">{t("before")}</strong>{t(" completing payment on the hosted page — for example you close the page or press \"cancel\" — no payment is taken and the order simply expires. ")}</P>
                 </>
             ),
         },
@@ -85,14 +70,12 @@ export default function Refunds() {
                     <Steps
                         steps={[
                             { title: 'Email billing', text: 'Write to billing@streetforge.co.uk from the email address registered to your account.' },
-                            { title: 'Include references', text: <>Add your order reference (<Code>TOP-…</Code>) and receipt number (<Code>INV-…</Code>) from the Top-Up history.</> },
+                            { title: 'Include references', text: <>{t("Add your order reference (")}<Code>{t("TOP-…")}</Code>{t(") and receipt number (")}<Code>{t("INV-…")}</Code>{t(") from the Top-Up history.")}</> },
                             { title: 'Explain the issue', text: 'Tell us what happened and, for faults, what you expected. Screenshots help.' },
                             { title: 'We review', text: 'We acknowledge within 2 business days and give a decision within 5 business days.' },
                         ]}
                     />
-                    <Callout title="Please don't send card details" tone="ember" icon={Clock}>
-                        We never need your full card number or CVC to process a refund — refunds are matched to the original payment through our Payment Provider.
-                    </Callout>
+                    <Callout title={t("Please don't send card details")} tone="ember" icon={Clock}>{t("We never need your full card number or CVC to process a refund — refunds are matched to the original payment through our Payment Provider. ")}</Callout>
                 </>
             ),
         },
@@ -101,16 +84,8 @@ export default function Refunds() {
             title: 'How refunds are paid',
             content: (
                 <>
-                    <P>
-                        Approved refunds are always returned to the <strong className="text-white">original payment method</strong> through the same Payment
-                        Provider that took the payment. We cannot refund to a different card, bank account, wallet or person. Refunds are issued in the currency of
-                        the original charge (USD); any exchange-rate difference applied by your card issuer is outside our control.
-                    </P>
-                    <P>
-                        We submit refunds within 2 business days of approval. Your bank normally shows the refund within 5–10 business days. When a refund is made,
-                        the related Credits are removed from your wallet; if they have already been spent, the wallet may show a negative balance until it is
-                        topped up or earned back.
-                    </P>
+                    <P>{t("Approved refunds are always returned to the ")}<strong className="text-white">{t("original payment method")}</strong>{t(" through the same Payment Provider that took the payment. We cannot refund to a different card, bank account, wallet or person. Refunds are issued in the currency of the original charge (USD, EUR or GBP); any exchange-rate difference applied by your card issuer is outside our control. ")}</P>
+                    <P>{t("We submit refunds within 2 business days of approval. Your bank normally shows the refund within 5–10 business days. When a refund is made, the related Credits are removed from your wallet; if they have already been spent, the wallet may show a negative balance until it is topped up or earned back. ")}</P>
                 </>
             ),
         },
@@ -118,10 +93,7 @@ export default function Refunds() {
             id: 'disputes',
             title: 'Chargebacks & escalation',
             content: (
-                <P>
-                    Please contact us before raising a dispute with your bank — it is quicker and keeps your account active. Opening a chargeback suspends
-                    purchasing on the account until it is resolved; see the <A href="/chargeback-policy">Chargeback Policy</A>. If you are not satisfied with our
-                    refund decision, you can use our <A href="/complaints">Complaints Procedure</A>.
+                <P>{t("Please contact us before raising a dispute with your bank — it is quicker and keeps your account active. Opening a chargeback suspends purchasing on the account until it is resolved; see the ")}<A href="/chargeback-policy">{t("Chargeback Policy")}</A>{t(". If you are not satisfied with our refund decision, you can use our ")}<A href="/complaints">{t("Complaints Procedure")}</A>.
                 </P>
             ),
         },
@@ -131,7 +103,7 @@ export default function Refunds() {
         <LegalShell
             href="/refund-policy"
             eyebrow="Billing policy · Consumer rights"
-            title="Refund &"
+            title={t("Refund &")}
             accent="Cancellation"
             lead="When a Credit top-up can be refunded, how the statutory cancellation right applies to instant digital content, and how refunds reach your card."
             version="3.0"

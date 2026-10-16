@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React from 'react';
 import LegalShell, { P, List, KV, A } from '../../Components/Legal/LegalShell';
 
@@ -7,11 +8,7 @@ export default function Accessibility() {
             id: 'commitment',
             title: 'Our commitment',
             content: (
-                <P>
-                    We want StreetForge to be usable by as many people as possible. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level
-                    AA for all website pages, account areas and policy documents, and to make the game itself as accessible as a real-time racing experience
-                    allows.
-                </P>
+                <P>{t("We want StreetForge to be usable by as many people as possible. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA for all website pages, account areas and policy documents, and to make the game itself as accessible as a real-time racing experience allows. ")}</P>
             ),
         },
         {
@@ -41,9 +38,7 @@ export default function Accessibility() {
                             'Some colour combinations on dark backgrounds are below 4.5:1 contrast for small labels; we are fixing these.',
                         ]}
                     />
-                    <P muted>
-                        The hosted payment page is provided by our Payment Provider, which maintains its own accessibility standards.
-                    </P>
+                    <P muted>{t("The hosted payment page is provided by our Payment Provider, which maintains its own accessibility standards. ")}</P>
                 </>
             ),
         },
@@ -53,7 +48,7 @@ export default function Accessibility() {
             content: (
                 <KV
                     rows={[
-                        ['Email', <A href="mailto:accessibility@streetforge.co.uk">accessibility@streetforge.co.uk</A>],
+                        ['Email', <A href="mailto:accessibility@streetforge.co.uk">{t("accessibility@streetforge.co.uk")}</A>],
                         ['Response time', 'Within 5 business days'],
                         ['Alternative formats', 'Any policy document on request as plain text or large print'],
                     ]}
@@ -66,7 +61,7 @@ export default function Accessibility() {
         <LegalShell
             href="/accessibility"
             eyebrow="WCAG 2.2 AA"
-            title="Accessibility"
+            title={t("Accessibility")}
             accent="Statement"
             lead="How accessible StreetForge is, what we know still needs work, and how to tell us about a barrier."
             sections={sections}
