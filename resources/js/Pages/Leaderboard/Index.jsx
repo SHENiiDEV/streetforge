@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React, { useState, useMemo } from 'react';
 import PublicLayout from '../../Layouts/PublicLayout';
 import { usePage, router, Link } from '@inertiajs/react';
@@ -99,14 +100,10 @@ export default function LeaderboardIndex({
                 {/* Header Title & Season Switcher Banner */}
                 <div className="text-center max-w-3xl mx-auto space-y-4">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-orbitron font-semibold uppercase tracking-wider shadow-lg shadow-cyan-500/10">
-                        <Trophy className="w-4 h-4" /> Global Championship Hall of Fame
-                    </div>
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-orbitron font-black text-white tracking-wide">
-                        Seasonal <span className="text-cyan-400">Leaderboard</span>
+                        <Trophy className="w-4 h-4" />{t(" Global Championship Hall of Fame ")}</div>
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-orbitron font-black text-white tracking-wide">{t("Seasonal ")}<span className="text-cyan-400">{t("Leaderboard")}</span>
                     </h1>
-                    <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                        Official telemetry lap times, Master Division MMR ratings, and historical championship winners across 500+ verified drivers.
-                    </p>
+                    <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">{t("Official telemetry lap times, Master Division MMR ratings, and historical championship winners across 500+ verified drivers. ")}</p>
                 </div>
 
                 {/* Seasons Navigation Pill Bar */}
@@ -132,23 +129,23 @@ export default function LeaderboardIndex({
                                                 ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800' 
                                                 : 'bg-slate-800/80 text-slate-400 border-slate-700'
                                         }`}>
-                                            {s.status_label}
+                                            {t(s.status_label)}
                                         </span>
-                                        <span className="text-xs text-slate-400 font-mono">{s.year}</span>
+                                        <span className="text-xs text-slate-400 font-mono">{t(s.year)}</span>
                                     </div>
 
                                     <div>
                                         <div className="font-orbitron font-extrabold text-xs sm:text-sm text-white leading-tight">
-                                            {s.name.split(':')[0]}
+                                            {t(s.name.split(':')[0])}
                                         </div>
                                         <div className="text-[11px] text-cyan-400 font-medium truncate mt-0.5">
-                                            {s.name.split(':')[1] || s.name}
+                                            {t(s.name.split(':')[1] || s.name)}
                                         </div>
                                     </div>
 
                                     <div className="mt-3 pt-2 border-t border-slate-850 flex items-center justify-between text-[10px] text-slate-400 font-mono">
-                                        <span>Prize: <strong className="text-white">{s.prize_pool}</strong></span>
-                                        <span>{s.total_racers} Racers</span>
+                                        <span>{t("Prize: ")}<strong className="text-white">{t(s.prize_pool)}</strong></span>
+                                        <span>{t(s.total_racers)}{t(" Racers")}</span>
                                     </div>
                                 </button>
                             );
@@ -164,25 +161,23 @@ export default function LeaderboardIndex({
                         <div className="space-y-2 max-w-2xl">
                             <div className="flex flex-wrap items-center gap-2.5">
                                 <h2 className="text-2xl sm:text-3xl font-orbitron font-extrabold text-white">
-                                    {currentSeason?.name}
+                                    {t(currentSeason?.name)}
                                 </h2>
                                 {isLiveSeason ? (
                                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-xs font-orbitron font-bold animate-pulse">
-                                        <Flame className="w-3.5 h-3.5" /> LIVE CHAMPIONSHIP
-                                    </span>
+                                        <Flame className="w-3.5 h-3.5" />{t(" LIVE CHAMPIONSHIP ")}</span>
                                 ) : (
                                     <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 text-xs font-orbitron font-bold">
-                                        <Award className="w-3.5 h-3.5 text-amber-400" /> OFFICIAL RESULTS
-                                    </span>
+                                        <Award className="w-3.5 h-3.5 text-amber-400" />{t(" OFFICIAL RESULTS ")}</span>
                                 )}
                             </div>
                             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                                {currentSeason?.description}
+                                {t(currentSeason?.description)}
                             </p>
                             <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-1 font-mono">
-                                <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-cyan-400" /> {currentSeason?.dates}</span>
-                                <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5 text-cyan-400" /> {totalParticipants} Registered Racers</span>
-                                <span className="flex items-center gap-1.5"><Trophy className="w-3.5 h-3.5 text-amber-400" /> Prize Pool: {currentSeason?.prize_pool}</span>
+                                <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-cyan-400" /> {t(currentSeason?.dates)}</span>
+                                <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5 text-cyan-400" /> {t(totalParticipants)}{t(" Registered Racers")}</span>
+                                <span className="flex items-center gap-1.5"><Trophy className="w-3.5 h-3.5 text-amber-400" />{t(" Prize Pool: ")}{t(currentSeason?.prize_pool)}</span>
                             </div>
                         </div>
 
@@ -193,18 +188,16 @@ export default function LeaderboardIndex({
                                     href="/race/lobby"
                                     className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-orbitron font-bold text-xs shadow-lg shadow-cyan-500/25 transition-all"
                                 >
-                                    <Flag className="w-4 h-4" /> Enter Race Circuit <ArrowUpRight className="w-4 h-4" />
+                                    <Flag className="w-4 h-4" />{t(" Enter Race Circuit ")}<ArrowUpRight className="w-4 h-4" />
                                 </Link>
                             ) : (
                                 <div className="p-4 bg-slate-950/80 rounded-2xl border border-amber-500/30 text-right space-y-1">
                                     <div className="text-[10px] font-orbitron uppercase tracking-wider text-amber-400 flex items-center justify-end gap-1 font-bold">
-                                        <Crown className="w-3.5 h-3.5" /> Season Champion
-                                    </div>
+                                        <Crown className="w-3.5 h-3.5" />{t(" Season Champion ")}</div>
                                     <div className="font-orbitron font-bold text-base text-white">
-                                        {currentSeason?.winner?.name || podium[0]?.name}
+                                        {t(currentSeason?.winner?.name || podium[0]?.name)}
                                     </div>
-                                    <div className="text-xs text-slate-400 font-mono">
-                                        Lap: <strong className="text-cyan-400">{currentSeason?.winner?.best_lap || podium[0]?.best_lap}</strong> &bull; Prize: <strong className="text-amber-300">{currentSeason?.winner?.prize || '150,000 CR'}</strong>
+                                    <div className="text-xs text-slate-400 font-mono">{t("Lap: ")}<strong className="text-cyan-400">{t(currentSeason?.winner?.best_lap || podium[0]?.best_lap)}</strong>{t(" • Prize: ")}<strong className="text-amber-300">{t(currentSeason?.winner?.prize || '150,000 CR')}</strong>
                                     </div>
                                 </div>
                             )}
@@ -217,13 +210,9 @@ export default function LeaderboardIndex({
                     <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                         <div className="flex items-center gap-2">
                             <Crown className="w-5 h-5 text-amber-400" />
-                            <h3 className="font-orbitron font-bold text-lg text-white">
-                                Championship Podium & Hall of Fame
-                            </h3>
+                            <h3 className="font-orbitron font-bold text-lg text-white">{t("Championship Podium & Hall of Fame ")}</h3>
                         </div>
-                        <div className="text-xs text-slate-400 font-mono">
-                            Top 3 Drivers
-                        </div>
+                        <div className="text-xs text-slate-400 font-mono">{t("Top 3 Drivers ")}</div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
@@ -232,8 +221,7 @@ export default function LeaderboardIndex({
                         {podium[1] && (
                             <div className="order-2 md:order-1 bg-gradient-to-b from-slate-900/90 to-slate-950 border border-slate-700/80 rounded-3xl p-6 relative flex flex-col justify-between shadow-xl group hover:border-slate-550 transition-all">
                                 <div className="absolute -top-3.5 left-6 px-3 py-1 rounded-full bg-slate-700 text-slate-200 text-[11px] font-orbitron font-extrabold flex items-center gap-1 shadow-md">
-                                    <Medal className="w-3.5 h-3.5 text-slate-300" /> #2 RUNNER-UP
-                                </div>
+                                    <Medal className="w-3.5 h-3.5 text-slate-300" />{t(" #2 RUNNER-UP ")}</div>
 
                                 <div className="space-y-4 pt-2">
                                     <div className="flex items-center gap-3.5">
@@ -241,37 +229,37 @@ export default function LeaderboardIndex({
                                             className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-orbitron font-bold text-lg shadow-md border-2 border-slate-500"
                                             style={{ backgroundColor: podium[1].avatar_color }}
                                         >
-                                            {podium[1].name[0].toUpperCase()}
+                                            {t(podium[1].name[0].toUpperCase())}
                                         </div>
                                         <div>
                                             <div className="font-orbitron font-bold text-base text-white group-hover:text-cyan-400 transition-colors">
-                                                {podium[1].name}
+                                                {t(podium[1].name)}
                                             </div>
                                             <div className="text-xs text-slate-400 font-mono flex items-center gap-1.5">
-                                                <span>{podium[1].country}</span> &bull; <span>LVL {podium[1].level}</span>
+                                                <span>{t(podium[1].country)}</span>{t(" • ")}<span>{t("LVL ")}{t(podium[1].level)}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-850 space-y-2 text-xs">
                                         <div className="flex items-center justify-between text-slate-400">
-                                            <span>Vehicle:</span>
-                                            <span className="font-semibold text-slate-200">{podium[1].vehicle}</span>
+                                            <span>{t("Vehicle:")}</span>
+                                            <span className="font-semibold text-slate-200">{t(podium[1].vehicle)}</span>
                                         </div>
                                         <div className="flex items-center justify-between text-slate-400">
-                                            <span>Best Lap:</span>
-                                            <span className="font-orbitron font-bold text-cyan-400">{podium[1].best_lap}</span>
+                                            <span>{t("Best Lap:")}</span>
+                                            <span className="font-orbitron font-bold text-cyan-400">{t(podium[1].best_lap)}</span>
                                         </div>
                                         <div className="flex items-center justify-between text-slate-400">
-                                            <span>Rating MMR:</span>
-                                            <span className="font-orbitron font-bold text-purple-400">{podium[1].mmr}</span>
+                                            <span>{t("Rating MMR:")}</span>
+                                            <span className="font-orbitron font-bold text-purple-400">{t(podium[1].mmr)}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="mt-4 pt-3 border-t border-slate-850 flex items-center justify-between text-xs">
-                                    <span className="text-slate-400">Prize Bounty:</span>
-                                    <span className="font-orbitron font-bold text-slate-200">{podium[1].prize}</span>
+                                    <span className="text-slate-400">{t("Prize Bounty:")}</span>
+                                    <span className="font-orbitron font-bold text-slate-200">{t(podium[1].prize)}</span>
                                 </div>
                             </div>
                         )}
@@ -280,8 +268,7 @@ export default function LeaderboardIndex({
                         {podium[0] && (
                             <div className="order-1 md:order-2 bg-gradient-to-b from-amber-950/40 via-slate-900/95 to-slate-950 border-2 border-amber-500/80 rounded-3xl p-6 sm:p-7 relative flex flex-col justify-between shadow-2xl shadow-amber-500/10 scale-105 z-20 group hover:border-amber-400 transition-all">
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 text-xs font-orbitron font-black uppercase tracking-wider flex items-center gap-1.5 shadow-lg shadow-amber-500/30">
-                                    <Crown className="w-4 h-4 fill-slate-950" /> #1 CHAMPION
-                                </div>
+                                    <Crown className="w-4 h-4 fill-slate-950" />{t(" #1 CHAMPION ")}</div>
 
                                 <div className="space-y-4 pt-4">
                                     <div className="flex items-center gap-4">
@@ -289,37 +276,37 @@ export default function LeaderboardIndex({
                                             className="w-14 h-14 rounded-2xl flex items-center justify-center text-white font-orbitron font-black text-xl shadow-lg border-2 border-amber-400"
                                             style={{ backgroundColor: podium[0].avatar_color }}
                                         >
-                                            {podium[0].name[0].toUpperCase()}
+                                            {t(podium[0].name[0].toUpperCase())}
                                         </div>
                                         <div>
                                             <div className="font-orbitron font-black text-lg sm:text-xl text-white group-hover:text-amber-300 transition-colors">
-                                                {podium[0].name}
+                                                {t(podium[0].name)}
                                             </div>
                                             <div className="text-xs text-amber-400/90 font-mono flex items-center gap-1.5 font-semibold">
-                                                <span>{podium[0].country}</span> &bull; <span>Master Division</span>
+                                                <span>{t(podium[0].country)}</span>{t(" • ")}<span>{t("Master Division")}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="p-4 bg-slate-950/90 rounded-2xl border border-amber-500/30 space-y-2 text-xs">
                                         <div className="flex items-center justify-between text-slate-300">
-                                            <span>Championship Car:</span>
-                                            <span className="font-bold text-white">{podium[0].vehicle}</span>
+                                            <span>{t("Championship Car:")}</span>
+                                            <span className="font-bold text-white">{t(podium[0].vehicle)}</span>
                                         </div>
                                         <div className="flex items-center justify-between text-slate-300">
-                                            <span>Record Lap Time:</span>
-                                            <span className="font-orbitron font-black text-amber-400 text-sm">{podium[0].best_lap}</span>
+                                            <span>{t("Record Lap Time:")}</span>
+                                            <span className="font-orbitron font-black text-amber-400 text-sm">{t(podium[0].best_lap)}</span>
                                         </div>
                                         <div className="flex items-center justify-between text-slate-300">
-                                            <span>Master MMR:</span>
-                                            <span className="font-orbitron font-black text-purple-300 text-sm">{podium[0].mmr}</span>
+                                            <span>{t("Master MMR:")}</span>
+                                            <span className="font-orbitron font-black text-purple-300 text-sm">{t(podium[0].mmr)}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="mt-4 pt-3 border-t border-amber-500/30 flex items-center justify-between text-xs">
-                                    <span className="text-amber-400/80 font-bold">Championship Purse:</span>
-                                    <span className="font-orbitron font-extrabold text-amber-300 text-sm">{podium[0].prize}</span>
+                                    <span className="text-amber-400/80 font-bold">{t("Championship Purse:")}</span>
+                                    <span className="font-orbitron font-extrabold text-amber-300 text-sm">{t(podium[0].prize)}</span>
                                 </div>
                             </div>
                         )}
@@ -328,8 +315,7 @@ export default function LeaderboardIndex({
                         {podium[2] && (
                             <div className="order-3 bg-gradient-to-b from-slate-900/90 to-slate-950 border border-orange-900/60 rounded-3xl p-6 relative flex flex-col justify-between shadow-xl group hover:border-orange-700 transition-all">
                                 <div className="absolute -top-3.5 left-6 px-3 py-1 rounded-full bg-orange-950 text-orange-300 border border-orange-800 text-[11px] font-orbitron font-extrabold flex items-center gap-1 shadow-md">
-                                    <Medal className="w-3.5 h-3.5 text-orange-400" /> #3 3RD PLACE
-                                </div>
+                                    <Medal className="w-3.5 h-3.5 text-orange-400" />{t(" #3 3RD PLACE ")}</div>
 
                                 <div className="space-y-4 pt-2">
                                     <div className="flex items-center gap-3.5">
@@ -337,37 +323,37 @@ export default function LeaderboardIndex({
                                             className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-orbitron font-bold text-lg shadow-md border-2 border-orange-700"
                                             style={{ backgroundColor: podium[2].avatar_color }}
                                         >
-                                            {podium[2].name[0].toUpperCase()}
+                                            {t(podium[2].name[0].toUpperCase())}
                                         </div>
                                         <div>
                                             <div className="font-orbitron font-bold text-base text-white group-hover:text-orange-300 transition-colors">
-                                                {podium[2].name}
+                                                {t(podium[2].name)}
                                             </div>
                                             <div className="text-xs text-slate-400 font-mono flex items-center gap-1.5">
-                                                <span>{podium[2].country}</span> &bull; <span>LVL {podium[2].level}</span>
+                                                <span>{t(podium[2].country)}</span>{t(" • ")}<span>{t("LVL ")}{t(podium[2].level)}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-850 space-y-2 text-xs">
                                         <div className="flex items-center justify-between text-slate-400">
-                                            <span>Vehicle:</span>
-                                            <span className="font-semibold text-slate-200">{podium[2].vehicle}</span>
+                                            <span>{t("Vehicle:")}</span>
+                                            <span className="font-semibold text-slate-200">{t(podium[2].vehicle)}</span>
                                         </div>
                                         <div className="flex items-center justify-between text-slate-400">
-                                            <span>Best Lap:</span>
-                                            <span className="font-orbitron font-bold text-cyan-400">{podium[2].best_lap}</span>
+                                            <span>{t("Best Lap:")}</span>
+                                            <span className="font-orbitron font-bold text-cyan-400">{t(podium[2].best_lap)}</span>
                                         </div>
                                         <div className="flex items-center justify-between text-slate-400">
-                                            <span>Rating MMR:</span>
-                                            <span className="font-orbitron font-bold text-purple-400">{podium[2].mmr}</span>
+                                            <span>{t("Rating MMR:")}</span>
+                                            <span className="font-orbitron font-bold text-purple-400">{t(podium[2].mmr)}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="mt-4 pt-3 border-t border-slate-850 flex items-center justify-between text-xs">
-                                    <span className="text-slate-400">Prize Bounty:</span>
-                                    <span className="font-orbitron font-bold text-orange-300">{podium[2].prize}</span>
+                                    <span className="text-slate-400">{t("Prize Bounty:")}</span>
+                                    <span className="font-orbitron font-bold text-orange-300">{t(podium[2].prize)}</span>
                                 </div>
                             </div>
                         )}
@@ -380,31 +366,29 @@ export default function LeaderboardIndex({
                     <div className="bg-gradient-to-r from-cyan-950/80 via-slate-900 to-slate-900 border-2 border-cyan-400/80 rounded-2xl p-5 sm:p-6 shadow-xl shadow-cyan-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-xl bg-cyan-500 flex items-center justify-center text-slate-950 font-orbitron font-black text-xl">
-                                #{currentUserRank.rank}
+                                #{t(currentUserRank.rank)}
                             </div>
                             <div>
-                                <div className="text-xs font-orbitron uppercase text-cyan-400 font-bold">
-                                    Your Championship Standing
-                                </div>
+                                <div className="text-xs font-orbitron uppercase text-cyan-400 font-bold">{t("Your Championship Standing ")}</div>
                                 <div className="font-orbitron font-bold text-lg text-white">
-                                    {currentUserRank.name} &bull; <span className="text-slate-300 font-normal text-sm">{currentUserRank.vehicle}</span>
+                                    {t(currentUserRank.name)}{t(" • ")}<span className="text-slate-300 font-normal text-sm">{t(currentUserRank.vehicle)}</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-6 text-xs font-mono">
                             <div>
-                                <div className="text-slate-400">Best Lap</div>
-                                <div className="font-orbitron font-bold text-cyan-400 text-sm">{currentUserRank.best_lap}</div>
+                                <div className="text-slate-400">{t("Best Lap")}</div>
+                                <div className="font-orbitron font-bold text-cyan-400 text-sm">{t(currentUserRank.best_lap)}</div>
                             </div>
                             <div>
-                                <div className="text-slate-400">Rating MMR</div>
-                                <div className="font-orbitron font-bold text-purple-400 text-sm">{currentUserRank.mmr}</div>
+                                <div className="text-slate-400">{t("Rating MMR")}</div>
+                                <div className="font-orbitron font-bold text-purple-400 text-sm">{t(currentUserRank.mmr)}</div>
                             </div>
                             <div>
-                                <div className="text-slate-400">Division Tier</div>
+                                <div className="text-slate-400">{t("Division Tier")}</div>
                                 <span className={`px-2 py-0.5 rounded-full text-[10px] font-orbitron font-bold border ${getTierColor(currentUserRank.tier)}`}>
-                                    {currentUserRank.tier}
+                                    {t(currentUserRank.tier)}
                                 </span>
                             </div>
                         </div>
@@ -425,7 +409,7 @@ export default function LeaderboardIndex({
                                     setSearchTerm(e.target.value);
                                     setCurrentPage(1);
                                 }}
-                                placeholder="Search driver, car, or country..."
+                                placeholder={t("Search driver, car, or country...")}
                                 className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
                             />
                         </div>
@@ -446,7 +430,7 @@ export default function LeaderboardIndex({
                                                 : 'text-slate-400 hover:text-white'
                                         }`}
                                     >
-                                        {tier === 'all' ? 'All Tiers' : tier}
+                                        {t(tier === 'all' ? 'All Tiers' : tier)}
                                     </button>
                                 ))}
                             </div>
@@ -459,22 +443,20 @@ export default function LeaderboardIndex({
                         <table className="w-full text-left text-xs text-slate-300">
                             <thead className="bg-slate-950 text-slate-400 uppercase font-orbitron text-[10px] tracking-wider border-b border-slate-800">
                                 <tr>
-                                    <th className="p-4 w-16 text-center">Rank</th>
-                                    <th className="p-4">Driver Profile</th>
-                                    <th className="p-4">Vehicle Model</th>
-                                    <th className="p-4">Circuit</th>
-                                    <th className="p-4 text-right">Best Lap</th>
-                                    <th className="p-4 text-right">MMR Rating</th>
-                                    <th className="p-4 text-center">Division</th>
-                                    <th className="p-4 text-right">Prize</th>
+                                    <th className="p-4 w-16 text-center">{t("Rank")}</th>
+                                    <th className="p-4">{t("Driver Profile")}</th>
+                                    <th className="p-4">{t("Vehicle Model")}</th>
+                                    <th className="p-4">{t("Circuit")}</th>
+                                    <th className="p-4 text-right">{t("Best Lap")}</th>
+                                    <th className="p-4 text-right">{t("MMR Rating")}</th>
+                                    <th className="p-4 text-center">{t("Division")}</th>
+                                    <th className="p-4 text-right">{t("Prize")}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-850 font-sans">
                                 {paginatedRacers.length === 0 ? (
                                     <tr>
-                                        <td colSpan="8" className="p-12 text-center text-slate-500">
-                                            No drivers found matching your search criteria.
-                                        </td>
+                                        <td colSpan="8" className="p-12 text-center text-slate-500">{t("No drivers found matching your search criteria. ")}</td>
                                     </tr>
                                 ) : (
                                     paginatedRacers.map((racer) => {
@@ -508,11 +490,11 @@ export default function LeaderboardIndex({
                                                         </span>
                                                     ) : racer.rank <= 10 ? (
                                                         <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-slate-800 text-cyan-400 border border-slate-700">
-                                                            {racer.rank}
+                                                            {t(racer.rank)}
                                                         </span>
                                                     ) : (
                                                         <span className="text-slate-500 font-mono">
-                                                            #{racer.rank}
+                                                            #{t(racer.rank)}
                                                         </span>
                                                     )}
                                                 </td>
@@ -524,19 +506,17 @@ export default function LeaderboardIndex({
                                                             className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-orbitron font-bold text-xs shrink-0"
                                                             style={{ backgroundColor: racer.avatar_color }}
                                                         >
-                                                            {racer.name[0].toUpperCase()}
+                                                            {t(racer.name[0].toUpperCase())}
                                                         </div>
                                                         <div>
                                                             <div className="font-orbitron font-bold text-slate-100 flex items-center gap-1.5">
                                                                 <span>{racer.name}</span>
                                                                 {isCurrentUser && (
-                                                                    <span className="px-1.5 py-0.2 rounded bg-cyan-400 text-slate-950 text-[9px] font-black uppercase">
-                                                                        YOU
-                                                                    </span>
+                                                                    <span className="px-1.5 py-0.2 rounded bg-cyan-400 text-slate-950 text-[9px] font-black uppercase">{t("YOU ")}</span>
                                                                 )}
                                                             </div>
                                                             <div className="text-[11px] text-slate-400 font-mono flex items-center gap-1">
-                                                                <span>{racer.country}</span> &bull; <span>LVL {racer.level}</span>
+                                                                <span>{t(racer.country)}</span>{t(" • ")}<span>{t("LVL ")}{t(racer.level)}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -544,34 +524,34 @@ export default function LeaderboardIndex({
 
                                                 {/* Vehicle */}
                                                 <td className="p-4 font-semibold text-slate-200">
-                                                    {racer.vehicle}
+                                                    {t(racer.vehicle)}
                                                 </td>
 
                                                 {/* Track */}
                                                 <td className="p-4 text-slate-400 text-[11px]">
-                                                    {racer.track}
+                                                    {t(racer.track)}
                                                 </td>
 
                                                 {/* Best Lap */}
                                                 <td className="p-4 text-right font-orbitron font-bold text-cyan-400">
-                                                    {racer.best_lap}
+                                                    {t(racer.best_lap)}
                                                 </td>
 
                                                 {/* MMR Rating */}
                                                 <td className="p-4 text-right font-orbitron font-bold text-purple-400">
-                                                    {racer.mmr}
+                                                    {t(racer.mmr)}
                                                 </td>
 
                                                 {/* Tier */}
                                                 <td className="p-4 text-center">
                                                     <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-orbitron font-bold border ${getTierColor(racer.tier)}`}>
-                                                        {racer.tier}
+                                                        {t(racer.tier)}
                                                     </span>
                                                 </td>
 
                                                 {/* Prize */}
                                                 <td className="p-4 text-right font-mono text-slate-300">
-                                                    {racer.prize}
+                                                    {t(racer.prize)}
                                                 </td>
                                             </tr>
                                         );
@@ -583,9 +563,7 @@ export default function LeaderboardIndex({
 
                     {/* Pagination Controls */}
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 text-xs text-slate-400">
-                        <div>
-                            Showing <strong className="text-white">{(currentPage - 1) * pageSize + 1}</strong> to <strong className="text-white">{Math.min(currentPage * pageSize, filteredRacers.length)}</strong> of <strong className="text-white">{filteredRacers.length}</strong> qualified drivers
-                        </div>
+                        <div>{t("Showing ")}<strong className="text-white">{t((currentPage - 1) * pageSize + 1)}</strong>{t(" to ")}<strong className="text-white">{t(Math.min(currentPage * pageSize, filteredRacers.length))}</strong>{t(" of ")}<strong className="text-white">{t(filteredRacers.length)}</strong>{t(" qualified drivers ")}</div>
 
                         <div className="flex items-center gap-2">
                             <button
@@ -598,11 +576,11 @@ export default function LeaderboardIndex({
 
                             <div className="flex items-center gap-1 font-orbitron text-xs">
                                 <span className="px-3 py-1 rounded-lg bg-cyan-950 border border-cyan-800 text-cyan-400 font-bold">
-                                    {currentPage}
+                                    {t(currentPage)}
                                 </span>
                                 <span className="text-slate-500">/</span>
                                 <span className="text-slate-400 font-mono">
-                                    {totalPages}
+                                    {t(totalPages)}
                                 </span>
                             </div>
 

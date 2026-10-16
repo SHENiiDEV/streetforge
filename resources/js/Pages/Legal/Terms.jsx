@@ -175,7 +175,7 @@ export default function Terms() {
             content: (
                 <>
                     <P>
-                        Prices for Top-Up packages are displayed in the Top-Up section in US dollars (USD) and include any applicable taxes. The price that applies is the
+                        Prices for Top-Up packages are displayed in the Top-Up section in your selected currency (USD, EUR or GBP), using our fixed exchange rates and include any applicable taxes. The price that applies is the
                         one shown when you confirm your order. We may change package prices for future orders at any time.
                     </P>
                     <H3>How a payment is taken</H3>

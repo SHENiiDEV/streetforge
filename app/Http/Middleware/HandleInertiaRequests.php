@@ -2,8 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\CurrencyService;
+use Closure;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Symfony\Component\HttpFoundation\Response;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -15,6 +18,14 @@ class HandleInertiaRequests extends Middleware
      * @var string
      */
     protected $rootView = 'app';
+
+    public function handle(Request $request, Closure $next): Response
+    {
+        $locale = $request->session()->get('locale', $request->cookie('site_locale', 'en'));
+        app()->setLocale(array_key_exists($locale, config('store.locales')) ? $locale : 'en');
+
+        return parent::handle($request, $next);
+    }
 
     /**
      * Determines the current asset version.
@@ -42,6 +53,12 @@ class HandleInertiaRequests extends Middleware
         }
 
         return array_merge(parent::share($request), [
+            'preferences' => [
+                'locale' => app()->getLocale(),
+                'currency' => app(CurrencyService::class)->selected(),
+                'locales' => config('store.locales'),
+                'currencies' => config('store.currencies'),
+            ],
             'auth' => [
                 'user' => $user ? [
                     'id' => $user->id,

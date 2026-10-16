@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React, { useState, useEffect, useRef } from 'react';
 import AppLayout from '../../Layouts/AppLayout';
 import CarVisualizer from '../../Components/CarVisualizer';
@@ -99,7 +100,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
     // Matchmaking Start
     const handleStartMatchmaking = () => {
         if (!activeCar) {
-            alert('Please select an active vehicle in your Garage first!');
+            alert(t('Please select an active vehicle in your Garage first!'));
             return;
         }
 
@@ -692,7 +693,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
             ctx.font = 'bold 10px Orbitron, sans-serif';
             ctx.fillStyle = '#22d3ee';
             ctx.textAlign = 'center';
-            ctx.fillText('YOU', player.x, player.y - 16);
+            ctx.fillText(t('YOU'), player.x, player.y - 16);
 
             // 4. HUD OVERLAY
             const allRacers = [player, ...aiRivals].sort((a, b) => b.distanceTraveled - a.distanceTraveled);
@@ -715,16 +716,16 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
 
             ctx.font = 'bold 9px Orbitron, sans-serif';
             ctx.fillStyle = '#94a3b8';
-            ctx.fillText('POSITION', 35, 74);
+            ctx.fillText(t('POSITION'), 35, 74);
 
             // Lap Counter
             ctx.font = 'bold 20px Orbitron, sans-serif';
             ctx.fillStyle = '#ffffff';
-            ctx.fillText(`LAP ${Math.min(player.lap, totalLaps)}/${totalLaps}`, 160, 54);
+            ctx.fillText(t('Lap :lap/:total', { lap: Math.min(player.lap, totalLaps), total: totalLaps }), 160, 54);
 
             ctx.font = 'bold 13px Rajdhani, monospace';
             ctx.fillStyle = activeTrackCfg.kerbInner;
-            ctx.fillText(`TIME: ${elapsedSec.toFixed(1)}s`, 160, 74);
+            ctx.fillText(t('Time: :time s', { time: elapsedSec.toFixed(1) }), 160, 74);
 
             // Speedometer & Nitro Bar (Right HUD)
             ctx.fillStyle = 'rgba(9, 13, 22, 0.85)';
@@ -758,7 +759,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
 
             ctx.font = 'bold 9px Orbitron, sans-serif';
             ctx.fillStyle = activeTrackCfg.kerbInner;
-            ctx.fillText('LIVE RACE STANDINGS', 32, canvas.height - 132);
+            ctx.fillText(t('LIVE RACE STANDINGS'), 32, canvas.height - 132);
 
             allRacers.forEach((r, idx) => {
                 ctx.font = r.isPlayer ? 'bold 10px Orbitron, sans-serif' : '10px Rajdhani, sans-serif';
@@ -787,11 +788,8 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-850 pb-6">
                     <div>
                         <div className="flex items-center gap-2 text-xs font-orbitron font-semibold uppercase text-cyan-400">
-                            <Flag className="w-4 h-4" /> Global Racing Championship
-                        </div>
-                        <h1 className="text-3xl font-orbitron font-extrabold text-white mt-1">
-                            Race Lobby & Leaderboard
-                        </h1>
+                            <Flag className="w-4 h-4" />{t(" Global Racing Championship ")}</div>
+                        <h1 className="text-3xl font-orbitron font-extrabold text-white mt-1">{t("Race Lobby & Leaderboard ")}</h1>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -799,15 +797,15 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                         <button
                             onClick={() => setSoundEnabled(!soundEnabled)}
                             className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-cyan-400 transition-colors"
-                            title="Toggle Engine Audio"
+                            title={t("Toggle Engine Audio")}
                         >
                             {soundEnabled ? <Volume2 className="w-4 h-4 text-cyan-400" /> : <VolumeX className="w-4 h-4" />}
                         </button>
 
                         <div className="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-right">
-                            <div className="text-[10px] uppercase font-bold text-slate-400">Active Car</div>
+                            <div className="text-[10px] uppercase font-bold text-slate-400">{t("Active Car")}</div>
                             <div className="font-orbitron font-bold text-xs text-cyan-400 truncate max-w-[140px]">
-                                {activeCar?.vehicle?.name || 'None Selected'}
+                                {t(activeCar?.vehicle?.name || 'None Selected')}
                             </div>
                         </div>
                     </div>
@@ -824,9 +822,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                     : 'text-slate-400 hover:text-white'
                             }`}
                         >
-                            <Flag className="w-3.5 h-3.5" />
-                            Circuits & Racing
-                        </button>
+                            <Flag className="w-3.5 h-3.5" />{t("Circuits & Racing ")}</button>
                         <button
                             onClick={() => setLobbyTab('leaderboard')}
                             className={`flex-1 py-2 rounded-lg text-xs font-orbitron font-bold transition-all flex items-center justify-center gap-2 ${
@@ -835,8 +831,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                     : 'text-slate-400 hover:text-white'
                             }`}
                         >
-                            <Trophy className="w-3.5 h-3.5" />
-                            World Leaderboard ({leaderboard.length})
+                            <Trophy className="w-3.5 h-3.5" />{t("World Leaderboard (")}{t(leaderboard.length)})
                         </button>
                     </div>
                 )}
@@ -853,10 +848,10 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                 <div className="lg:col-span-8 space-y-6">
                                     <div className="flex items-center justify-between">
                                         <h3 className="font-orbitron font-bold text-base text-white flex items-center gap-2">
-                                            <span>Select Championship Circuit</span>
-                                            <span className="text-xs font-mono font-normal text-slate-500">({tracks.length} Available)</span>
+                                            <span>{t("Select Championship Circuit")}</span>
+                                            <span className="text-xs font-mono font-normal text-slate-500">({t(tracks.length)}{t(" Available)")}</span>
                                         </h3>
-                                        <span className="text-xs text-cyan-400 font-mono">Real-Time Canvas Physics</span>
+                                        <span className="text-xs text-cyan-400 font-mono">{t("Real-Time Canvas Physics")}</span>
                                     </div>
 
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -886,11 +881,10 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                                                 track.difficulty === 'Medium' ? 'bg-cyan-950/80 text-cyan-400 border-cyan-800' :
                                                                 'bg-orange-950/80 text-orange-400 border-orange-800'
                                                             }`}>
-                                                                {track.difficulty}
+                                                                {t(track.difficulty)}
                                                             </span>
                                                             <span className="text-xs text-slate-400 font-mono font-bold">
-                                                                {track.laps} LAPS
-                                                            </span>
+                                                                {t(track.laps)}{t(" LAPS ")}</span>
                                                         </div>
 
                                                         {/* Mini SVG Track Silhouette Map */}
@@ -915,34 +909,34 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
 
                                                         <div className="flex items-center gap-1.5 text-slate-400 text-[11px] mb-1">
                                                             <Icon className="w-3.5 h-3.5" style={{ color: trackMeta.tone }} />
-                                                            <span>{trackMeta.label}</span>
+                                                            <span>{t(trackMeta.label)}</span>
                                                         </div>
 
                                                         <h4 className="font-orbitron font-bold text-base text-white group-hover:text-cyan-300 transition-colors">
-                                                            {track.name}
+                                                            {t(track.name)}
                                                         </h4>
                                                         <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
-                                                            {track.description}
+                                                            {t(track.description)}
                                                         </p>
                                                     </div>
 
                                                     <div className="pt-3 mt-4 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center text-xs">
                                                         <div>
-                                                            <div className="text-[10px] text-slate-500 uppercase font-bold">Length</div>
+                                                            <div className="text-[10px] text-slate-500 uppercase font-bold">{t("Length")}</div>
                                                             <div className="font-mono font-bold text-slate-200">
-                                                                {(track.length_meters / 1000).toFixed(1)} <span className="text-[9px] text-slate-500">KM</span>
+                                                                {t((track.length_meters / 1000).toFixed(1))} <span className="text-[9px] text-slate-500">{t("KM")}</span>
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <div className="text-[10px] text-slate-500 uppercase font-bold">1st Prize</div>
+                                                            <div className="text-[10px] text-slate-500 uppercase font-bold">{t("1st Prize")}</div>
                                                             <div className="font-mono font-bold text-cyan-400">
-                                                                +{Math.round(track.reward_currency_1st)} <span className="text-[9px] text-slate-500">CR</span>
+                                                                +{t(Math.round(track.reward_currency_1st))} <span className="text-[9px] text-slate-500">{t("CR")}</span>
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <div className="text-[10px] text-slate-500 uppercase font-bold">XP Gain</div>
+                                                            <div className="text-[10px] text-slate-500 uppercase font-bold">{t("XP Gain")}</div>
                                                             <div className="font-mono font-bold text-purple-400">
-                                                                +{track.reward_xp_1st} <span className="text-[9px] text-slate-500">XP</span>
+                                                                +{t(track.reward_xp_1st)} <span className="text-[9px] text-slate-500">{t("XP")}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -953,22 +947,12 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
 
                                     {/* Controls Card */}
                                     <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-3">
-                                        <h4 className="font-orbitron font-bold text-xs uppercase tracking-wider text-slate-300">
-                                            Driver Controls & Nitro Overdrive
-                                        </h4>
+                                        <h4 className="font-orbitron font-bold text-xs uppercase tracking-wider text-slate-300">{t("Driver Controls & Nitro Overdrive ")}</h4>
                                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs">
-                                            <div className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 font-mono text-cyan-400 font-bold">
-                                                W / &uarr; Accelerate
-                                            </div>
-                                            <div className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 font-mono text-cyan-400 font-bold">
-                                                S / &darr; Brake / Reverse
-                                            </div>
-                                            <div className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 font-mono text-cyan-400 font-bold">
-                                                A &bull; D / &larr; &bull; &rarr; Steer
-                                            </div>
-                                            <div className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 font-mono text-orange-400 font-bold">
-                                                SPACE Nitro Boost
-                                            </div>
+                                            <div className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 font-mono text-cyan-400 font-bold">{t("W / ↑ Accelerate ")}</div>
+                                            <div className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 font-mono text-cyan-400 font-bold">{t("S / ↓ Brake / Reverse ")}</div>
+                                            <div className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 font-mono text-cyan-400 font-bold">{t("A • D / ← • → Steer ")}</div>
+                                            <div className="p-2.5 bg-slate-950 rounded-xl border border-slate-800 font-mono text-orange-400 font-bold">{t("SPACE Nitro Boost ")}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -977,15 +961,11 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                 <div className="lg:col-span-4 space-y-6">
                                     <div className="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 backdrop-blur-xl shadow-xl space-y-6">
                                         <div>
-                                            <span className="text-[10px] font-orbitron font-bold uppercase tracking-wider text-cyan-400">
-                                                Driver Telemetry
-                                            </span>
+                                            <span className="text-[10px] font-orbitron font-bold uppercase tracking-wider text-cyan-400">{t("Driver Telemetry ")}</span>
                                             <h3 className="font-orbitron font-bold text-xl text-white mt-1">
-                                                {user?.name} {user?.surname}
+                                                {t(user?.name)} {t(user?.surname)}
                                             </h3>
-                                            <div className="text-xs text-slate-400 font-mono">
-                                                Level {user?.level} &bull; {user?.xp} XP Points
-                                            </div>
+                                            <div className="text-xs text-slate-400 font-mono">{t("Level ")}{t(user?.level)}{t(" • ")}{t(user?.xp)}{t(" XP Points ")}</div>
                                         </div>
 
                                         {activeCar ? (
@@ -994,8 +974,8 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                             </div>
                                         ) : (
                                             <div className="p-6 bg-slate-950 rounded-2xl text-center space-y-2">
-                                                <div className="text-xs text-slate-400">No active car selected.</div>
-                                                <Link href="/garage" className="text-xs text-cyan-400 underline font-bold">Go to Garage</Link>
+                                                <div className="text-xs text-slate-400">{t("No active car selected.")}</div>
+                                                <Link href="/garage" className="text-xs text-cyan-400 underline font-bold">{t("Go to Garage")}</Link>
                                             </div>
                                         )}
 
@@ -1004,9 +984,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                             disabled={!activeCar}
                                             className="w-full py-4 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-orbitron font-black text-sm tracking-wide shadow-xl shadow-cyan-500/25 transition-all flex items-center justify-center gap-2"
                                         >
-                                            <Play className="w-4 h-4 fill-current" />
-                                            Launch 6-Car Grid Race
-                                        </button>
+                                            <Play className="w-4 h-4 fill-current" />{t("Launch 6-Car Grid Race ")}</button>
                                     </div>
                                 </div>
 
@@ -1017,14 +995,10 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                     <div>
                                         <div className="inline-flex items-center gap-2 text-xs font-orbitron font-semibold uppercase text-cyan-400">
-                                            <Trophy className="w-4 h-4" /> Global Division Rankings
-                                        </div>
-                                        <h2 className="text-2xl font-orbitron font-bold text-white mt-1">
-                                            Championship Season '26 Leaderboard
-                                        </h2>
+                                            <Trophy className="w-4 h-4" />{t(" Global Division Rankings ")}</div>
+                                        <h2 className="text-2xl font-orbitron font-bold text-white mt-1">{t("Championship Season '26 Leaderboard ")}</h2>
                                     </div>
-                                    <div className="text-xs text-slate-400 font-mono">
-                                        Active Drivers: <strong className="text-cyan-400 font-orbitron">1,430+ Racers</strong>
+                                    <div className="text-xs text-slate-400 font-mono">{t("Active Drivers: ")}<strong className="text-cyan-400 font-orbitron">{t("1,430+ Racers")}</strong>
                                     </div>
                                 </div>
 
@@ -1032,14 +1006,14 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                     <table className="w-full text-left border-collapse">
                                         <thead>
                                             <tr className="border-b border-slate-800 text-[10px] font-orbitron font-bold uppercase text-slate-400 tracking-wider">
-                                                <th className="py-3 px-4">Rank</th>
-                                                <th className="py-3 px-4">Driver</th>
-                                                <th className="py-3 px-4">Country</th>
-                                                <th className="py-3 px-4">Level</th>
-                                                <th className="py-3 px-4">Vehicle</th>
-                                                <th className="py-3 px-4">Circuit</th>
-                                                <th className="py-3 px-4">Best Lap</th>
-                                                <th className="py-3 px-4 text-right">MMR Rating</th>
+                                                <th className="py-3 px-4">{t("Rank")}</th>
+                                                <th className="py-3 px-4">{t("Driver")}</th>
+                                                <th className="py-3 px-4">{t("Country")}</th>
+                                                <th className="py-3 px-4">{t("Level")}</th>
+                                                <th className="py-3 px-4">{t("Vehicle")}</th>
+                                                <th className="py-3 px-4">{t("Circuit")}</th>
+                                                <th className="py-3 px-4">{t("Best Lap")}</th>
+                                                <th className="py-3 px-4 text-right">{t("MMR Rating")}</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-slate-850 text-xs">
@@ -1061,7 +1035,7 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                                                 entry.rank === 3 ? 'bg-amber-700/20 text-amber-600 border border-amber-700/40' :
                                                                 'text-slate-400'
                                                             }`}>
-                                                                {rankBadge}
+                                                                {t(rankBadge)}
                                                             </span>
                                                         </td>
                                                         <td className="py-3.5 px-4">
@@ -1070,36 +1044,32 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                                                     className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold text-white shadow"
                                                                     style={{ backgroundColor: entry.avatar_color }}
                                                                 >
-                                                                    {entry.user_name[0]}
+                                                                    {t(entry.user_name[0])}
                                                                 </div>
                                                                 <span className="font-orbitron font-bold text-slate-200">
-                                                                    {entry.user_name}
+                                                                    {t(entry.user_name)}
                                                                     {entry.is_current_user && (
-                                                                        <span className="ml-1.5 text-[9px] font-bold uppercase text-cyan-400 bg-cyan-950 px-1.5 py-0.2 rounded border border-cyan-900">
-                                                                            You
-                                                                        </span>
+                                                                        <span className="ml-1.5 text-[9px] font-bold uppercase text-cyan-400 bg-cyan-950 px-1.5 py-0.2 rounded border border-cyan-900">{t("You ")}</span>
                                                                     )}
                                                                 </span>
                                                             </div>
                                                         </td>
                                                         <td className="py-3.5 px-4 text-slate-300">
-                                                            {entry.country}
+                                                            {t(entry.country)}
                                                         </td>
-                                                        <td className="py-3.5 px-4 font-mono font-bold text-cyan-400">
-                                                            LVL {entry.level}
+                                                        <td className="py-3.5 px-4 font-mono font-bold text-cyan-400">{t("LVL ")}{t(entry.level)}
                                                         </td>
                                                         <td className="py-3.5 px-4 text-slate-300 font-medium">
-                                                            {entry.vehicle_name}
+                                                            {t(entry.vehicle_name)}
                                                         </td>
                                                         <td className="py-3.5 px-4 text-slate-400">
-                                                            {entry.track_name}
+                                                            {t(entry.track_name)}
                                                         </td>
                                                         <td className="py-3.5 px-4 font-mono font-bold text-emerald-400">
-                                                            {entry.best_lap}
+                                                            {t(entry.best_lap)}
                                                         </td>
                                                         <td className="py-3.5 px-4 text-right font-orbitron font-bold text-purple-400">
-                                                            {entry.rating_mmr} PTS
-                                                        </td>
+                                                            {t(entry.rating_mmr)}{t(" PTS ")}</td>
                                                     </tr>
                                                 );
                                             })}
@@ -1116,19 +1086,16 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                     <div className="max-w-md mx-auto py-20 text-center space-y-6">
                         <div className="w-24 h-24 mx-auto rounded-full bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center animate-pulse">
                             <span className="font-orbitron font-black text-4xl text-cyan-400">
-                                {matchmakingCountdown}
+                                {t(matchmakingCountdown)}
                             </span>
                         </div>
-                        <h2 className="font-orbitron font-black text-2xl text-white">
-                            Assembling 6-Car Starting Grid...
-                        </h2>
-                        <p className="text-xs text-slate-400">
-                            Syncing telemetry with live competitors on {selectedTrack?.name}.
+                        <h2 className="font-orbitron font-black text-2xl text-white">{t("Assembling 6-Car Starting Grid... ")}</h2>
+                        <p className="text-xs text-slate-400">{t("Syncing telemetry with live competitors on ")}{t(selectedTrack?.name)}.
                         </p>
                         <div className="flex flex-wrap justify-center gap-2 pt-2">
                             {selectedOpponents.map((bot, i) => (
                                 <span key={i} className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-orbitron text-slate-300">
-                                    {bot.name} ({bot.country})
+                                    {t(bot.name)} ({t(bot.country)})
                                 </span>
                             ))}
                         </div>
@@ -1160,29 +1127,26 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
 
                             <div>
                                 <h2 className="text-3xl font-orbitron font-black text-white">
-                                    {finalPosition === 1 ? '🥇 VICTORY - 1ST PLACE!' :
+                                    {t(finalPosition === 1 ? '🥇 VICTORY - 1ST PLACE!' :
                                      finalPosition === 2 ? '🥈 2ND PLACE PODIUM!' :
                                      finalPosition === 3 ? '🥉 3RD PLACE PODIUM!' :
-                                     `🏁 POSITION ${finalPosition} / 6`}
+                                     t('🏁 Position :position / 6', { position: finalPosition }))}
                                 </h2>
-                                <p className="text-xs text-slate-400 mt-1">
-                                    Total Race Time: <strong className="text-white font-mono">{finalTime} seconds</strong>
+                                <p className="text-xs text-slate-400 mt-1">{t("Total Race Time: ")}<strong className="text-white font-mono">{t(finalTime)}{t(" seconds")}</strong>
                                 </p>
                             </div>
 
                             {/* Rewards Box */}
                             <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-6 grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
-                                    <div className="text-[10px] uppercase font-bold text-slate-400">Credits Earned</div>
+                                    <div className="text-[10px] uppercase font-bold text-slate-400">{t("Credits Earned")}</div>
                                     <div className="font-orbitron font-extrabold text-2xl text-cyan-400">
-                                        +{raceRewards?.currency || 0} CR
-                                    </div>
+                                        +{t(raceRewards?.currency || 0)}{t(" CR ")}</div>
                                 </div>
                                 <div className="space-y-1">
-                                    <div className="text-[10px] uppercase font-bold text-slate-400">XP Gained</div>
+                                    <div className="text-[10px] uppercase font-bold text-slate-400">{t("XP Gained")}</div>
                                     <div className="font-orbitron font-extrabold text-2xl text-purple-400">
-                                        +{raceRewards?.xp || 0} XP
-                                    </div>
+                                        +{t(raceRewards?.xp || 0)}{t(" XP ")}</div>
                                 </div>
                             </div>
 
@@ -1192,16 +1156,12 @@ export default function Lobby({ tracks = [], activeCar, recentResults = [], lead
                                     onClick={() => setGameState('lobby')}
                                     className="flex-1 py-3.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-orbitron font-bold text-xs shadow-lg transition-all flex items-center justify-center gap-2"
                                 >
-                                    <RotateCcw className="w-4 h-4" />
-                                    Race Again
-                                </button>
+                                    <RotateCcw className="w-4 h-4" />{t("Race Again ")}</button>
                                 <Link
                                     href="/garage"
                                     className="flex-1 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 font-orbitron font-bold text-xs transition-all flex items-center justify-center gap-2"
                                 >
-                                    <Warehouse className="w-4 h-4" />
-                                    Tune Car in Garage
-                                </Link>
+                                    <Warehouse className="w-4 h-4" />{t("Tune Car in Garage ")}</Link>
                             </div>
 
                         </div>

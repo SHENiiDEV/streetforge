@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React from 'react';
 import { LifeBuoy, CreditCard, Shield, Scale, Database, Flag } from 'lucide-react';
 import LegalShell, { P, KV, A, useCompany } from '../../Components/Legal/LegalShell';
@@ -20,7 +21,7 @@ export default function Contact() {
             title: 'Choose the right team',
             content: (
                 <>
-                    <P>Writing to the right address gets you a faster answer. Please email from the address registered to your StreetForge account.</P>
+                    <P>{t("Writing to the right address gets you a faster answer. Please email from the address registered to your StreetForge account.")}</P>
                     <div className="grid sm:grid-cols-2 gap-4">
                         {DEPARTMENTS.map(({ icon: Icon, title, email, text, sla, tone }) => (
                             <a key={email} href={`mailto:${email}`} className="group surface notch-tr p-5 flex flex-col gap-3 hover:border-white/20 transition-colors">
@@ -28,11 +29,11 @@ export default function Contact() {
                                     <div className={`w-9 h-9 border border-white/[0.08] flex items-center justify-center ${tone}`}>
                                         <Icon className="w-4 h-4" />
                                     </div>
-                                    <span className="label-tech text-slate-600">Reply {sla}</span>
+                                    <span className="label-tech text-slate-600">{t("Reply ")}{t(sla)}</span>
                                 </div>
-                                <div className="font-display font-bold uppercase tracking-wide text-white">{title}</div>
-                                <p className="text-[13.5px] text-slate-400 leading-relaxed flex-1">{text}</p>
-                                <span className="text-sm text-cyan-300 group-hover:text-white transition-colors break-all">{email}</span>
+                                <div className="font-display font-bold uppercase tracking-wide text-white">{t(title)}</div>
+                                <p className="text-[13.5px] text-slate-400 leading-relaxed flex-1">{t(text)}</p>
+                                <span className="text-sm text-cyan-300 group-hover:text-white transition-colors break-all">{t(email)}</span>
                             </a>
                         ))}
                     </div>
@@ -43,10 +44,8 @@ export default function Contact() {
             id: 'payments',
             title: 'Payment questions',
             content: (
-                <P>
-                    StreetForge never asks for card details by email or chat — payments are made only on our PCI DSS Level 1 provider's hosted page. When
-                    contacting billing, include just your order reference (<span className="font-mono text-cyan-200">TOP-…</span>) and receipt number. Read{' '}
-                    <A href="/payment-security">how we process payments</A>.
+                <P>{t("StreetForge never asks for card details by email or chat — payments are made only on our PCI DSS Level 1 provider's hosted page. When contacting billing, include just your order reference (")}<span className="font-mono text-cyan-200">{t("TOP-…")}</span>{t(") and receipt number. Read")}{t(' ')}
+                    <A href="/payment-security">{t("how we process payments")}</A>.
                 </P>
             ),
         },
@@ -70,10 +69,10 @@ export default function Contact() {
                 <KV
                     rows={[
                         ['Company', c.name],
-                        ['Company number', <span className="numeric">{c.number}</span>],
+                        ['Company number', <span className="numeric">{t(c.number)}</span>],
                         ['Registered in', 'England & Wales'],
                         ['Address', c.address],
-                        ['General email', <A href={`mailto:${c.email}`}>{c.email}</A>],
+                        ['General email', <A href={`mailto:${c.email}`}>{t(c.email)}</A>],
                     ]}
                 />
             ),
@@ -84,7 +83,7 @@ export default function Contact() {
         <LegalShell
             href="/contact"
             eyebrow="Support & enquiries"
-            title="Contact"
+            title={t("Contact")}
             accent="StreetForge"
             lead="Reach the right team at StreetForge — support, billing, fair play, security, privacy or legal — and see when we're available."
             sections={sections}

@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React from 'react';
 import PublicLayout from '../../Layouts/PublicLayout';
 import { Link } from '@inertiajs/react';
@@ -47,15 +48,10 @@ export default function HowItWorks() {
             <div className="max-w-5xl mx-auto px-4 py-16">
                 
                 <div className="text-center space-y-4 mb-16">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                        Driver Guide & Gameplay Mechanics
-                    </div>
-                    <h1 className="text-4xl sm:text-5xl font-orbitron font-extrabold text-white">
-                        How <span className="text-cyan-400">It Works</span>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">{t("Driver Guide & Gameplay Mechanics ")}</div>
+                    <h1 className="text-4xl sm:text-5xl font-orbitron font-extrabold text-white">{t("How ")}<span className="text-cyan-400">{t("It Works")}</span>
                     </h1>
-                    <p className="max-w-2xl mx-auto text-slate-400 text-base leading-relaxed">
-                        From garage tuning to podium finishes: follow our streamlined progression system to dominate the global leaderboard.
-                    </p>
+                    <p className="max-w-2xl mx-auto text-slate-400 text-base leading-relaxed">{t("From garage tuning to podium finishes: follow our streamlined progression system to dominate the global leaderboard. ")}</p>
                 </div>
 
                 {/* Steps Timeline */}
@@ -69,7 +65,7 @@ export default function HowItWorks() {
                             >
                                 <div className="flex items-center gap-4 shrink-0">
                                     <span className="font-orbitron font-black text-3xl sm:text-4xl text-cyan-500/40 group-hover:text-cyan-400 transition-colors">
-                                        {step.num}
+                                        {t(step.num)}
                                     </span>
                                     <div className="w-12 h-12 rounded-xl bg-cyan-950/60 border border-cyan-800/80 flex items-center justify-center text-cyan-400">
                                         <Icon className="w-6 h-6" />
@@ -78,14 +74,14 @@ export default function HowItWorks() {
                                 <div className="flex-1 space-y-1">
                                     <div className="flex items-center gap-3">
                                         <h3 className="font-orbitron font-bold text-lg text-white">
-                                            {step.title}
+                                            {t(step.title)}
                                         </h3>
                                         <span className="text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded bg-slate-800 text-cyan-400 border border-slate-700">
-                                            {step.badge}
+                                            {t(step.badge)}
                                         </span>
                                     </div>
                                     <p className="text-sm text-slate-300 leading-relaxed">
-                                        {step.desc}
+                                        {t(step.desc)}
                                     </p>
                                 </div>
                             </div>
@@ -96,25 +92,23 @@ export default function HowItWorks() {
                 {/* Controls Cheat-Sheet */}
                 <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-8 mb-16">
                     <h2 className="text-xl font-orbitron font-bold text-white mb-6 flex items-center gap-2">
-                        <Flag className="w-5 h-5 text-cyan-400" />
-                        In-Game Driver Controls
-                    </h2>
+                        <Flag className="w-5 h-5 text-cyan-400" />{t("In-Game Driver Controls ")}</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
                         <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
-                            <div className="font-orbitron font-bold text-cyan-400 text-lg">W / &uarr;</div>
-                            <div className="text-xs text-slate-400 mt-1">Accelerate</div>
+                            <div className="font-orbitron font-bold text-cyan-400 text-lg">{t("W / ↑")}</div>
+                            <div className="text-xs text-slate-400 mt-1">{t("Accelerate")}</div>
                         </div>
                         <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
-                            <div className="font-orbitron font-bold text-cyan-400 text-lg">S / &darr;</div>
-                            <div className="text-xs text-slate-400 mt-1">Brake / Reverse</div>
+                            <div className="font-orbitron font-bold text-cyan-400 text-lg">{t("S / ↓")}</div>
+                            <div className="text-xs text-slate-400 mt-1">{t("Brake / Reverse")}</div>
                         </div>
                         <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
-                            <div className="font-orbitron font-bold text-cyan-400 text-lg">A &bull; D / &larr; &bull; &rarr;</div>
-                            <div className="text-xs text-slate-400 mt-1">Steering / Drift</div>
+                            <div className="font-orbitron font-bold text-cyan-400 text-lg">{t("A • D / ← • →")}</div>
+                            <div className="text-xs text-slate-400 mt-1">{t("Steering / Drift")}</div>
                         </div>
                         <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
-                            <div className="font-orbitron font-bold text-orange-400 text-lg">SPACE / SHIFT</div>
-                            <div className="text-xs text-slate-400 mt-1">Nitrous Boost</div>
+                            <div className="font-orbitron font-bold text-orange-400 text-lg">{t("SPACE / SHIFT")}</div>
+                            <div className="text-xs text-slate-400 mt-1">{t("Nitrous Boost")}</div>
                         </div>
                     </div>
                 </div>
@@ -123,9 +117,7 @@ export default function HowItWorks() {
                     <Link
                         href="/register"
                         className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-orbitron font-bold text-sm shadow-xl shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all"
-                    >
-                        Enter The Championship Now
-                    </Link>
+                    >{t("Enter The Championship Now ")}</Link>
                 </div>
 
             </div>

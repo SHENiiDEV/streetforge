@@ -33,7 +33,7 @@ export default function BillingTerms() {
                 <>
                     <P>
                         Credit packages, their price, the number of Credits and any bonus percentage are displayed in the Top-Up section before you confirm an
-                        order. Prices are in US dollars (USD) and include any taxes we are required to charge. If your card is denominated in another currency,
+                        order. Prices are in your selected currency (USD, EUR or GBP) at fixed exchange rates and include any taxes we are required to charge. If your card is denominated in another currency,
                         your card issuer will convert the amount using its own rate and may add a foreign-transaction fee.
                     </P>
                     <List

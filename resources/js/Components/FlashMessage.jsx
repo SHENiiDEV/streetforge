@@ -1,3 +1,4 @@
+import { t } from '../localization';
 import React, { useEffect, useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import { CheckCircle2, AlertTriangle, Info, X } from 'lucide-react';
@@ -40,7 +41,7 @@ export default function FlashMessage() {
             <div className={`flex items-start gap-3 p-4 rounded-xl border backdrop-blur-md ${styles[type]}`}>
                 <Icon className="w-5 h-5 shrink-0 mt-0.5" />
                 <div className="flex-1 text-sm font-medium leading-relaxed">
-                    {message}
+                    {t(message)}
                 </div>
                 <button
                     onClick={() => setVisible(false)}

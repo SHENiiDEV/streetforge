@@ -1,3 +1,4 @@
+import { t, locale } from '../localization';
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import {
@@ -6,6 +7,7 @@ import {
     HelpCircle, ArrowRight,
 } from 'lucide-react';
 import BrandLogo from './BrandLogo';
+import SitePreferences from './SitePreferences';
 
 function usePathname() {
     const [path, setPath] = useState(typeof window !== 'undefined' ? window.location.pathname : '/');
@@ -83,6 +85,7 @@ export default function Navbar() {
 
     return (
         <header className="sticky top-0 z-50 w-full select-none">
+            <SitePreferences />
             {/* Scroll progress */}
             <div className="absolute top-0 left-0 h-px w-full bg-white/[0.06]">
                 <div
@@ -117,7 +120,7 @@ export default function Navbar() {
                                             }`}
                                         >
                                             <link.icon className={`w-3.5 h-3.5 ${active ? 'text-cyan-400' : ''}`} />
-                                            <span>{link.name}</span>
+                                            <span>{t(link.name)}</span>
                                             {link.pulse && !active && (
                                                 <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
                                             )}
@@ -138,15 +141,15 @@ export default function Navbar() {
                                 <>
                                     <Link
                                         href="/topup"
-                                        title="Top up credits"
+                                        title={t("Top up credits")}
                                         className="group flex items-center gap-3 border border-white/[0.08] hover:border-cyan-400/40 px-3.5 py-2 transition-colors"
                                     >
                                         <Zap className="w-3.5 h-3.5 text-cyan-400 fill-cyan-400" />
                                         <span className="text-left leading-none">
-                                            <span className="block label-tech text-slate-600 mb-1">Balance</span>
+                                            <span className="block label-tech text-slate-600 mb-1">{t("Balance")}</span>
                                             <span className="numeric text-sm font-bold text-white">
-                                                {Number(user.game_balance).toLocaleString()}
-                                                <span className="text-[10px] text-slate-600 ml-1">CR</span>
+                                                {t(Number(user.game_balance).toLocaleString(locale()))}
+                                                <span className="text-[10px] text-slate-600 ml-1">{t("CR")}</span>
                                             </span>
                                         </span>
                                         <Plus className="w-3.5 h-3.5 text-slate-600 group-hover:text-cyan-400 transition-colors" />
@@ -161,11 +164,11 @@ export default function Navbar() {
                                                 className="w-8 h-8 flex items-center justify-center text-white font-display font-bold text-sm"
                                                 style={{ backgroundColor: user.avatar_color || '#06b6d4' }}
                                             >
-                                                {user.name ? user.name[0].toUpperCase() : 'R'}
+                                                {t(user.name ? user.name[0].toUpperCase() : 'R')}
                                             </span>
                                             <span className="hidden xl:block text-left leading-none">
                                                 <span className="block text-xs font-semibold text-slate-200 truncate max-w-[92px]">{user.name}</span>
-                                                <span className="block label-tech text-cyan-400 mt-1">LVL {user.level}</span>
+                                                <span className="block label-tech text-cyan-400 mt-1">{t("LVL ")}{t(user.level)}</span>
                                             </span>
                                             <ChevronDown className={`w-3.5 h-3.5 text-slate-600 transition-transform ${userOpen ? 'rotate-180 text-cyan-400' : ''}`} />
                                         </button>
@@ -178,9 +181,9 @@ export default function Navbar() {
                                                     </div>
                                                     <div className="text-[11px] text-slate-500 font-mono truncate">{user.email}</div>
                                                     <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
-                                                        <span className="label-tech text-slate-600">Licence</span>
+                                                        <span className="label-tech text-slate-600">{t("Licence")}</span>
                                                         <span className="label-tech text-cyan-400">
-                                                            {user.level >= 10 ? 'Class A' : 'Class B'}
+                                                            {t(user.level >= 10 ? 'Class A' : 'Class B')}
                                                         </span>
                                                     </div>
                                                 </div>
@@ -199,7 +202,7 @@ export default function Navbar() {
                                                             className="flex items-center gap-2.5 px-3 py-2.5 text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.04] transition-colors"
                                                         >
                                                             <item.icon className={`w-4 h-4 ${item.tone}`} />
-                                                            {item.label}
+                                                            {t(item.label)}
                                                         </Link>
                                                     ))}
                                                 </div>
@@ -208,24 +211,18 @@ export default function Navbar() {
                                                     onClick={handleLogout}
                                                     className="w-full flex items-center gap-2.5 px-3 py-2.5 text-xs font-semibold text-red-400 hover:bg-red-500/10 border-t border-white/[0.06] transition-colors"
                                                 >
-                                                    <LogOut className="w-4 h-4" />
-                                                    Sign Out
-                                                </button>
+                                                    <LogOut className="w-4 h-4" />{t("Sign Out ")}</button>
                                             </div>
                                         )}
                                     </div>
                                 </>
                             ) : (
                                 <div className="flex items-center gap-2">
-                                    <Link href="/login" className="px-4 py-2.5 label-tech text-slate-400 hover:text-white transition-colors">
-                                        Sign In
-                                    </Link>
+                                    <Link href="/login" className="px-4 py-2.5 label-tech text-slate-400 hover:text-white transition-colors">{t("Sign In ")}</Link>
                                     <Link
                                         href="/register"
                                         className="group inline-flex items-center gap-2 px-5 py-2.5 bg-white text-carbon-950 font-display font-bold uppercase tracking-wider text-xs hover:bg-cyan-300 transition-colors"
-                                    >
-                                        Start Racing
-                                        <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                                    >{t("Start Racing ")}<ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
                                     </Link>
                                 </div>
                             )}
@@ -239,12 +236,12 @@ export default function Navbar() {
                                     className="flex items-center gap-1.5 border border-white/[0.08] px-2.5 py-1.5 numeric text-xs font-bold text-cyan-300"
                                 >
                                     <Zap className="w-3 h-3 fill-cyan-400 text-cyan-400" />
-                                    {Number(user.game_balance).toLocaleString()}
+                                    {t(Number(user.game_balance).toLocaleString(locale()))}
                                 </Link>
                             )}
                             <button
                                 onClick={() => setMobileOpen(!mobileOpen)}
-                                aria-label="Toggle navigation"
+                                aria-label={t("Toggle navigation")}
                                 className="p-2.5 border border-white/[0.08] text-slate-300 hover:text-white hover:border-white/20 transition-colors"
                             >
                                 {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -256,7 +253,7 @@ export default function Navbar() {
 
             {/* Mobile drawer */}
             {mobileOpen && (
-                <div className="lg:hidden fixed inset-x-0 top-16 bottom-0 z-50 bg-carbon-950/97 backdrop-blur-2xl overflow-y-auto border-t border-white/[0.06]">
+                <div className="lg:hidden fixed inset-x-0 top-[104px] bottom-0 z-50 bg-carbon-950/97 backdrop-blur-2xl overflow-y-auto border-t border-white/[0.06]">
                     <div className="max-w-lg mx-auto px-5 py-7 space-y-7">
 
                         {user ? (
@@ -266,47 +263,39 @@ export default function Navbar() {
                                         className="w-11 h-11 flex items-center justify-center text-white font-display font-bold text-lg"
                                         style={{ backgroundColor: user.avatar_color || '#06b6d4' }}
                                     >
-                                        {user.name ? user.name[0].toUpperCase() : 'R'}
+                                        {t(user.name ? user.name[0].toUpperCase() : 'R')}
                                     </span>
                                     <div>
                                         <div className="font-display font-bold uppercase tracking-wide text-sm text-white truncate max-w-[140px]">
                                             {user.name} {user.surname}
                                         </div>
-                                        <div className="label-tech text-cyan-400 mt-1">Level {user.level}</div>
+                                        <div className="label-tech text-cyan-400 mt-1">{t("Level ")}{t(user.level)}</div>
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="label-tech text-slate-600 mb-1">Credits</div>
+                                    <div className="label-tech text-slate-600 mb-1">{t("Credits")}</div>
                                     <div className="numeric text-base font-bold text-white">
-                                        {Number(user.game_balance).toLocaleString()}
+                                        {t(Number(user.game_balance).toLocaleString(locale()))}
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div className="surface p-5 space-y-4">
                                 <div>
-                                    <div className="font-display font-bold uppercase tracking-wide text-base text-white">
-                                        Join the Season &rsquo;26 grid
-                                    </div>
-                                    <div className="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                                        Free starter car and 1,000 CR the moment you sign up.
-                                    </div>
+                                    <div className="font-display font-bold uppercase tracking-wide text-base text-white">{t("Join the Season ’26 grid ")}</div>
+                                    <div className="text-xs text-slate-500 mt-1.5 leading-relaxed">{t("Free starter car and 1,000 CR the moment you sign up. ")}</div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
                                     <Link
                                         href="/register"
                                         onClick={() => setMobileOpen(false)}
                                         className="py-3 text-center label-tech text-carbon-950 bg-white hover:bg-cyan-300 transition-colors"
-                                    >
-                                        Create Account
-                                    </Link>
+                                    >{t("Create Account ")}</Link>
                                     <Link
                                         href="/login"
                                         onClick={() => setMobileOpen(false)}
                                         className="py-3 text-center label-tech text-slate-200 border border-white/15"
-                                    >
-                                        Sign In
-                                    </Link>
+                                    >{t("Sign In ")}</Link>
                                 </div>
                             </div>
                         )}
@@ -317,14 +306,12 @@ export default function Navbar() {
                             className="w-full flex items-center justify-between p-5 bg-white text-carbon-950 font-display font-bold uppercase tracking-wider text-sm"
                         >
                             <span className="flex items-center gap-2.5">
-                                <Flag className="w-5 h-5" />
-                                Enter Race Circuit
-                            </span>
+                                <Flag className="w-5 h-5" />{t("Enter Race Circuit ")}</span>
                             <ArrowRight className="w-5 h-5" />
                         </Link>
 
                         <div className="space-y-3">
-                            <div className="label-tech text-slate-600">Navigation</div>
+                            <div className="label-tech text-slate-600">{t("Navigation")}</div>
                             <div className="grid grid-cols-2 gap-2">
                                 {[
                                     { name: 'Race Lobby', href: '/race/lobby', icon: Flag },
@@ -351,7 +338,7 @@ export default function Navbar() {
                                             }`}
                                         >
                                             <item.icon className={`w-4 h-4 ${active || item.highlight ? 'text-cyan-400' : 'text-slate-600'}`} />
-                                            <span className="truncate">{item.name}</span>
+                                            <span className="truncate">{t(item.name)}</span>
                                         </Link>
                                     );
                                 })}
@@ -375,7 +362,7 @@ export default function Navbar() {
                                         onClick={() => setMobileOpen(false)}
                                         className="label-tech text-slate-600 hover:text-cyan-400 transition-colors"
                                     >
-                                        {label}
+                                        {t(label)}
                                     </Link>
                                 ))}
                             </div>
@@ -385,9 +372,7 @@ export default function Navbar() {
                                     onClick={handleLogout}
                                     className="w-full flex items-center justify-center gap-2 py-3.5 label-tech text-red-400 border border-red-500/20 hover:bg-red-500/10 transition-colors"
                                 >
-                                    <LogOut className="w-4 h-4" />
-                                    Sign Out
-                                </button>
+                                    <LogOut className="w-4 h-4" />{t("Sign Out ")}</button>
                             )}
                         </div>
                     </div>

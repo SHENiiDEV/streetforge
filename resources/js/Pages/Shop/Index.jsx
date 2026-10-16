@@ -1,3 +1,4 @@
+import { t, locale } from '../../localization';
 import React from 'react';
 import AppLayout from '../../Layouts/AppLayout';
 import CarVisualizer from '../../Components/CarVisualizer';
@@ -32,30 +33,23 @@ export default function Shop({ vehicles = [], ownedVehicleIds = [], ownedSkinIds
                 <div className="bg-gradient-to-r from-cyan-950/80 via-slate-900 to-blue-950 border border-cyan-500/30 rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xl">
                     <div className="space-y-2">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                            <ShoppingBag className="w-3.5 h-3.5" /> High Performance Showroom
-                        </div>
-                        <h1 className="text-3xl sm:text-4xl font-orbitron font-extrabold text-white">
-                            Motorsport Dealership
-                        </h1>
-                        <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
-                            Unlock championship vehicles, hypercars, and muscle roadsters using your in-game currency credits.
-                        </p>
+                            <ShoppingBag className="w-3.5 h-3.5" />{t(" High Performance Showroom ")}</div>
+                        <h1 className="text-3xl sm:text-4xl font-orbitron font-extrabold text-white">{t("Motorsport Dealership ")}</h1>
+                        <p className="text-xs sm:text-sm text-slate-300 max-w-xl">{t("Unlock championship vehicles, hypercars, and muscle roadsters using your in-game currency credits. ")}</p>
                     </div>
 
                     <div className="flex items-center gap-4 bg-slate-950/80 p-4 rounded-2xl border border-slate-800 shrink-0">
                         <div>
-                            <div className="text-[10px] uppercase font-bold text-slate-400">Available Balance</div>
+                            <div className="text-[10px] uppercase font-bold text-slate-400">{t("Available Balance")}</div>
                             <div className="font-orbitron font-extrabold text-xl text-cyan-400">
-                                {Number(user?.game_balance).toLocaleString()} <span className="text-xs text-slate-400">CR</span>
+                                {t(Number(user?.game_balance).toLocaleString(locale()))} <span className="text-xs text-slate-400">{t("CR")}</span>
                             </div>
                         </div>
                         <Link
                             href="/topup"
                             className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-orbitron font-bold text-xs shadow-md transition-all flex items-center gap-1.5"
                         >
-                            <CreditCard className="w-3.5 h-3.5" />
-                            Top-Up
-                        </Link>
+                            <CreditCard className="w-3.5 h-3.5" />{t("Top-Up ")}</Link>
                     </div>
                 </div>
 
@@ -77,18 +71,17 @@ export default function Shop({ vehicles = [], ownedVehicleIds = [], ownedSkinIds
                                 <div>
                                     <div className="flex items-center justify-between mb-2">
                                         <span className="text-[10px] font-orbitron font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950 px-2.5 py-0.5 rounded border border-cyan-900">
-                                            {car.class_type} Class
-                                        </span>
+                                            {t(car.class_type)}{t(" Class ")}</span>
                                         <span className="font-orbitron font-extrabold text-base text-white">
-                                            {car.price > 0 ? `${Number(car.price).toLocaleString()} CR` : 'FREE STARTER'}
+                                            {t(car.price > 0 ? `${Number(car.price).toLocaleString(locale())} CR` : 'FREE STARTER')}
                                         </span>
                                     </div>
 
                                     <h3 className="font-orbitron font-black text-2xl text-white">
-                                        {car.name}
+                                        {t(car.name)}
                                     </h3>
                                     <p className="text-xs text-slate-400 mt-1 mb-4 leading-relaxed">
-                                        {car.description}
+                                        {t(car.description)}
                                     </p>
 
                                     {/* Car Preview */}
@@ -110,9 +103,7 @@ export default function Shop({ vehicles = [], ownedVehicleIds = [], ownedSkinIds
                                             href="/garage"
                                             className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 font-orbitron font-bold text-xs flex items-center justify-center gap-2 transition-all"
                                         >
-                                            <Warehouse className="w-4 h-4 text-cyan-400" />
-                                            Owned &bull; Open in Garage
-                                        </Link>
+                                            <Warehouse className="w-4 h-4 text-cyan-400" />{t("Owned • Open in Garage ")}</Link>
                                     ) : (
                                         <button
                                             onClick={() => handleBuyVehicle(car.id)}
@@ -124,9 +115,9 @@ export default function Shop({ vehicles = [], ownedVehicleIds = [], ownedSkinIds
                                             }`}
                                         >
                                             {canAfford ? (
-                                                <>Purchase Vehicle &bull; {Number(car.price).toLocaleString()} CR</>
+                                                <>{t("Purchase Vehicle • ")}{t(Number(car.price).toLocaleString(locale()))}{t(" CR")}</>
                                             ) : (
-                                                <><Lock className="w-3.5 h-3.5" /> Insufficient Balance</>
+                                                <><Lock className="w-3.5 h-3.5" />{t(" Insufficient Balance")}</>
                                             )}
                                         </button>
                                     )}

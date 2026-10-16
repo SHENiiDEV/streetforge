@@ -4,14 +4,14 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GarageController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\RaceController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\SitePreferencesController;
 use App\Http\Controllers\TopupController;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\LeaderboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +20,7 @@ use App\Http\Controllers\LeaderboardController;
 */
 
 // Public & Information Pages
+Route::post('/preferences', [SitePreferencesController::class, 'update'])->name('preferences.update');
 Route::get('/', [PageController::class, 'landing'])->name('landing');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/how-it-works', [PageController::class, 'howItWorks'])->name('how-it-works');

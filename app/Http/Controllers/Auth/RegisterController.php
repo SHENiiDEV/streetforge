@@ -52,9 +52,9 @@ class RegisterController extends Controller
             'post_code' => ['required', 'string', 'max:20'],
             'terms' => ['accepted'],
         ], [
-            'country.not_in' => 'Registration is strictly prohibited from your selected country due to international sanctions and regulatory compliance.',
-            'terms.accepted' => 'You must accept the Terms & Conditions and Privacy Policy to create a racer account.',
-            'dob.before' => 'You must be at least 16 years of age to register.',
+            'country.not_in' => __('Registration is strictly prohibited from your selected country due to international sanctions and regulatory compliance.'),
+            'terms.accepted' => __('You must accept the Terms & Conditions and Privacy Policy to create a racer account.'),
+            'dob.before' => __('You must be at least 16 years of age to register.'),
         ]);
 
         $user = User::create([
@@ -95,13 +95,13 @@ class RegisterController extends Controller
         }
 
         try {
-            Mail::to($user->email)->queue(new WelcomeUserMail($user));
+            Mail::to($user->email)->queue((new WelcomeUserMail($user))->locale(app()->getLocale()));
         } catch (\Throwable $e) {
             // Silently log or continue if mail server is not configured in local environment
         }
 
         Auth::login($user);
 
-        return redirect()->route('garage.index')->with('success', 'Welcome to StreetForge! We credited your garage with your first vehicle and 1,000 Starter Credits.');
+        return redirect()->route('garage.index')->with('success', __('Welcome to StreetForge! We credited your garage with your first vehicle and 1,000 Starter Credits.'));
     }
 }

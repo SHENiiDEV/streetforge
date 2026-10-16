@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React, { useState } from 'react';
 import PublicLayout from '../../Layouts/PublicLayout';
 import { Link, router } from '@inertiajs/react';
@@ -41,15 +42,10 @@ export default function NewsIndex({ articles = [], selectedCategory = 'all', cat
                 {/* Header Banner */}
                 <div className="text-center space-y-4 max-w-3xl mx-auto">
                     <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                        <Newspaper className="w-3.5 h-3.5" />
-                        StreetForge Paddock & Journal
-                    </div>
-                    <h1 className="text-4xl sm:text-5xl font-orbitron font-extrabold text-white tracking-tight">
-                        Motorsport News & <span className="text-cyan-400">Engineering</span>
+                        <Newspaper className="w-3.5 h-3.5" />{t("StreetForge Paddock & Journal ")}</div>
+                    <h1 className="text-4xl sm:text-5xl font-orbitron font-extrabold text-white tracking-tight">{t("Motorsport News & ")}<span className="text-cyan-400">{t("Engineering")}</span>
                     </h1>
-                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                        Stay updated on championship standings, dyno tuning optimization, patch notes, security bulletins, and technical deep dives.
-                    </p>
+                    <p className="text-slate-300 text-sm sm:text-base leading-relaxed">{t("Stay updated on championship standings, dyno tuning optimization, patch notes, security bulletins, and technical deep dives. ")}</p>
                 </div>
 
                 {/* Category Filter Pills */}
@@ -66,7 +62,7 @@ export default function NewsIndex({ articles = [], selectedCategory = 'all', cat
                                         : 'bg-slate-900/80 text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800'
                                 }`}
                             >
-                                {cat === 'all' ? 'All Articles' : cat}
+                                {t(cat === 'all' ? 'All Articles' : cat)}
                             </button>
                         );
                     })}
@@ -79,24 +75,24 @@ export default function NewsIndex({ articles = [], selectedCategory = 'all', cat
                             <div className="lg:col-span-8 space-y-4">
                                 <div className="flex flex-wrap items-center gap-3">
                                     <span className={`text-[10px] font-orbitron font-bold uppercase px-2.5 py-1 rounded-md border ${CATEGORY_COLORS[featuredArticle.category] || 'text-cyan-400 bg-cyan-950 border-cyan-800'}`}>
-                                        {featuredArticle.category}
+                                        {t(featuredArticle.category)}
                                     </span>
                                     <span className="text-xs text-slate-400 flex items-center gap-1">
-                                        <Calendar className="w-3.5 h-3.5" /> {featuredArticle.published_at}
+                                        <Calendar className="w-3.5 h-3.5" /> {t(featuredArticle.published_at)}
                                     </span>
                                     <span className="text-xs text-slate-400 flex items-center gap-1">
-                                        <Clock className="w-3.5 h-3.5" /> {featuredArticle.read_time}
+                                        <Clock className="w-3.5 h-3.5" /> {t(featuredArticle.read_time)}
                                     </span>
                                 </div>
 
                                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-orbitron font-bold text-white group-hover:text-cyan-400 transition-colors">
                                     <Link href={`/news/${featuredArticle.slug}`}>
-                                        {featuredArticle.title}
+                                        {t(featuredArticle.title)}
                                     </Link>
                                 </h2>
 
                                 <p className="text-slate-300 text-sm leading-relaxed max-w-2xl">
-                                    {featuredArticle.excerpt}
+                                    {t(featuredArticle.excerpt)}
                                 </p>
 
                                 <div className="flex items-center justify-between pt-4 border-t border-slate-800/80">
@@ -105,35 +101,32 @@ export default function NewsIndex({ articles = [], selectedCategory = 'all', cat
                                             className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-white shadow"
                                             style={{ backgroundColor: featuredArticle.author.avatar }}
                                         >
-                                            {featuredArticle.author.name[0]}
+                                            {t(featuredArticle.author.name[0])}
                                         </div>
                                         <div>
-                                            <div className="text-xs font-bold text-white">{featuredArticle.author.name}</div>
-                                            <div className="text-[10px] text-slate-400">{featuredArticle.author.role}</div>
+                                            <div className="text-xs font-bold text-white">{t(featuredArticle.author.name)}</div>
+                                            <div className="text-[10px] text-slate-400">{t(featuredArticle.author.role)}</div>
                                         </div>
                                     </div>
 
                                     <Link
                                         href={`/news/${featuredArticle.slug}`}
                                         className="inline-flex items-center gap-1.5 text-xs font-orbitron font-bold text-cyan-400 group-hover:translate-x-1 transition-transform"
-                                    >
-                                        Read Full Article <ArrowRight className="w-4 h-4" />
+                                    >{t("Read Full Article ")}<ArrowRight className="w-4 h-4" />
                                     </Link>
                                 </div>
                             </div>
 
                             {/* Stat Highlights Card */}
                             <div className="lg:col-span-4 bg-slate-950/80 border border-slate-800 rounded-2xl p-6 space-y-4">
-                                <div className="text-[10px] font-orbitron font-bold uppercase tracking-wider text-slate-400">
-                                    Article Telemetry & Highlights
-                                </div>
+                                <div className="text-[10px] font-orbitron font-bold uppercase tracking-wider text-slate-400">{t("Article Telemetry & Highlights ")}</div>
                                 <div className="space-y-3">
-                                    {featuredArticle.stats?.map((stat, i) => (
+                                    {t(featuredArticle.stats?.map((stat, i) => (
                                         <div key={i} className="flex justify-between items-center py-1.5 border-b border-slate-900 text-xs">
-                                            <span className="text-slate-400">{stat.label}</span>
-                                            <span className="font-orbitron font-bold text-cyan-400">{stat.value}</span>
+                                            <span className="text-slate-400">{t(stat.label)}</span>
+                                            <span className="font-orbitron font-bold text-cyan-400">{t(stat.value)}</span>
                                         </div>
-                                    ))}
+                                    )))}
                                 </div>
                             </div>
                         </div>
@@ -150,21 +143,21 @@ export default function NewsIndex({ articles = [], selectedCategory = 'all', cat
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <span className={`text-[10px] font-orbitron font-bold uppercase px-2.5 py-0.5 rounded border ${CATEGORY_COLORS[article.category] || 'text-cyan-400 bg-cyan-950 border-cyan-800'}`}>
-                                        {article.category}
+                                        {t(article.category)}
                                     </span>
                                     <span className="text-[11px] text-slate-500 font-mono">
-                                        {article.read_time}
+                                        {t(article.read_time)}
                                     </span>
                                 </div>
 
                                 <h3 className="text-lg font-orbitron font-bold text-white group-hover:text-cyan-400 transition-colors leading-snug">
                                     <Link href={`/news/${article.slug}`}>
-                                        {article.title}
+                                        {t(article.title)}
                                     </Link>
                                 </h3>
 
                                 <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">
-                                    {article.excerpt}
+                                    {t(article.excerpt)}
                                 </p>
                             </div>
 
@@ -174,16 +167,15 @@ export default function NewsIndex({ articles = [], selectedCategory = 'all', cat
                                         className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-[10px] text-white"
                                         style={{ backgroundColor: article.author.avatar }}
                                     >
-                                        {article.author.name[0]}
+                                        {t(article.author.name[0])}
                                     </div>
-                                    <span className="text-[11px] text-slate-300 font-medium">{article.author.name}</span>
+                                    <span className="text-[11px] text-slate-300 font-medium">{t(article.author.name)}</span>
                                 </div>
 
                                 <Link
                                     href={`/news/${article.slug}`}
                                     className="text-xs font-orbitron font-bold text-cyan-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform"
-                                >
-                                    Read <ChevronRight className="w-3.5 h-3.5" />
+                                >{t("Read ")}<ChevronRight className="w-3.5 h-3.5" />
                                 </Link>
                             </div>
                         </div>

@@ -1,3 +1,4 @@
+import { t, locale } from '../localization';
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import PublicLayout from '../Layouts/PublicLayout';
 import CarVisualizer from '../Components/CarVisualizer';
@@ -88,7 +89,7 @@ function Eyebrow({ children, tone = 'cyan', className = '' }) {
     };
     return (
         <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border label-tech ${tones[tone]} ${className}`}>
-            {children}
+            {t(children)}
         </span>
     );
 }
@@ -109,22 +110,22 @@ function SectionHeading({ index, eyebrow, title, accent, lead, action, align = '
             <div className={`space-y-5 ${centered ? 'max-w-2xl' : 'max-w-2xl'}`}>
                 <div className={`flex items-center gap-3 ${centered ? 'justify-center' : ''}`}>
                     {index && (
-                        <span className="label-tech text-slate-600 numeric">{index}</span>
+                        <span className="label-tech text-slate-600 numeric">{t(index)}</span>
                     )}
                     <span className="h-px w-8 bg-white/15" />
-                    <span className="label-tech text-cyan-300/90">{eyebrow}</span>
+                    <span className="label-tech text-cyan-300/90">{t(eyebrow)}</span>
                 </div>
                 <h2 className="headline text-4xl sm:text-5xl lg:text-6xl text-white text-balance">
-                    {title}{' '}
-                    {accent && <span className="text-cyan-400">{accent}</span>}
+                    {t(title)}{t(' ')}
+                    {accent && <span className="text-cyan-400">{t(accent)}</span>}
                 </h2>
                 {lead && (
                     <p className="text-slate-400 text-sm sm:text-[15px] leading-relaxed max-w-xl">
-                        {lead}
+                        {t(lead)}
                     </p>
                 )}
             </div>
-            {action}
+            {t(action)}
         </div>
     );
 }
@@ -139,10 +140,10 @@ function Meter({ label, value, max, unit, tone = 'cyan', animate = true }) {
     return (
         <div className="space-y-2">
             <div className="flex items-baseline justify-between">
-                <span className="label-tech text-slate-500">{label}</span>
+                <span className="label-tech text-slate-500">{t(label)}</span>
                 <span className="numeric text-white font-bold text-base leading-none">
-                    {value}
-                    <span className="text-slate-600 text-[10px] font-semibold ml-1">{unit}</span>
+                    {t(value)}
+                    <span className="text-slate-600 text-[10px] font-semibold ml-1">{t(unit)}</span>
                 </span>
             </div>
             <div className="h-[3px] w-full bg-white/[0.06] overflow-hidden rounded-full">
@@ -162,7 +163,7 @@ function GhostIndex({ children, className = '' }) {
             className={`headline pointer-events-none select-none absolute text-[16rem] leading-none text-white/[0.018] ${className}`}
             aria-hidden="true"
         >
-            {children}
+            {t(children)}
         </span>
     );
 }
@@ -245,7 +246,7 @@ function Ticker({ items }) {
                 {row.map((item, i) => (
                     <span key={i} className="flex items-center gap-3 px-6 shrink-0">
                         <span className="w-1 h-1 rounded-full bg-cyan-400/70" />
-                        <span className="label-tech text-slate-400 whitespace-nowrap">{item}</span>
+                        <span className="label-tech text-slate-400 whitespace-nowrap">{t(item)}</span>
                     </span>
                 ))}
             </div>
@@ -311,24 +312,17 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                         <div className="inline-flex items-center justify-center">
                             <Eyebrow tone="cyan" className="shadow-lg shadow-cyan-500/10">
                                 <LiveDot color="bg-cyan-400" />
-                                <span className="font-semibold tracking-wider">SEASON ’26 CHAMPIONSHIP</span>
+                                <span className="font-semibold tracking-wider">{t("SEASON ’26 CHAMPIONSHIP")}</span>
                                 <span className="text-slate-600">•</span>
-                                <span className="text-slate-400">540+ ACTIVE RACERS ON GRID</span>
+                                <span className="text-slate-400">{t("540+ ACTIVE RACERS ON GRID")}</span>
                             </Eyebrow>
                         </div>
 
-                        <h1 className="headline text-4xl sm:text-6xl lg:text-7xl xl:text-[5.2rem] text-white tracking-tight leading-[1.05]">
-                            PRECISION MOTORSPORT.
-                            <br />
-                            <span className="bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-500 bg-clip-text text-transparent">
-                                DOMINATE THE CIRCUIT.
-                            </span>
+                        <h1 className="headline text-4xl sm:text-6xl lg:text-7xl xl:text-[5.2rem] text-white tracking-tight leading-[1.05]">{t("PRECISION MOTORSPORT. ")}<br />
+                            <span className="bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-500 bg-clip-text text-transparent">{t("DOMINATE THE CIRCUIT. ")}</span>
                         </h1>
 
-                        <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl mx-auto">
-                            A high-fidelity 60&nbsp;FPS motorsport engine running natively in your browser.
-                            Forge your machine on the dyno, dial in gear ratios, and race for championship prize pools.
-                        </p>
+                        <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl mx-auto">{t("A high-fidelity 60 FPS motorsport engine running natively in your browser. Forge your machine on the dyno, dial in gear ratios, and race for championship prize pools. ")}</p>
 
                         {/* High-Octane Action CTAs */}
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
@@ -339,7 +333,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                 >
                                     <span className="absolute inset-y-0 w-16 bg-white/40 animate-sweep" aria-hidden="true" />
                                     <Flag className="w-4 h-4" />
-                                    <span className="relative">Enter Race Lobby</span>
+                                    <span className="relative">{t("Enter Race Lobby")}</span>
                                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                                 </Link>
                             ) : (
@@ -350,7 +344,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                     >
                                         <span className="absolute inset-y-0 w-16 bg-white/40 animate-sweep" aria-hidden="true" />
                                         <Zap className="w-4 h-4" />
-                                        <span className="relative">Claim Starter Car &amp; 1,000 CR</span>
+                                        <span className="relative">{t("Claim Starter Car & 1,000 CR")}</span>
                                         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                                     </Link>
                                     <Link
@@ -358,7 +352,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                         className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 border border-white/15 hover:border-cyan-400/40 text-slate-200 hover:text-white font-display font-bold uppercase tracking-wider text-sm backdrop-blur-md bg-white/[0.02] transition-colors"
                                     >
                                         <Wrench className="w-4 h-4 text-cyan-400" />
-                                        <span>Dyno Tuning Bay</span>
+                                        <span>{t("Dyno Tuning Bay")}</span>
                                     </Link>
                                 </>
                             )}
@@ -367,20 +361,16 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                         {/* Quick Trust Badges */}
                         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-1 text-xs">
                             <span className="inline-flex items-center gap-1.5 text-slate-400">
-                                <Flame className="w-3.5 h-3.5 text-orange-400" /> 60 FPS Canvas Physics
-                            </span>
+                                <Flame className="w-3.5 h-3.5 text-orange-400" />{t(" 60 FPS Canvas Physics ")}</span>
                             <span className="text-slate-700">•</span>
                             <span className="inline-flex items-center gap-1.5 text-slate-400">
-                                <Cpu className="w-3.5 h-3.5 text-cyan-400" /> Zero Downloads Required
-                            </span>
+                                <Cpu className="w-3.5 h-3.5 text-cyan-400" />{t(" Zero Downloads Required ")}</span>
                             <span className="text-slate-700">•</span>
                             <span className="inline-flex items-center gap-1.5 text-slate-400">
-                                <Trophy className="w-3.5 h-3.5 text-amber-400" /> 500,000 CR Season Purse
-                            </span>
+                                <Trophy className="w-3.5 h-3.5 text-amber-400" />{t(" 500,000 CR Season Purse ")}</span>
                             <span className="text-slate-700">•</span>
                             <span className="inline-flex items-center gap-1.5 text-slate-400">
-                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> UK Tax &amp; Invoices
-                            </span>
+                                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />{t(" UK Tax & Invoices ")}</span>
                         </div>
                     </div>
 
@@ -397,17 +387,14 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                             <div className="px-5 py-3.5 bg-carbon-950/90 border-b border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
                                 <div className="flex items-center gap-3">
                                     <div className="flex items-center gap-1.5 px-2.5 py-1 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono font-semibold">
-                                        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                                        DYNO TELEMETRY ACTIVE
-                                    </div>
-                                    <span className="text-xs text-slate-500 hidden sm:inline font-mono">
-                                        CHASSIS ID: SF-{(activeCar?.id || 1).toString().padStart(4, '0')}
+                                        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />{t("DYNO TELEMETRY ACTIVE ")}</div>
+                                    <span className="text-xs text-slate-500 hidden sm:inline font-mono">{t("CHASSIS ID: SF-")}{t((activeCar?.id || 1).toString().padStart(4, '0'))}
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-4 text-xs font-mono">
-                                    <span className="text-slate-400">CLASS: <strong className="text-white font-bold">{activeCar?.class_type || 'SPORT'}</strong></span>
+                                    <span className="text-slate-400">{t("CLASS: ")}<strong className="text-white font-bold">{t(activeCar?.class_type || 'SPORT')}</strong></span>
                                     <span className="text-slate-600">|</span>
-                                    <span className="text-slate-400">TIER: <strong className="text-cyan-400 font-bold">STAGE 3 TUNED</strong></span>
+                                    <span className="text-slate-400">{t("TIER: ")}<strong className="text-cyan-400 font-bold">{t("STAGE 3 TUNED")}</strong></span>
                                 </div>
                             </div>
 
@@ -418,16 +405,16 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                 <div className="lg:col-span-3 p-6 flex flex-col justify-between space-y-6 bg-carbon-950/40">
                                     <div>
                                         <div className="flex items-center justify-between mb-4">
-                                            <span className="label-tech text-cyan-400/90">DYNO OUTPUT</span>
-                                            <span className="label-tech text-slate-500">REAL-TIME</span>
+                                            <span className="label-tech text-cyan-400/90">{t("DYNO OUTPUT")}</span>
+                                            <span className="label-tech text-slate-500">{t("REAL-TIME")}</span>
                                         </div>
 
                                         <div className="space-y-4">
                                             <div className="p-3.5 bg-carbon-925 border border-white/[0.06]">
-                                                <div className="text-[11px] font-mono text-slate-400 uppercase">Estimated Power</div>
+                                                <div className="text-[11px] font-mono text-slate-400 uppercase">{t("Estimated Power")}</div>
                                                 <div className="numeric text-3xl font-black text-white mt-0.5 flex items-baseline gap-1.5">
-                                                    {Math.round((activeCar?.base_speed || 220) * 2.45)}
-                                                    <span className="text-xs font-mono text-cyan-400">BHP</span>
+                                                    {t(Math.round((activeCar?.base_speed || 220) * 2.45))}
+                                                    <span className="text-xs font-mono text-cyan-400">{t("BHP")}</span>
                                                 </div>
                                             </div>
 
@@ -440,7 +427,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                     </div>
 
                                     <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs">
-                                        <span className="text-slate-400 font-mono">WEIGHT DIST.</span>
+                                        <span className="text-slate-400 font-mono">{t("WEIGHT DIST.")}</span>
                                         <span className="numeric text-white font-bold">48 : 52 %</span>
                                     </div>
                                 </div>
@@ -455,18 +442,18 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                     {/* Car Headline & Specs */}
                                     <div className="w-full flex items-start justify-between z-10">
                                         <div>
-                                            <span className="label-tech text-cyan-300 font-semibold">{activeCar?.class_type || 'Sport'} Class Machine</span>
+                                            <span className="label-tech text-cyan-300 font-semibold">{t(activeCar?.class_type || 'Sport')}{t(" Class Machine")}</span>
                                             <h2 className="headline text-2xl sm:text-4xl text-white tracking-wide mt-1">
-                                                {activeCar?.name || 'Apex Pulse GT'}
+                                                {t(activeCar?.name || 'Apex Pulse GT')}
                                             </h2>
                                         </div>
                                         <div className="text-right">
-                                            <div className="label-tech text-slate-500">VALUATION</div>
+                                            <div className="label-tech text-slate-500">{t("VALUATION")}</div>
                                             <div className="numeric text-xl font-bold text-white mt-0.5">
                                                 {activeCar?.price > 0 ? (
-                                                    <>{Number(activeCar.price).toLocaleString()} <span className="text-xs text-cyan-400 font-mono">CR</span></>
+                                                    <>{t(Number(activeCar.price).toLocaleString(locale()))} <span className="text-xs text-cyan-400 font-mono">{t("CR")}</span></>
                                                 ) : (
-                                                    <span className="text-emerald-400 font-mono">STARTER FREE</span>
+                                                    <span className="text-emerald-400 font-mono">{t("STARTER FREE")}</span>
                                                 )}
                                             </div>
                                         </div>
@@ -482,14 +469,14 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                         <>
                                             <button
                                                 onClick={prevCar}
-                                                aria-label="Previous vehicle"
+                                                aria-label={t("Previous vehicle")}
                                                 className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-2.5 border border-white/10 bg-carbon-950/80 hover:bg-carbon-900 text-slate-300 hover:text-white hover:border-cyan-400 transition-all"
                                             >
                                                 <ChevronLeft className="w-5 h-5" />
                                             </button>
                                             <button
                                                 onClick={nextCar}
-                                                aria-label="Next vehicle"
+                                                aria-label={t("Next vehicle")}
                                                 className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-2.5 border border-white/10 bg-carbon-950/80 hover:bg-carbon-900 text-slate-300 hover:text-white hover:border-cyan-400 transition-all"
                                             >
                                                 <ChevronRight className="w-5 h-5" />
@@ -499,16 +486,13 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
 
                                     {/* Quick direct links */}
                                     <div className="w-full flex items-center justify-between z-10 pt-4 border-t border-white/[0.06] text-xs">
-                                        <span className="text-slate-400 font-mono">
-                                            SELECTION: <span className="text-white font-bold">{carIdx + 1}</span> / {featuredVehicles.length || 1}
+                                        <span className="text-slate-400 font-mono">{t("SELECTION: ")}<span className="text-white font-bold">{t(carIdx + 1)}</span> / {t(featuredVehicles.length || 1)}
                                         </span>
                                         <Link
                                             href="/garage"
                                             className="inline-flex items-center gap-1.5 text-cyan-300 hover:text-cyan-200 font-mono uppercase tracking-wider font-semibold transition-colors"
                                         >
-                                            <Wrench className="w-3.5 h-3.5" />
-                                            Tune Setup
-                                            <ArrowUpRight className="w-3.5 h-3.5" />
+                                            <Wrench className="w-3.5 h-3.5" />{t("Tune Setup ")}<ArrowUpRight className="w-3.5 h-3.5" />
                                         </Link>
                                     </div>
                                 </div>
@@ -517,11 +501,9 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                 <div className="lg:col-span-3 p-6 flex flex-col justify-between space-y-6 bg-carbon-950/40">
                                     <div>
                                         <div className="flex items-center justify-between mb-4">
-                                            <span className="label-tech text-cyan-400/90">LIVE CIRCUIT RADAR</span>
+                                            <span className="label-tech text-cyan-400/90">{t("LIVE CIRCUIT RADAR")}</span>
                                             <span className="label-tech text-emerald-400 flex items-center gap-1">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                                                QUALIFYING
-                                            </span>
+                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />{t("QUALIFYING ")}</span>
                                         </div>
 
                                         {/* Mini track layout */}
@@ -531,10 +513,10 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                             </div>
                                             <div className="mt-3 flex items-center justify-between">
                                                 <span className="font-display text-sm font-bold text-white uppercase truncate">
-                                                    {tracks[0]?.name || 'Neon City Grand Prix'}
+                                                    {t(tracks[0]?.name || 'Neon City Grand Prix')}
                                                 </span>
                                                 <span className="text-xs font-mono text-cyan-400 shrink-0">
-                                                    {tracks[0]?.length_meters ? `${(tracks[0].length_meters / 1000).toFixed(1)} KM` : '2.8 KM'}
+                                                    {t(tracks[0]?.length_meters ? `${(tracks[0].length_meters / 1000).toFixed(1)} KM` : '2.8 KM')}
                                                 </span>
                                             </div>
                                         </div>
@@ -542,16 +524,16 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                         {/* Circuit Session Stats */}
                                         <div className="space-y-2 text-xs font-mono">
                                             <div className="flex justify-between py-1.5 border-b border-white/[0.04]">
-                                                <span className="text-slate-500">SESSION PURSE</span>
-                                                <span className="text-amber-400 font-bold">550 CR</span>
+                                                <span className="text-slate-500">{t("SESSION PURSE")}</span>
+                                                <span className="text-amber-400 font-bold">{t("550 CR")}</span>
                                             </div>
                                             <div className="flex justify-between py-1.5 border-b border-white/[0.04]">
-                                                <span className="text-slate-500">LAP RECORD</span>
+                                                <span className="text-slate-500">{t("LAP RECORD")}</span>
                                                 <span className="text-white font-bold">1:14.288</span>
                                             </div>
                                             <div className="flex justify-between py-1.5">
-                                                <span className="text-slate-500">DIFFICULTY</span>
-                                                <span className="text-cyan-400 font-bold">PRO-TIER</span>
+                                                <span className="text-slate-500">{t("DIFFICULTY")}</span>
+                                                <span className="text-cyan-400 font-bold">{t("PRO-TIER")}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -562,7 +544,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                         className="w-full group inline-flex items-center justify-center gap-2 py-3 bg-white hover:bg-cyan-300 text-carbon-950 font-display font-bold uppercase tracking-wider text-xs transition-colors"
                                     >
                                         <Flag className="w-3.5 h-3.5" />
-                                        <span>Join Matchmaking</span>
+                                        <span>{t("Join Matchmaking")}</span>
                                         <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                                     </Link>
                                 </div>
@@ -573,8 +555,8 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                             {featuredVehicles.length > 1 && (
                                 <div className="p-4 bg-carbon-950 border-t border-white/[0.08]">
                                     <div className="flex items-center justify-between mb-2 px-1">
-                                        <span className="label-tech text-slate-500">PIT LANE SHOWROOM &bull; SELECT VEHICLE</span>
-                                        <span className="label-tech text-slate-600 hidden sm:inline">CLICK TO INSPECT</span>
+                                        <span className="label-tech text-slate-500">{t("PIT LANE SHOWROOM • SELECT VEHICLE")}</span>
+                                        <span className="label-tech text-slate-600 hidden sm:inline">{t("CLICK TO INSPECT")}</span>
                                     </div>
                                     <div className="flex gap-2.5 overflow-x-auto scrollbar-none pb-1">
                                         {featuredVehicles.map((car, idx) => {
@@ -590,16 +572,16 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                                     }`}
                                                 >
                                                     <span className={`font-mono text-xs font-bold ${isActive ? 'text-cyan-400' : 'text-slate-600'}`}>
-                                                        0{idx + 1}
+                                                        0{t(idx + 1)}
                                                     </span>
                                                     <div>
                                                         <div className="font-display font-bold uppercase text-xs tracking-wider whitespace-nowrap text-white">
-                                                            {car.name}
+                                                            {t(car.name)}
                                                         </div>
                                                         <div className="text-[10px] font-mono text-slate-500 flex items-center gap-2">
-                                                            <span>{car.class_type}</span>
-                                                            <span>&bull;</span>
-                                                            <span className="text-cyan-400">{car.base_speed} KM/H</span>
+                                                            <span>{t(car.class_type)}</span>
+                                                            <span>{t("•")}</span>
+                                                            <span className="text-cyan-400">{t(car.base_speed)}{t(" KM/H")}</span>
                                                         </div>
                                                     </div>
                                                 </button>
@@ -633,10 +615,10 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                 style={{ transitionDelay: `${i * 80}ms` }}
                             >
                                 <div className="numeric text-4xl sm:text-5xl font-bold text-white leading-none">
-                                    {m.value}<span className="text-cyan-400">{m.suffix}</span>
+                                    {t(m.value)}<span className="text-cyan-400">{t(m.suffix)}</span>
                                 </div>
-                                <div className="label-tech text-slate-400 pt-2">{m.label}</div>
-                                <div className="text-xs text-slate-600">{m.sub}</div>
+                                <div className="label-tech text-slate-400 pt-2">{t(m.label)}</div>
+                                <div className="text-xs text-slate-600">{t(m.sub)}</div>
                             </div>
                         ))}
                     </div>
@@ -650,16 +632,14 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                     <SectionHeading
                         index="01"
                         eyebrow="The Calendar"
-                        title="Three circuits."
+                        title={t("Three circuits.")}
                         accent="One championship."
                         lead="Each layout rewards a different build. Street precision, raw top speed, or absolute corner discipline — pick your battleground."
                         action={
                             <Link
                                 href="/race/lobby"
                                 className="group inline-flex items-center gap-2 label-tech text-cyan-300 hover:text-white transition-colors shrink-0"
-                            >
-                                All circuits
-                                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                            >{t("All circuits ")}<ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                             </Link>
                         }
                     />
@@ -687,8 +667,8 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                     style={{ transitionDelay: `${i * 110}ms` }}
                                 >
                                     <div className="flex items-start justify-between mb-5">
-                                        <span className="label-tech text-slate-600 numeric">R{String(i + 1).padStart(2, '0')}</span>
-                                        <span className={`label-tech px-2.5 py-1 border rounded-full ${diffTone}`}>{t.difficulty}</span>
+                                        <span className="label-tech text-slate-600 numeric">R{t(String(i + 1).padStart(2, '0'))}</span>
+                                        <span className={`label-tech px-2.5 py-1 border rounded-full ${diffTone}`}>{t(t.difficulty)}</span>
                                     </div>
 
                                     <div className="h-36 mb-6 opacity-90 group-hover:opacity-100 transition-opacity">
@@ -697,14 +677,14 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
 
                                     <div className="flex items-center gap-2 mb-2">
                                         <Icon className="w-3.5 h-3.5" style={{ color: meta.tone }} />
-                                        <span className="label-tech text-slate-500">{meta.label}</span>
+                                        <span className="label-tech text-slate-500">{t(meta.label)}</span>
                                     </div>
 
                                     <h3 className="headline text-2xl text-white group-hover:text-cyan-300 transition-colors">
-                                        {t.name}
+                                        {t(t.name)}
                                     </h3>
                                     <p className="text-xs text-slate-500 leading-relaxed mt-3 line-clamp-2 flex-1">
-                                        {t.description}
+                                        {t(t.description)}
                                     </p>
 
                                     <div className="grid grid-cols-3 gap-3 mt-6 pt-5 border-t border-white/[0.06]">
@@ -716,7 +696,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                             <div key={k} className="space-y-1">
                                                 <s.icon className="w-3 h-3 text-slate-600" />
                                                 <div className="numeric text-lg text-white font-bold leading-none">
-                                                    {s.v}<span className="text-[9px] text-slate-600 ml-1 font-semibold">{s.u}</span>
+                                                    {t(s.v)}<span className="text-[9px] text-slate-600 ml-1 font-semibold">{t(s.u)}</span>
                                                 </div>
                                             </div>
                                         ))}
@@ -738,31 +718,23 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                             <div className="flex items-center gap-3">
                                 <span className="label-tech text-slate-600 numeric">02</span>
                                 <span className="h-px w-8 bg-white/15" />
-                                <span className="label-tech text-orange-300/90">The Dyno Bay</span>
+                                <span className="label-tech text-orange-300/90">{t("The Dyno Bay")}</span>
                             </div>
-                            <h2 className="headline text-4xl sm:text-5xl lg:text-6xl text-white">
-                                Every tenth<br />is bought <span className="text-orange-400">in the garage</span>
+                            <h2 className="headline text-4xl sm:text-5xl lg:text-6xl text-white">{t("Every tenth")}<br />{t("is bought ")}<span className="text-orange-400">{t("in the garage")}</span>
                             </h2>
-                            <p className="text-slate-400 text-sm sm:text-[15px] leading-relaxed max-w-lg">
-                                Twenty-two components across four engineering disciplines. Stack stages, watch the dyno
-                                curve move, then find out on track whether the setup was worth the credits.
-                            </p>
+                            <p className="text-slate-400 text-sm sm:text-[15px] leading-relaxed max-w-lg">{t("Twenty-two components across four engineering disciplines. Stack stages, watch the dyno curve move, then find out on track whether the setup was worth the credits. ")}</p>
 
                             <div className="flex flex-wrap gap-3 pt-1">
                                 <Link
                                     href="/garage"
                                     className="group inline-flex items-center gap-2.5 px-6 py-3.5 bg-white text-carbon-950 font-display font-bold uppercase tracking-wider text-sm hover:bg-orange-300 transition-colors"
                                 >
-                                    <Wrench className="w-4 h-4" />
-                                    Open the Garage
-                                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                                    <Wrench className="w-4 h-4" />{t("Open the Garage ")}<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                                 </Link>
                                 <Link
                                     href="/shop"
                                     className="inline-flex items-center gap-2 px-6 py-3.5 border border-white/15 hover:border-white/30 text-slate-200 font-display font-bold uppercase tracking-wider text-sm transition-colors"
-                                >
-                                    Showroom
-                                </Link>
+                                >{t("Showroom ")}</Link>
                             </div>
                         </div>
 
@@ -781,8 +753,8 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                             <row.icon className="w-4.5 h-4.5" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="font-display font-bold uppercase tracking-wide text-[15px] text-white">{row.name}</div>
-                                            <div className="text-xs text-slate-500 mt-0.5 truncate">{row.desc}</div>
+                                            <div className="font-display font-bold uppercase tracking-wide text-[15px] text-white">{t(row.name)}</div>
+                                            <div className="text-xs text-slate-500 mt-0.5 truncate">{t(row.desc)}</div>
                                         </div>
                                         <div className="flex items-center gap-1.5 shrink-0">
                                             {Array.from({ length: 5 }).map((_, k) => (
@@ -797,7 +769,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                                     }}
                                                 />
                                             ))}
-                                            <span className="label-tech text-slate-600 ml-2 numeric">{row.stages}</span>
+                                            <span className="label-tech text-slate-600 ml-2 numeric">{t(row.stages)}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -815,13 +787,11 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                         <SectionHeading
                             index="03"
                             eyebrow="The Roster"
-                            title="Pick your"
+                            title={t("Pick your")}
                             accent="weapon."
                             lead="From a free starter coupe to a carbon-tubbed hypercar. Every machine takes the full upgrade tree."
                             action={
-                                <Link href="/shop" className="group inline-flex items-center gap-2 label-tech text-cyan-300 hover:text-white transition-colors shrink-0">
-                                    Visit showroom
-                                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                <Link href="/shop" className="group inline-flex items-center gap-2 label-tech text-cyan-300 hover:text-white transition-colors shrink-0">{t("Visit showroom ")}<ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                                 </Link>
                             }
                         />
@@ -845,13 +815,13 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
 
                                     <div className="flex items-start justify-between gap-3">
                                         <div className="min-w-0">
-                                            <div className="label-tech text-cyan-300/70">{v.class_type}</div>
+                                            <div className="label-tech text-cyan-300/70">{t(v.class_type)}</div>
                                             <h4 className="font-display font-bold uppercase tracking-wide text-base text-white mt-1 truncate">
-                                                {v.name}
+                                                {t(v.name)}
                                             </h4>
                                         </div>
                                         <div className="numeric text-sm font-bold text-slate-400 shrink-0">
-                                            {v.price > 0 ? Number(v.price).toLocaleString() : <span className="text-emerald-400">FREE</span>}
+                                            {v.price > 0 ? Number(v.price).toLocaleString(locale()) : <span className="text-emerald-400">{t("FREE")}</span>}
                                         </div>
                                     </div>
 
@@ -863,7 +833,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                         ].map((s, k) => (
                                             <div key={k} className="flex items-center gap-1.5">
                                                 <s.icon className="w-3 h-3 text-slate-600" />
-                                                <span className="numeric text-sm text-slate-300 font-semibold">{s.v}</span>
+                                                <span className="numeric text-sm text-slate-300 font-semibold">{t(s.v)}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -880,7 +850,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                     <SectionHeading
                         index="04"
                         eyebrow="Quick Start"
-                        title="Grid slot in"
+                        title={t("Grid slot in")}
                         accent="under a minute."
                         align="center"
                     />
@@ -904,11 +874,11 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                     <div className="relative z-10 w-[4.8rem] h-[4.8rem] mx-auto lg:mx-0 border border-white/[0.08] bg-carbon-925 flex items-center justify-center">
                                         <s.icon className="w-6 h-6 text-cyan-400" />
                                         <span className="absolute -top-2.5 -right-2.5 numeric text-xs font-bold text-carbon-950 bg-cyan-400 px-1.5 py-0.5">
-                                            {s.n}
+                                            {t(s.n)}
                                         </span>
                                     </div>
-                                    <h3 className="font-display font-bold uppercase tracking-wide text-lg text-white">{s.title}</h3>
-                                    <p className="text-sm text-slate-500 leading-relaxed max-w-xs mx-auto lg:mx-0">{s.desc}</p>
+                                    <h3 className="font-display font-bold uppercase tracking-wide text-lg text-white">{t(s.title)}</h3>
+                                    <p className="text-sm text-slate-500 leading-relaxed max-w-xs mx-auto lg:mx-0">{t(s.desc)}</p>
                                 </div>
                             ))}
                         </div>
@@ -923,13 +893,11 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                     <SectionHeading
                         index="05"
                         eyebrow="Paddock Wire"
-                        title="From the"
+                        title={t("From the")}
                         accent="pit wall."
                         lead="Championship bulletins, engineering deep-dives and patch notes from the team building the sim."
                         action={
-                            <Link href="/news" className="group inline-flex items-center gap-2 label-tech text-cyan-300 hover:text-white transition-colors shrink-0">
-                                All articles
-                                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                            <Link href="/news" className="group inline-flex items-center gap-2 label-tech text-cyan-300 hover:text-white transition-colors shrink-0">{t("All articles ")}<ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                             </Link>
                         }
                     />
@@ -946,23 +914,17 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
 
                             <div className="relative space-y-5">
                                 <div className="flex items-center gap-3">
-                                    <span className="label-tech px-2.5 py-1 border border-cyan-400/25 text-cyan-300 rounded-full">Championship</span>
+                                    <span className="label-tech px-2.5 py-1 border border-cyan-400/25 text-cyan-300 rounded-full">{t("Championship")}</span>
                                     <span className="label-tech text-slate-600 flex items-center gap-1.5">
-                                        <Clock className="w-3 h-3" /> 4 min read
-                                    </span>
+                                        <Clock className="w-3 h-3" />{t(" 4 min read ")}</span>
                                 </div>
-                                <h3 className="headline text-3xl sm:text-4xl text-white group-hover:text-cyan-300 transition-colors max-w-xl">
-                                    Season &rsquo;26 kickoff: new circuits &amp; a 500k CR purse
-                                </h3>
-                                <p className="text-sm text-slate-400 leading-relaxed max-w-lg">
-                                    The largest championship season yet opens with three world-class circuits, eight
-                                    vehicle classes and the biggest credit distribution StreetForge has run.
-                                </p>
+                                <h3 className="headline text-3xl sm:text-4xl text-white group-hover:text-cyan-300 transition-colors max-w-xl">{t("Season ’26 kickoff: new circuits & a 500k CR purse ")}</h3>
+                                <p className="text-sm text-slate-400 leading-relaxed max-w-lg">{t("The largest championship season yet opens with three world-class circuits, eight vehicle classes and the biggest credit distribution StreetForge has run. ")}</p>
                                 <div className="flex items-center gap-3 pt-2">
                                     <span className="w-8 h-8 bg-cyan-400 text-carbon-950 font-display font-bold flex items-center justify-center text-sm">D</span>
                                     <div>
-                                        <div className="text-xs font-semibold text-slate-200">Dominic Vance</div>
-                                        <div className="label-tech text-slate-600">Motorsport Director &middot; Sep 14</div>
+                                        <div className="text-xs font-semibold text-slate-200">{t("Dominic Vance")}</div>
+                                        <div className="label-tech text-slate-600">{t("Motorsport Director · Sep 14")}</div>
                                     </div>
                                 </div>
                             </div>
@@ -1002,21 +964,21 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                 >
                                     <div className="space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <span className={`label-tech px-2.5 py-1 border rounded-full ${a.tone}`}>{a.cat}</span>
-                                            <span className="label-tech text-slate-600">{a.read}</span>
+                                            <span className={`label-tech px-2.5 py-1 border rounded-full ${a.tone}`}>{t(a.cat)}</span>
+                                            <span className="label-tech text-slate-600">{t(a.read)}</span>
                                         </div>
                                         <h3
                                             className="font-display font-bold uppercase tracking-wide text-xl text-white group-hover:text-cyan-300 transition-colors leading-tight"
                                             dangerouslySetInnerHTML={{ __html: a.title }}
                                         />
-                                        <p className="text-xs text-slate-500 leading-relaxed">{a.excerpt}</p>
+                                        <p className="text-xs text-slate-500 leading-relaxed">{t(a.excerpt)}</p>
                                     </div>
                                     <div className="flex items-center justify-between pt-5 mt-5 border-t border-white/[0.06]">
                                         <div className="flex items-center gap-2.5">
                                             <span className="w-6 h-6 flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: a.color }}>
-                                                {a.author[0]}
+                                                {t(a.author[0])}
                                             </span>
-                                            <span className="label-tech text-slate-500">{a.author} &middot; {a.date}</span>
+                                            <span className="label-tech text-slate-500">{t(a.author)}{t(" · ")}{t(a.date)}</span>
                                         </div>
                                         <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-cyan-400 transition-colors" />
                                     </div>
@@ -1041,8 +1003,8 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                     <t.icon className="w-4 h-4" />
                                 </div>
                                 <div className="space-y-1">
-                                    <div className="font-display font-bold uppercase tracking-wide text-sm text-white">{t.title}</div>
-                                    <div className="text-xs text-slate-500 leading-relaxed">{t.desc}</div>
+                                    <div className="font-display font-bold uppercase tracking-wide text-sm text-white">{t(t.title)}</div>
+                                    <div className="text-xs text-slate-500 leading-relaxed">{t(t.desc)}</div>
                                 </div>
                             </div>
                         ))}
@@ -1058,21 +1020,13 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
 
                 <div className="relative max-w-3xl mx-auto px-5 sm:px-6 text-center space-y-8">
                     <Eyebrow tone="neutral">
-                        <Trophy className="w-3 h-3" />
-                        Ready to race
-                    </Eyebrow>
+                        <Trophy className="w-3 h-3" />{t("Ready to race ")}</Eyebrow>
 
-                    <h2 className="headline text-5xl sm:text-6xl lg:text-7xl text-white text-balance">
-                        Claim your<br />
-                        <span className="bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-600 bg-clip-text text-transparent">
-                            driver seat
-                        </span>
+                    <h2 className="headline text-5xl sm:text-6xl lg:text-7xl text-white text-balance">{t("Claim your")}<br />
+                        <span className="bg-gradient-to-r from-cyan-300 via-sky-400 to-blue-600 bg-clip-text text-transparent">{t("driver seat ")}</span>
                     </h2>
 
-                    <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
-                        Sign up in thirty seconds. First sports car and <strong className="text-white">1,000&nbsp;CR</strong> on
-                        the house. No card, no download, no plugin.
-                    </p>
+                    <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">{t("Sign up in thirty seconds. First sports car and ")}<strong className="text-white">{t("1,000 CR")}</strong>{t(" on the house. No card, no download, no plugin. ")}</p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
                         <Link
@@ -1081,16 +1035,14 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                         >
                             <span className="absolute inset-y-0 w-14 bg-white/60 animate-sweep" aria-hidden="true" />
                             <span className="relative flex items-center gap-2.5">
-                                {user ? <><Play className="w-4 h-4" /> Enter Race Lobby</> : <>Register Free<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" /></>}
+                                {user ? <><Play className="w-4 h-4" />{t(" Enter Race Lobby")}</> : <>{t("Register Free")}<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" /></>}
                             </span>
                         </Link>
                         {!user && (
                             <Link
                                 href="/how-it-works"
                                 className="inline-flex items-center justify-center gap-2 px-10 py-4 border border-white/15 hover:border-white/30 text-slate-200 font-display font-bold uppercase tracking-wider text-sm transition-colors"
-                            >
-                                How it works
-                            </Link>
+                            >{t("How it works ")}</Link>
                         )}
                     </div>
 
@@ -1098,7 +1050,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                         {['No credit card', 'No download', 'Instant access'].map((t) => (
                             <span key={t} className="label-tech text-slate-600 flex items-center gap-2">
                                 <span className="w-1 h-1 rounded-full bg-cyan-400" />
-                                {t}
+                                {t(t)}
                             </span>
                         ))}
                     </div>

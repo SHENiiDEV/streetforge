@@ -1,3 +1,4 @@
+import { t } from '../localization';
 import React from 'react';
 
 export default function StatBar({ label, value, max = 350, unit = '', color = 'cyan', icon: Icon }) {
@@ -16,10 +17,10 @@ export default function StatBar({ label, value, max = 350, unit = '', color = 'c
             <div className="flex items-center justify-between text-xs">
                 <span className="flex items-center gap-1.5 text-slate-400 font-medium uppercase tracking-wider">
                     {Icon && <Icon className="w-3.5 h-3.5 text-slate-300" />}
-                    {label}
+                    {t(label)}
                 </span>
                 <span className="font-orbitron font-bold text-slate-200">
-                    {value} <span className="text-slate-500 text-[10px] font-normal">{unit}</span>
+                    {t(value)} <span className="text-slate-500 text-[10px] font-normal">{t(unit)}</span>
                 </span>
             </div>
             <div className="h-2 w-full bg-slate-900/80 rounded-full overflow-hidden border border-slate-800 p-0.5">

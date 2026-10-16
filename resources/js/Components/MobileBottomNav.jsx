@@ -1,3 +1,4 @@
+import { t } from '../localization';
 import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { 
@@ -81,7 +82,7 @@ export default function MobileBottomNav() {
                             <span className={`label-tech mt-1.5 leading-none ${
                                 isActive ? 'text-cyan-300' : 'text-slate-500'
                             }`}>
-                                {item.name}
+                                {t(item.name)}
                             </span>
 
                             {/* Active Micro-Indicator Dot */}

@@ -1,3 +1,4 @@
+import { t } from '../localization';
 import React from 'react';
 import { Link } from '@inertiajs/react';
 
@@ -79,17 +80,13 @@ export default function BrandLogo({
             {showText && (
                 <div className="flex flex-col whitespace-nowrap leading-none">
                     <div className={`font-orbitron font-extrabold ${currentSize.text} tracking-tight text-white flex items-center leading-none`}>
-                        <span className="text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">STREET</span>
-                        <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-cyan-400 bg-clip-text text-transparent ml-1 font-black drop-shadow-[0_0_10px_rgba(6,182,212,0.3)]">
-                            FORGE
-                        </span>
+                        <span className="text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{t("STREET")}</span>
+                        <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-cyan-400 bg-clip-text text-transparent ml-1 font-black drop-shadow-[0_0_10px_rgba(6,182,212,0.3)]">{t("FORGE ")}</span>
                     </div>
                     {showSubtitle && (
                         <div className="flex items-center gap-1.5 mt-1.5">
                             <span className="inline-block w-1 h-1 rounded-full bg-cyan-400 shrink-0" />
-                            <span className={`label-tech text-slate-600 ${currentSize.sub}`}>
-                                Motorsport Simulation
-                            </span>
+                            <span className={`label-tech text-slate-600 ${currentSize.sub}`}>{t("Motorsport Simulation ")}</span>
                         </div>
                     )}
                 </div>
@@ -100,7 +97,7 @@ export default function BrandLogo({
     if (linkTo) {
         return (
             <Link href={linkTo} className="focus:outline-none shrink-0 inline-flex">
-                {LogoContent}
+                {t(LogoContent)}
             </Link>
         );
     }

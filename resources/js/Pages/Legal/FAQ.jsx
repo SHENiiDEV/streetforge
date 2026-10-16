@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React, { useState } from 'react';
 import PublicLayout from '../../Layouts/PublicLayout';
 import { usePage, Link } from '@inertiajs/react';
@@ -59,7 +60,7 @@ export default function FAQ() {
         {
             category: 'billing',
             q: 'How do top-up credit purchases work?',
-            a: 'Buy credits in the Top-Up section by credit or debit card. Top Values includes 2,750 CR for $25 and 15,000 CR for $100, with bonus credits included. You can also choose a custom quantity from 100 CR with no upper limit at $1 per 100 CR, without a bonus. Your balance updates after successful payment.',
+            a: 'Buy credits by card. Choose a bonus bundle or a custom quantity from 100 CR with no upper limit. Select USD, EUR or GBP. Prices use fixed exchange rates: 1 USD = 0.92 EUR = 0.79 GBP. Your balance updates after successful payment.',
         },
         {
             category: 'billing',
@@ -69,7 +70,7 @@ export default function FAQ() {
         {
             category: 'billing',
             q: 'What payment methods are supported?',
-            a: 'We accept all major Visa and Mastercard credit and debit cards, as well as digital wallets powered by Level 1 PCI-DSS certified payment gateways with 3D Secure 2.0 biometric verification.',
+            a: 'We accept Visa and Mastercard credit and debit cards.',
         },
         {
             category: 'billing',
@@ -103,15 +104,10 @@ export default function FAQ() {
                 
                 {/* Header */}
                 <div className="text-center space-y-4 mb-12">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                        Driver Knowledge Base & Help Desk
-                    </div>
-                    <h1 className="text-4xl sm:text-5xl font-orbitron font-extrabold text-white">
-                        Frequently Asked <span className="text-cyan-400">Questions</span>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">{t("Driver Knowledge Base & Help Desk ")}</div>
+                    <h1 className="text-4xl sm:text-5xl font-orbitron font-extrabold text-white">{t("Frequently Asked ")}<span className="text-cyan-400">{t("Questions")}</span>
                     </h1>
-                    <p className="max-w-2xl mx-auto text-slate-400 text-base leading-relaxed">
-                        Find answers regarding gameplay mechanics, garage dyno tuning, payment processing, PDF invoices, and international sanctions compliance.
-                    </p>
+                    <p className="max-w-2xl mx-auto text-slate-400 text-base leading-relaxed">{t("Find answers regarding gameplay mechanics, garage dyno tuning, payment processing, PDF invoices, and international sanctions compliance. ")}</p>
                 </div>
 
                 {/* Category Filter Pills */}
@@ -129,7 +125,7 @@ export default function FAQ() {
                                     : 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-800'
                             }`}
                         >
-                            {cat.label}
+                            {t(cat.label)}
                         </button>
                     ))}
                 </div>
@@ -153,7 +149,7 @@ export default function FAQ() {
                                 >
                                     <span className="flex items-center gap-3 text-sm sm:text-base pr-4">
                                         <HelpCircle className={`w-5 h-5 shrink-0 ${isOpen ? 'text-cyan-400' : 'text-slate-500'}`} />
-                                        {faq.q}
+                                        {t(faq.q)}
                                     </span>
                                     <ChevronDown
                                         className={`w-5 h-5 text-slate-400 transition-transform duration-200 shrink-0 ${
@@ -163,7 +159,7 @@ export default function FAQ() {
                                 </button>
                                 {isOpen && (
                                     <div className="px-5 pb-5 pt-2 text-sm text-slate-300 leading-relaxed border-t border-slate-800/80 bg-slate-950/40">
-                                        {faq.a}
+                                        {t(faq.a)}
                                     </div>
                                 )}
                             </div>
@@ -180,12 +176,8 @@ export default function FAQ() {
                         <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
                             <Gauge className="w-5 h-5" />
                         </div>
-                        <h4 className="font-orbitron font-bold text-white group-hover:text-cyan-400 transition-colors">
-                            Driver Gameplay Guide
-                        </h4>
-                        <p className="text-xs text-slate-400 leading-relaxed">
-                            Learn about throttle control, nitro management, and cornering lines on each championship track.
-                        </p>
+                        <h4 className="font-orbitron font-bold text-white group-hover:text-cyan-400 transition-colors">{t("Driver Gameplay Guide ")}</h4>
+                        <p className="text-xs text-slate-400 leading-relaxed">{t("Learn about throttle control, nitro management, and cornering lines on each championship track. ")}</p>
                     </Link>
 
                     <Link
@@ -195,12 +187,8 @@ export default function FAQ() {
                         <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
                             <CreditCard className="w-5 h-5" />
                         </div>
-                        <h4 className="font-orbitron font-bold text-white group-hover:text-cyan-400 transition-colors">
-                            Refunds & Invoices
-                        </h4>
-                        <p className="text-xs text-slate-400 leading-relaxed">
-                            Review our automated VAT billing, 14-day digital statutory rights, and dispute procedures.
-                        </p>
+                        <h4 className="font-orbitron font-bold text-white group-hover:text-cyan-400 transition-colors">{t("Refunds & Invoices ")}</h4>
+                        <p className="text-xs text-slate-400 leading-relaxed">{t("Review our automated VAT billing, 14-day digital statutory rights, and dispute procedures. ")}</p>
                     </Link>
 
                     <Link
@@ -210,30 +198,21 @@ export default function FAQ() {
                         <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
                             <ShieldAlert className="w-5 h-5" />
                         </div>
-                        <h4 className="font-orbitron font-bold text-white group-hover:text-cyan-400 transition-colors">
-                            Sanctions Bulletin
-                        </h4>
-                        <p className="text-xs text-slate-400 leading-relaxed">
-                            See the complete schedule of prohibited countries under UK HM Treasury and international law.
-                        </p>
+                        <h4 className="font-orbitron font-bold text-white group-hover:text-cyan-400 transition-colors">{t("Sanctions Bulletin ")}</h4>
+                        <p className="text-xs text-slate-400 leading-relaxed">{t("See the complete schedule of prohibited countries under UK HM Treasury and international law. ")}</p>
                     </Link>
                 </div>
 
                 {/* Support Contact Box */}
                 <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-cyan-950/40 border border-slate-800 rounded-2xl p-8 sm:p-10 text-center space-y-4">
-                    <h3 className="text-xl font-orbitron font-bold text-white">
-                        Have a Specific Technical or Billing Inquiry?
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
-                        Our London operations team and telemetry support specialists respond to inquiries within 24 business hours.
-                    </p>
+                    <h3 className="text-xl font-orbitron font-bold text-white">{t("Have a Specific Technical or Billing Inquiry? ")}</h3>
+                    <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">{t("Our London operations team and telemetry support specialists respond to inquiries within 24 business hours. ")}</p>
                     <div className="pt-2">
                         <a
                             href={`mailto:${companyEmail}`}
                             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-orbitron font-bold text-sm shadow-lg shadow-cyan-500/20 transition-all"
                         >
-                            <Mail className="w-4 h-4" />
-                            Email Support ({companyEmail})
+                            <Mail className="w-4 h-4" />{t("Email Support (")}{t(companyEmail)})
                         </a>
                     </div>
                 </div>

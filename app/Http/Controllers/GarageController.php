@@ -42,7 +42,7 @@ class GarageController extends Controller
         UserVehicle::where('user_id', $request->user()->id)->update(['is_active' => false]);
         $userVehicle->update(['is_active' => true]);
 
-        return back()->with('success', 'Active racing vehicle switched to ' . $userVehicle->vehicle->name);
+        return back()->with('success', __('Active racing vehicle switched to :vehicle', ['vehicle' => $userVehicle->vehicle->name]));
     }
 
     public function installUpgrade(Request $request, UserVehicle $userVehicle): RedirectResponse
@@ -59,12 +59,12 @@ class GarageController extends Controller
 
         // Check if already installed
         if ($userVehicle->upgrades()->where('upgrade_id', $upgrade->id)->exists()) {
-            return back()->with('error', 'This upgrade is already installed on this vehicle.');
+            return back()->with('error', __('This upgrade is already installed on this vehicle.'));
         }
 
         $user = $request->user();
         if ($user->game_balance < $upgrade->price) {
-            return back()->with('error', 'Insufficient credits. You need ' . number_format($upgrade->price - $user->game_balance) . ' more CR.');
+            return back()->with('error', __('Insufficient credits. You need :credits more CR.', ['credits' => number_format($upgrade->price - $user->game_balance)]));
         }
 
         // Deduct price and attach
@@ -72,7 +72,7 @@ class GarageController extends Controller
         $userVehicle->upgrades()->attach($upgrade->id, ['user_id' => $user->id]);
         $userVehicle->recalculateStats();
 
-        return back()->with('success', 'Successfully purchased and installed ' . $upgrade->name . '!');
+        return back()->with('success', __('Successfully purchased and installed :upgrade!', ['upgrade' => __($upgrade->name)]));
     }
 
     public function applySkin(Request $request, UserVehicle $userVehicle): RedirectResponse
@@ -91,9 +91,9 @@ class GarageController extends Controller
         // Check if user owns the skin or if it's free
         $ownsSkin = $user->ownedSkins()->where('skin_id', $skin->id)->exists() || $skin->price <= 0;
 
-        if (!$ownsSkin) {
+        if (! $ownsSkin) {
             if ($user->game_balance < $skin->price) {
-                return back()->with('error', 'Insufficient credits for this custom livery.');
+                return back()->with('error', __('Insufficient credits for this custom livery.'));
             }
             $user->decrement('game_balance', $skin->price);
             $user->ownedSkins()->syncWithoutDetaching([$skin->id]);
@@ -101,6 +101,6 @@ class GarageController extends Controller
 
         $userVehicle->update(['skin_id' => $skin->id]);
 
-        return back()->with('success', 'Applied livery ' . $skin->name . ' to your car!');
+        return back()->with('success', __('Applied livery :livery to your car!', ['livery' => $skin->name]));
     }
 }

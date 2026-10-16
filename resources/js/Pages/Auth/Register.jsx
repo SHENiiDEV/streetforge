@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React, { useState } from 'react';
 import PublicLayout from '../../Layouts/PublicLayout';
 import { useForm, Link, usePage } from '@inertiajs/react';
@@ -61,15 +62,10 @@ export default function Register({ blacklistedCountries = [] }) {
                 
                 {/* Heading */}
                 <div className="text-center space-y-3 mb-8">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">
-                        ⚡ Official Driver Registration
-                    </div>
-                    <h1 className="text-3xl font-orbitron font-extrabold text-white">
-                        Create Your <span className="text-cyan-400">Racer Profile</span>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-400 text-xs font-semibold uppercase tracking-wider">{t("⚡ Official Driver Registration ")}</div>
+                    <h1 className="text-3xl font-orbitron font-extrabold text-white">{t("Create Your ")}<span className="text-cyan-400">{t("Racer Profile")}</span>
                     </h1>
-                    <p className="text-xs text-slate-400">
-                        Join the championship, receive a complimentary sports vehicle and 1,000 Starter Credits.
-                    </p>
+                    <p className="text-xs text-slate-400">{t("Join the championship, receive a complimentary sports vehicle and 1,000 Starter Credits. ")}</p>
                 </div>
 
                 {/* Form Card */}
@@ -78,13 +74,11 @@ export default function Register({ blacklistedCountries = [] }) {
                         
                         {/* Section 1: Account & Credentials */}
                         <div className="space-y-4">
-                            <h3 className="text-xs font-orbitron font-bold uppercase tracking-wider text-cyan-400 border-b border-slate-800 pb-2">
-                                1. Personal & Contact Information
-                            </h3>
+                            <h3 className="text-xs font-orbitron font-bold uppercase tracking-wider text-cyan-400 border-b border-slate-800 pb-2">{t("1. Personal & Contact Information ")}</h3>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-300 mb-1">First Name *</label>
+                                    <label className="block text-xs font-medium text-slate-300 mb-1">{t("First Name *")}</label>
                                     <div className="relative">
                                         <User className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                                         <input
@@ -92,30 +86,30 @@ export default function Register({ blacklistedCountries = [] }) {
                                             required
                                             value={data.name}
                                             onChange={e => setData('name', e.target.value)}
-                                            placeholder="Alex"
+                                            placeholder={t("Alex")}
                                             className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-600"
                                         />
                                     </div>
-                                    {errors.name && <div className="text-xs text-red-400 mt-1">{errors.name}</div>}
+                                    {errors.name && <div className="text-xs text-red-400 mt-1">{t(errors.name)}</div>}
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-300 mb-1">Surname *</label>
+                                    <label className="block text-xs font-medium text-slate-300 mb-1">{t("Surname *")}</label>
                                     <input
                                         type="text"
                                         required
                                         value={data.surname}
                                         onChange={e => setData('surname', e.target.value)}
-                                        placeholder="Rider"
+                                        placeholder={t("Rider")}
                                         className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-600"
                                     />
-                                    {errors.surname && <div className="text-xs text-red-400 mt-1">{errors.surname}</div>}
+                                    {errors.surname && <div className="text-xs text-red-400 mt-1">{t(errors.surname)}</div>}
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-300 mb-1">Email Address *</label>
+                                    <label className="block text-xs font-medium text-slate-300 mb-1">{t("Email Address *")}</label>
                                     <div className="relative">
                                         <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                                         <input
@@ -123,15 +117,15 @@ export default function Register({ blacklistedCountries = [] }) {
                                             required
                                             value={data.email}
                                             onChange={e => setData('email', e.target.value)}
-                                            placeholder="racer@example.com"
+                                            placeholder={t("racer@example.com")}
                                             className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-600"
                                         />
                                     </div>
-                                    {errors.email && <div className="text-xs text-red-400 mt-1">{errors.email}</div>}
+                                    {errors.email && <div className="text-xs text-red-400 mt-1">{t(errors.email)}</div>}
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-300 mb-1">Phone Number *</label>
+                                    <label className="block text-xs font-medium text-slate-300 mb-1">{t("Phone Number *")}</label>
                                     <div className="relative">
                                         <Phone className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                                         <input
@@ -139,16 +133,16 @@ export default function Register({ blacklistedCountries = [] }) {
                                             required
                                             value={data.phone}
                                             onChange={e => setData('phone', e.target.value)}
-                                            placeholder="+49 151 23456789"
+                                            placeholder={t("+49 151 23456789")}
                                             className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-600"
                                         />
                                     </div>
-                                    {errors.phone && <div className="text-xs text-red-400 mt-1">{errors.phone}</div>}
+                                    {errors.phone && <div className="text-xs text-red-400 mt-1">{t(errors.phone)}</div>}
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-xs font-medium text-slate-300 mb-1">Date of Birth * (Must be 16+)</label>
+                                <label className="block text-xs font-medium text-slate-300 mb-1">{t("Date of Birth * (Must be 16+)")}</label>
                                 <div className="relative">
                                     <Calendar className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                                     <input
@@ -159,12 +153,12 @@ export default function Register({ blacklistedCountries = [] }) {
                                         className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-600"
                                     />
                                 </div>
-                                {errors.dob && <div className="text-xs text-red-400 mt-1">{errors.dob}</div>}
+                                {errors.dob && <div className="text-xs text-red-400 mt-1">{t(errors.dob)}</div>}
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-300 mb-1">Password *</label>
+                                    <label className="block text-xs font-medium text-slate-300 mb-1">{t("Password *")}</label>
                                     <div className="relative">
                                         <Lock className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                                         <input
@@ -172,21 +166,21 @@ export default function Register({ blacklistedCountries = [] }) {
                                             required
                                             value={data.password}
                                             onChange={e => setData('password', e.target.value)}
-                                            placeholder="Min. 8 characters"
+                                            placeholder={t("Min. 8 characters")}
                                             className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white"
                                         />
                                     </div>
-                                    {errors.password && <div className="text-xs text-red-400 mt-1">{errors.password}</div>}
+                                    {errors.password && <div className="text-xs text-red-400 mt-1">{t(errors.password)}</div>}
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-300 mb-1">Confirm Password *</label>
+                                    <label className="block text-xs font-medium text-slate-300 mb-1">{t("Confirm Password *")}</label>
                                     <input
                                         type="password"
                                         required
                                         value={data.password_confirmation}
                                         onChange={e => setData('password_confirmation', e.target.value)}
-                                        placeholder="Repeat password"
+                                        placeholder={t("Repeat password")}
                                         className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg px-3 py-2 text-sm text-white"
                                     />
                                 </div>
@@ -196,15 +190,13 @@ export default function Register({ blacklistedCountries = [] }) {
                         {/* Section 2: Address (4 Required Blocks) & Country Sanctions Check */}
                         <div className="space-y-4 pt-2">
                             <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                                <h3 className="text-xs font-orbitron font-bold uppercase tracking-wider text-cyan-400">
-                                    2. Physical Residential Address
-                                </h3>
-                                <span className="text-[10px] text-slate-500 font-mono">Invoice Billing & Tax Compliance</span>
+                                <h3 className="text-xs font-orbitron font-bold uppercase tracking-wider text-cyan-400">{t("2. Physical Residential Address ")}</h3>
+                                <span className="text-[10px] text-slate-500 font-mono">{t("Invoice Billing & Tax Compliance")}</span>
                             </div>
 
                             {/* Block 1: Street Address */}
                             <div>
-                                <label className="block text-xs font-medium text-slate-300 mb-1">Street, House Number, Apt *</label>
+                                <label className="block text-xs font-medium text-slate-300 mb-1">{t("Street, House Number, Apt *")}</label>
                                 <div className="relative">
                                     <MapPin className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
                                     <input
@@ -212,55 +204,55 @@ export default function Register({ blacklistedCountries = [] }) {
                                         required
                                         value={data.street}
                                         onChange={e => setData('street', e.target.value)}
-                                        placeholder="Friedrichstraße 43, Apt 12"
+                                        placeholder={t("Friedrichstraße 43, Apt 12")}
                                         className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-600"
                                     />
                                 </div>
-                                {errors.street && <div className="text-xs text-red-400 mt-1">{errors.street}</div>}
+                                {errors.street && <div className="text-xs text-red-400 mt-1">{t(errors.street)}</div>}
                             </div>
 
                             {/* Block 2, 3, 4: City, Country, Post Code */}
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-300 mb-1">City *</label>
+                                    <label className="block text-xs font-medium text-slate-300 mb-1">{t("City *")}</label>
                                     <input
                                         type="text"
                                         required
                                         value={data.city}
                                         onChange={e => setData('city', e.target.value)}
-                                        placeholder="Berlin"
+                                        placeholder={t("Berlin")}
                                         className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-600"
                                     />
-                                    {errors.city && <div className="text-xs text-red-400 mt-1">{errors.city}</div>}
+                                    {errors.city && <div className="text-xs text-red-400 mt-1">{t(errors.city)}</div>}
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-300 mb-1">Country *</label>
+                                    <label className="block text-xs font-medium text-slate-300 mb-1">{t("Country *")}</label>
                                     <select
                                         required
                                         value={data.country}
                                         onChange={e => handleCountryChange(e.target.value)}
                                         className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg px-3 py-2 text-sm text-white"
                                     >
-                                        <option value="">Select Country</option>
+                                        <option value="">{t("Select Country")}</option>
                                         {allowedCountries.map(country => (
-                                            <option key={country} value={country}>{country}</option>
+                                            <option key={country} value={country}>{t(country)}</option>
                                         ))}
                                     </select>
-                                    {errors.country && <div className="text-xs text-red-400 mt-1">{errors.country}</div>}
+                                    {errors.country && <div className="text-xs text-red-400 mt-1">{t(errors.country)}</div>}
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-medium text-slate-300 mb-1">Postal Code *</label>
+                                    <label className="block text-xs font-medium text-slate-300 mb-1">{t("Postal Code *")}</label>
                                     <input
                                         type="text"
                                         required
                                         value={data.post_code}
                                         onChange={e => setData('post_code', e.target.value)}
-                                        placeholder="10117"
+                                        placeholder={t("10117")}
                                         className="w-full bg-slate-950 border border-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-600"
                                     />
-                                    {errors.post_code && <div className="text-xs text-red-400 mt-1">{errors.post_code}</div>}
+                                    {errors.post_code && <div className="text-xs text-red-400 mt-1">{t(errors.post_code)}</div>}
                                 </div>
                             </div>
 
@@ -269,9 +261,7 @@ export default function Register({ blacklistedCountries = [] }) {
                                 <div className="p-3.5 rounded-xl bg-red-950/60 border border-red-500/50 flex items-start gap-3 text-xs text-red-200">
                                     <ShieldAlert className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                                     <div>
-                                        <strong className="block font-semibold">Sanctions Compliance Notice:</strong>
-                                        Registration from this country is restricted under international compliance regulations. You cannot proceed with this selection.
-                                    </div>
+                                        <strong className="block font-semibold">{t("Sanctions Compliance Notice:")}</strong>{t("Registration from this country is restricted under international compliance regulations. You cannot proceed with this selection. ")}</div>
                                 </div>
                             )}
                         </div>
@@ -286,19 +276,13 @@ export default function Register({ blacklistedCountries = [] }) {
                                     onChange={e => setData('terms', e.target.checked)}
                                     className="mt-1 rounded bg-slate-950 border-slate-700 text-cyan-500 focus:ring-cyan-500 focus:ring-offset-slate-900 w-4 h-4"
                                 />
-                                <span className="text-xs text-slate-300 leading-normal">
-                                    I confirm that I am at least 16 years old and I agree to the{' '}
-                                    <Link href="/terms" target="_blank" className="text-cyan-400 hover:underline font-semibold">
-                                        Terms & Conditions
-                                    </Link>{' '}
-                                    and{' '}
-                                    <Link href="/privacy" target="_blank" className="text-cyan-400 hover:underline font-semibold">
-                                        Privacy Policy
-                                    </Link>
+                                <span className="text-xs text-slate-300 leading-normal">{t("I confirm that I am at least 16 years old and I agree to the")}{t(' ')}
+                                    <Link href="/terms" target="_blank" className="text-cyan-400 hover:underline font-semibold">{t("Terms & Conditions ")}</Link>{t(' ')}{t("and")}{t(' ')}
+                                    <Link href="/privacy" target="_blank" className="text-cyan-400 hover:underline font-semibold">{t("Privacy Policy ")}</Link>
                                     .
                                 </span>
                             </label>
-                            {errors.terms && <div className="text-xs text-red-400">{errors.terms}</div>}
+                            {errors.terms && <div className="text-xs text-red-400">{t(errors.terms)}</div>}
                         </div>
 
                         {/* Submit Button */}
@@ -307,18 +291,15 @@ export default function Register({ blacklistedCountries = [] }) {
                             disabled={processing || sanctionWarning}
                             className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-orbitron font-bold text-sm tracking-wide shadow-xl shadow-cyan-500/20 hover:shadow-cyan-500/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                         >
-                            {processing ? 'Registering Driver...' : 'Complete Registration & Claim Starter Car'}
+                            {t(processing ? 'Registering Driver...' : 'Complete Registration & Claim Starter Car')}
                             <ChevronRight className="w-4 h-4" />
                         </button>
 
                     </form>
 
                     {/* Footer note */}
-                    <div className="mt-6 text-center text-xs text-slate-400">
-                        Already have a racing license?{' '}
-                        <Link href="/login" className="text-cyan-400 hover:underline font-semibold">
-                            Sign in here
-                        </Link>
+                    <div className="mt-6 text-center text-xs text-slate-400">{t("Already have a racing license?")}{t(' ')}
+                        <Link href="/login" className="text-cyan-400 hover:underline font-semibold">{t("Sign in here ")}</Link>
                     </div>
                 </div>
 

@@ -261,7 +261,7 @@
                 </td>
                 <td style="text-align: center; font-weight: 600;">1</td>
                 <td style="text-align: right; font-weight: 600; color: #0891b2;">+{{ number_format($transaction->game_credits, 0) }} CR</td>
-                <td style="text-align: right; font-weight: 700; color: #0f172a;">${{ number_format($transaction->fiat_amount, 2) }}</td>
+                <td style="text-align: right; font-weight: 700; color: #0f172a;">{{ config('store.currencies.'.$transaction->currency.'.symbol', $transaction->currency) }}{{ number_format($transaction->fiat_amount, 2) }}</td>
             </tr>
         </tbody>
     </table>
@@ -270,15 +270,15 @@
     <table class="summary-table">
         <tr>
             <td style="color: #64748b;">Subtotal:</td>
-            <td style="text-align: right; font-weight: 600;">${{ number_format($transaction->fiat_amount, 2) }}</td>
+            <td style="text-align: right; font-weight: 600;">{{ config('store.currencies.'.$transaction->currency.'.symbol', $transaction->currency) }}{{ number_format($transaction->fiat_amount, 2) }}</td>
         </tr>
         <tr>
             <td style="color: #64748b;">VAT / Sales Tax (0%):</td>
-            <td style="text-align: right; font-weight: 600;">$0.00</td>
+            <td style="text-align: right; font-weight: 600;">{{ config('store.currencies.'.$transaction->currency.'.symbol', $transaction->currency) }}0.00</td>
         </tr>
         <tr class="total-row">
             <td>Total Paid:</td>
-            <td style="text-align: right; color: #0891b2;">${{ number_format($transaction->fiat_amount, 2) }} {{ $transaction->currency }}</td>
+            <td style="text-align: right; color: #0891b2;">{{ config('store.currencies.'.$transaction->currency.'.symbol', $transaction->currency) }}{{ number_format($transaction->fiat_amount, 2) }} {{ $transaction->currency }}</td>
         </tr>
     </table>
 

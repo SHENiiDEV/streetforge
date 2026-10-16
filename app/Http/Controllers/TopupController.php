@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\PaymentReceiptMail;
 use App\Models\Transaction;
+use App\Services\CurrencyService;
 use App\Services\InvoiceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -45,7 +46,7 @@ class TopupController extends Controller
         'currency' => 'USD',
     ];
 
-    public function index(Request $request): Response
+    public function index(Request $request, CurrencyService $currencyService): Response
     {
         $user = $request->user();
 
@@ -54,14 +55,21 @@ class TopupController extends Controller
             ->take(15)
             ->get();
 
+        $currency = $currencyService->selected();
+        $packages = array_map(fn (array $package): array => array_merge($package, [
+            'fiat_amount' => $currencyService->fromUsdCents((int) round($package['fiat_amount'] * 100), $currency),
+            'currency' => $currency,
+            'base_credits' => (int) round($package['fiat_amount'] * 100),
+        ]), $this->packages);
+
         return Inertia::render('Topup/Index', [
-            'packages' => $this->packages,
-            'customTopup' => $this->customTopup,
+            'packages' => $packages,
+            'customTopup' => array_merge($this->customTopup, ['currency' => $currency]),
             'transactions' => $transactions,
         ]);
     }
 
-    public function createOrder(Request $request): RedirectResponse
+    public function createOrder(Request $request, CurrencyService $currencyService): RedirectResponse
     {
         $validated = $request->validate([
             'package_id' => ['required', 'string', Rule::in([...array_column($this->packages, 'id'), 'custom'])],
@@ -83,6 +91,10 @@ class TopupController extends Controller
             : collect($this->packages)->firstWhere('id', $validated['package_id']);
 
         $user = $request->user();
+        $currency = $currencyService->selected();
+        $usdCents = $validated['package_id'] === 'custom'
+            ? (int) $validated['custom_credits']
+            : (int) round($pkg['fiat_amount'] * 100);
         $ref = 'TOP-'.strtoupper(Str::random(10));
         $invoiceNumber = 'INV-'.date('Y').'-'.str_pad((string) (Transaction::count() + 1001), 6, '0', STR_PAD_LEFT);
 
@@ -90,12 +102,13 @@ class TopupController extends Controller
             'user_id' => $user->id,
             'transaction_ref' => $ref,
             'gateway' => 'credit_card',
-            'fiat_amount' => $pkg['fiat_amount'],
-            'currency' => $pkg['currency'],
+            'fiat_amount' => $currencyService->fromUsdCents($usdCents, $currency),
+            'currency' => $currency,
             'game_credits' => $pkg['game_credits'],
             'status' => 'pending',
             'invoice_number' => $invoiceNumber,
             'customer_snapshot' => [
+                'locale' => app()->getLocale(),
                 'name' => $user->full_name,
                 'email' => $user->email,
                 'phone' => $user->phone,
@@ -116,7 +129,7 @@ class TopupController extends Controller
         }
 
         if ($transaction->status === 'success') {
-            return redirect()->route('topup.index')->with('info', 'This payment has already been completed.');
+            return redirect()->route('topup.index')->with('info', __('This payment has already been completed.'));
         }
 
         return Inertia::render('Topup/Checkout', [
@@ -132,7 +145,7 @@ class TopupController extends Controller
         }
 
         if ($transaction->status === 'success') {
-            return redirect()->route('topup.index')->with('info', 'This payment has already been completed.');
+            return redirect()->route('topup.index')->with('info', __('This payment has already been completed.'));
         }
 
         $user = $transaction->user;
@@ -161,12 +174,12 @@ class TopupController extends Controller
 
         // 4. Send Email
         try {
-            Mail::to($user->email)->queue(new PaymentReceiptMail($transaction));
+            Mail::to($user->email)->queue((new PaymentReceiptMail($transaction))->locale($transaction->customer_snapshot['locale'] ?? 'en'));
         } catch (\Throwable $e) {
             // mail logging
         }
 
-        return redirect()->route('topup.index')->with('success', 'Payment successful! +'.number_format($transaction->game_credits).' CR added to your wallet.');
+        return redirect()->route('topup.index')->with('success', __('Payment successful! +:credits CR added to your wallet.', ['credits' => number_format($transaction->game_credits)]));
     }
 
     /**
@@ -209,7 +222,7 @@ class TopupController extends Controller
 
         try {
             $invoiceService->generate($transaction);
-            Mail::to($transaction->user->email)->queue(new PaymentReceiptMail($transaction));
+            Mail::to($transaction->user->email)->queue((new PaymentReceiptMail($transaction))->locale($transaction->customer_snapshot['locale'] ?? 'en'));
         } catch (\Throwable $e) {
             report($e);
         }

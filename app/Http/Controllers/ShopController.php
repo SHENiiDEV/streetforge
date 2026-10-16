@@ -35,11 +35,11 @@ class ShopController extends Controller
         $user = $request->user();
 
         if (UserVehicle::where('user_id', $user->id)->where('vehicle_id', $vehicle->id)->exists()) {
-            return back()->with('error', 'You already own this vehicle in your garage.');
+            return back()->with('error', __('You already own this vehicle in your garage.'));
         }
 
         if ($user->game_balance < $vehicle->price) {
-            return back()->with('error', 'Insufficient credits to purchase ' . $vehicle->name . '. You need ' . number_format($vehicle->price - $user->game_balance) . ' CR more.');
+            return back()->with('error', __('Insufficient credits to purchase :vehicle. You need :credits CR more.', ['vehicle' => $vehicle->name, 'credits' => number_format($vehicle->price - $user->game_balance)]));
         }
 
         $user->decrement('game_balance', $vehicle->price);
@@ -61,7 +61,7 @@ class ShopController extends Controller
             $user->ownedSkins()->syncWithoutDetaching([$defaultSkin->id]);
         }
 
-        return back()->with('success', 'Congratulations! ' . $vehicle->name . ' has been added to your garage.');
+        return back()->with('success', __('Congratulations! :vehicle has been added to your garage.', ['vehicle' => $vehicle->name]));
     }
 
     public function buySkin(Request $request, Skin $skin): RedirectResponse
@@ -69,16 +69,16 @@ class ShopController extends Controller
         $user = $request->user();
 
         if ($user->ownedSkins()->where('skin_id', $skin->id)->exists()) {
-            return back()->with('error', 'You already own this livery.');
+            return back()->with('error', __('You already own this livery.'));
         }
 
         if ($user->game_balance < $skin->price) {
-            return back()->with('error', 'Insufficient credits to purchase this skin.');
+            return back()->with('error', __('Insufficient credits to purchase this skin.'));
         }
 
         $user->decrement('game_balance', $skin->price);
         $user->ownedSkins()->attach($skin->id);
 
-        return back()->with('success', 'Custom livery ' . $skin->name . ' unlocked! You can apply it in your Garage.');
+        return back()->with('success', __('Custom livery :livery unlocked! You can apply it in your Garage.', ['livery' => $skin->name]));
     }
 }

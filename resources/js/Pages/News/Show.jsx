@@ -1,3 +1,4 @@
+import { t } from '../../localization';
 import React from 'react';
 import PublicLayout from '../../Layouts/PublicLayout';
 import { Link } from '@inertiajs/react';
@@ -35,30 +36,29 @@ export default function NewsShow({ article, related = [] }) {
                         href="/news"
                         className="inline-flex items-center gap-2 text-xs font-orbitron font-bold text-slate-400 hover:text-cyan-400 transition-colors"
                     >
-                        <ArrowLeft className="w-4 h-4" /> Back to News & Articles
-                    </Link>
+                        <ArrowLeft className="w-4 h-4" />{t(" Back to News & Articles ")}</Link>
                 </div>
 
                 {/* Article Header */}
                 <div className="space-y-4">
                     <div className="flex flex-wrap items-center gap-3">
                         <span className={`text-[10px] font-orbitron font-bold uppercase px-3 py-1 rounded-md border ${CATEGORY_COLORS[article.category] || 'text-cyan-400 bg-cyan-950 border-cyan-800'}`}>
-                            {article.category}
+                            {t(article.category)}
                         </span>
                         <span className="text-xs text-slate-400 flex items-center gap-1.5 font-mono">
-                            <Calendar className="w-3.5 h-3.5" /> {article.published_at}
+                            <Calendar className="w-3.5 h-3.5" /> {t(article.published_at)}
                         </span>
                         <span className="text-xs text-slate-400 flex items-center gap-1.5 font-mono">
-                            <Clock className="w-3.5 h-3.5" /> {article.read_time}
+                            <Clock className="w-3.5 h-3.5" /> {t(article.read_time)}
                         </span>
                     </div>
 
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-orbitron font-extrabold text-white tracking-tight leading-tight">
-                        {article.title}
+                        {t(article.title)}
                     </h1>
 
                     <p className="text-slate-300 text-base sm:text-lg leading-relaxed font-light">
-                        {article.excerpt}
+                        {t(article.excerpt)}
                     </p>
 
                     {/* Author Bar */}
@@ -68,17 +68,15 @@ export default function NewsShow({ article, related = [] }) {
                                 className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm text-white shadow-md"
                                 style={{ backgroundColor: article.author.avatar }}
                             >
-                                {article.author.name[0]}
+                                {t(article.author.name[0])}
                             </div>
                             <div>
-                                <div className="text-sm font-bold text-white">{article.author.name}</div>
-                                <div className="text-xs text-slate-400">{article.author.role}</div>
+                                <div className="text-sm font-bold text-white">{t(article.author.name)}</div>
+                                <div className="text-xs text-slate-400">{t(article.author.role)}</div>
                             </div>
                         </div>
 
-                        <div className="text-xs text-slate-500 font-mono">
-                            Official StreetForge Publication
-                        </div>
+                        <div className="text-xs text-slate-500 font-mono">{t("Official StreetForge Publication ")}</div>
                     </div>
                 </div>
 
@@ -87,28 +85,26 @@ export default function NewsShow({ article, related = [] }) {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
                         {article.stats.map((st, idx) => (
                             <div key={idx} className="space-y-1 text-center sm:text-left">
-                                <div className="text-[10px] font-orbitron uppercase text-slate-400">{st.label}</div>
-                                <div className="text-xl font-orbitron font-bold text-cyan-400">{st.value}</div>
+                                <div className="text-[10px] font-orbitron uppercase text-slate-400">{t(st.label)}</div>
+                                <div className="text-xl font-orbitron font-bold text-cyan-400">{t(st.value)}</div>
                             </div>
                         ))}
                     </div>
                 )}
 
                 {/* Article Main Body Content */}
-                <div className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed">
-                    {article.content?.map((paragraph, index) => (
+                <div lang="en" className="bg-slate-900/70 border border-slate-800 rounded-3xl p-6 sm:p-10 space-y-6 text-slate-300 text-sm sm:text-base leading-relaxed">
+                    {t(article.content?.map((paragraph, index) => (
                         <p key={index} className="text-slate-300">
                             {paragraph}
                         </p>
-                    ))}
+                    )))}
                 </div>
 
                 {/* Related Articles Section */}
                 {related.length > 0 && (
                     <div className="space-y-6 pt-6 border-t border-slate-800">
-                        <h3 className="font-orbitron font-bold text-xl text-white">
-                            Related Articles & Paddock Notes
-                        </h3>
+                        <h3 className="font-orbitron font-bold text-xl text-white">{t("Related Articles & Paddock Notes ")}</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             {related.map(rel => (
                                 <Link
@@ -117,13 +113,12 @@ export default function NewsShow({ article, related = [] }) {
                                     className="p-5 bg-slate-900/60 hover:bg-slate-850 border border-slate-800 hover:border-cyan-500/40 rounded-2xl space-y-2 transition-all block group"
                                 >
                                     <div className="text-[10px] font-orbitron font-bold uppercase text-cyan-400">
-                                        {rel.category}
+                                        {t(rel.category)}
                                     </div>
                                     <div className="font-orbitron font-bold text-xs text-white group-hover:text-cyan-400 transition-colors line-clamp-2">
-                                        {rel.title}
+                                        {t(rel.title)}
                                     </div>
-                                    <div className="text-[11px] text-slate-500 flex items-center gap-1 pt-1">
-                                        Read <ChevronRight className="w-3 h-3" />
+                                    <div className="text-[11px] text-slate-500 flex items-center gap-1 pt-1">{t("Read ")}<ChevronRight className="w-3 h-3" />
                                     </div>
                                 </Link>
                             ))}

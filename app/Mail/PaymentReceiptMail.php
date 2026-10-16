@@ -21,7 +21,7 @@ class PaymentReceiptMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Receipt for your StreetForge Top-Up ('.$this->transaction->invoice_number.')',
+            subject: __('Receipt for your StreetForge Top-Up (:invoice)', ['invoice' => $this->transaction->invoice_number]),
         );
     }
 
