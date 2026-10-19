@@ -287,7 +287,7 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
     const trackCount = useCountUp(stats.tracks || 3, 900, statsIn);
     const vehicleCount = useCountUp(stats.vehicles || featuredVehicles.length || 7, 1100, statsIn);
 
-    const tickerItems = (tracks.length ? tracks.map((t) => t.name) : ['Neon City Grand Prix', 'Cyber Highway Sprint', 'Canyon Drift Pass'])
+    const tickerItems = (tracks.length ? tracks.map((track) => track.name) : ['Neon City Grand Prix', 'Cyber Highway Sprint', 'Canyon Drift Pass'])
         .concat(['Season ’26 Championship', '60 FPS Canvas Engine', 'Dyno Tuning Bay', 'Instant VAT Invoices', 'Global Leaderboard', 'No Downloads Required']);
 
     return (
@@ -649,30 +649,30 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                             { id: 1, name: 'Neon City Grand Prix', theme: 'cyber_city', difficulty: 'Medium', laps: 2, length_meters: 2800, reward_currency_1st: 550, description: 'High-speed urban circuit through neon skyscrapers and underground speed tunnels.' },
                             { id: 2, name: 'Cyber Highway Sprint', theme: 'neon_highway', difficulty: 'Easy', laps: 2, length_meters: 2200, reward_currency_1st: 380, description: 'Wide elevated highway built for raw top speed, drafting and nitro timing.' },
                             { id: 3, name: 'Canyon Drift Pass', theme: 'canyon_drift', difficulty: 'Hard', laps: 3, length_meters: 3500, reward_currency_1st: 850, description: 'Mountain hairpins and switchbacks that punish anything but perfect handling.' },
-                        ]).map((t, i) => {
-                            const meta = TRACK_META[t.theme] || TRACK_META.cyber_city;
+                        ]).map((track, i) => {
+                            const meta = TRACK_META[track.theme] || TRACK_META.cyber_city;
                             const Icon = meta.icon;
                             const diffTone = {
                                 Easy: 'text-emerald-400 border-emerald-400/25',
                                 Medium: 'text-cyan-300 border-cyan-400/25',
                                 Hard: 'text-orange-400 border-orange-400/25',
                                 Pro: 'text-red-400 border-red-400/25',
-                            }[t.difficulty] || 'text-slate-400 border-white/10';
+                            }[track.difficulty] || 'text-slate-400 border-white/10';
 
                             return (
                                 <Link
-                                    key={t.id}
+                                    key={track.id}
                                     href="/race/lobby"
                                     className={`group surface notch-tr p-6 flex flex-col lift hover:border-white/20 reveal ${circuitsIn ? 'reveal-in' : ''}`}
                                     style={{ transitionDelay: `${i * 110}ms` }}
                                 >
                                     <div className="flex items-start justify-between mb-5">
                                         <span className="label-tech text-slate-600 numeric">R{t(String(i + 1).padStart(2, '0'))}</span>
-                                        <span className={`label-tech px-2.5 py-1 border rounded-full ${diffTone}`}>{t(t.difficulty)}</span>
+                                        <span className={`label-tech px-2.5 py-1 border rounded-full ${diffTone}`}>{t(track.difficulty)}</span>
                                     </div>
 
                                     <div className="h-36 mb-6 opacity-90 group-hover:opacity-100 transition-opacity">
-                                        <TrackMap theme={t.theme} />
+                                        <TrackMap theme={track.theme} />
                                     </div>
 
                                     <div className="flex items-center gap-2 mb-2">
@@ -681,17 +681,17 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                                     </div>
 
                                     <h3 className="headline text-2xl text-white group-hover:text-cyan-300 transition-colors">
-                                        {t(t.name)}
+                                        {t(track.name)}
                                     </h3>
                                     <p className="text-xs text-slate-500 leading-relaxed mt-3 line-clamp-2 flex-1">
-                                        {t(t.description)}
+                                        {t(track.description)}
                                     </p>
 
                                     <div className="grid grid-cols-3 gap-3 mt-6 pt-5 border-t border-white/[0.06]">
                                         {[
-                                            { icon: Route, v: `${(t.length_meters / 1000).toFixed(1)}`, u: 'KM' },
-                                            { icon: Timer, v: t.laps, u: 'LAPS' },
-                                            { icon: Trophy, v: Math.round(Number(t.reward_currency_1st)), u: 'CR' },
+                                            { icon: Route, v: `${(track.length_meters / 1000).toFixed(1)}`, u: 'KM' },
+                                            { icon: Timer, v: track.laps, u: 'LAPS' },
+                                            { icon: Trophy, v: Math.round(Number(track.reward_currency_1st)), u: 'CR' },
                                         ].map((s, k) => (
                                             <div key={k} className="space-y-1">
                                                 <s.icon className="w-3 h-3 text-slate-600" />
@@ -997,14 +997,14 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                             { icon: Lock, title: 'Encrypted Checkout', desc: '256-bit TLS through regulated UK/EU payment gateways.' },
                             { icon: FileText, title: 'Automated VAT Invoices', desc: 'A pixel-perfect PDF tax invoice for every single purchase.' },
                             { icon: ShieldCheck, title: 'Sanctions Compliant', desc: 'UK GDPR, Data Protection Act 2018, HM Treasury & OFAC screening.' },
-                        ].map((t) => (
-                            <div key={t.title} className="flex items-start gap-4">
+                        ].map((benefit) => (
+                            <div key={benefit.title} className="flex items-start gap-4">
                                 <div className="w-10 h-10 shrink-0 border border-white/[0.08] flex items-center justify-center text-cyan-400">
-                                    <t.icon className="w-4 h-4" />
+                                    <benefit.icon className="w-4 h-4" />
                                 </div>
                                 <div className="space-y-1">
-                                    <div className="font-display font-bold uppercase tracking-wide text-sm text-white">{t(t.title)}</div>
-                                    <div className="text-xs text-slate-500 leading-relaxed">{t(t.desc)}</div>
+                                    <div className="font-display font-bold uppercase tracking-wide text-sm text-white">{t(benefit.title)}</div>
+                                    <div className="text-xs text-slate-500 leading-relaxed">{t(benefit.desc)}</div>
                                 </div>
                             </div>
                         ))}
@@ -1047,10 +1047,10 @@ export default function Landing({ featuredVehicles = [], tracks = [], stats = {}
                     </div>
 
                     <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 pt-6">
-                        {['No credit card', 'No download', 'Instant access'].map((t) => (
-                            <span key={t} className="label-tech text-slate-600 flex items-center gap-2">
+                        {['No credit card', 'No download', 'Instant access'].map((benefit) => (
+                            <span key={benefit} className="label-tech text-slate-600 flex items-center gap-2">
                                 <span className="w-1 h-1 rounded-full bg-cyan-400" />
-                                {t(t)}
+                                {t(benefit)}
                             </span>
                         ))}
                     </div>
