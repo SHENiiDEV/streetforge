@@ -6,9 +6,10 @@ class CurrencyService
 {
     public function selected(): string
     {
-        $currency = session('currency', request()->cookie('site_currency', 'USD'));
+        $default = config('store.default_currency');
+        $currency = session('currency', request()->cookie('site_currency', $default));
 
-        return array_key_exists($currency, config('store.currencies')) ? $currency : 'USD';
+        return in_array($currency, config('store.enabled_currencies'), true) ? $currency : $default;
     }
 
     public function fromUsdCents(int $cents, string $currency): string

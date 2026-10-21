@@ -28,7 +28,7 @@ export default function BillingTerms() {
             title: 'Packages, prices & currency',
             content: (
                 <>
-                    <P>{t("Credit packages, their price, the number of Credits and any bonus percentage are displayed in the Top-Up section before you confirm an order. Prices are in your selected currency (USD, EUR or GBP) at fixed exchange rates and include any taxes we are required to charge. If your card is denominated in another currency, your card issuer will convert the amount using its own rate and may add a foreign-transaction fee. ")}</P>
+                    <P>{t("Credit packages, their price, the number of Credits and any bonus percentage are displayed in the Top-Up section before you confirm an order. Prices are in euros (EUR) and include any taxes we are required to charge. If your card is denominated in another currency, your card issuer will convert the amount using its own rate and may add a foreign-transaction fee. ")}</P>
                     <List
                         items={[
                             'The price shown when you confirm an order is the price you pay, even if we later change it.',

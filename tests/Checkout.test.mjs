@@ -33,9 +33,9 @@ async function renderCheckout(language, overrides = {}) {
     const props = {
         auth: { user: { name: 'Alex', game_balance: '500.00' } },
         preferences: {
-            locale: language, currency: 'USD',
+            locale: language, currency: 'EUR',
             locales: { en: 'English', nb: 'Norsk', sv: 'Svenska' },
-            currencies: { USD: 'USD' },
+            currencies: { EUR: 'EUR' },
         },
         transaction: {
             transaction_ref: 'TOP-UI-CHECK', fiat_amount: '23.00', currency: 'EUR',
@@ -65,6 +65,9 @@ for (const [language, paymentLabel] of [
         assert.ok(html.includes(paymentLabel));
         assert.ok(html.includes('EUR'));
         assert.ok(!html.includes('type="text"'));
+        assert.ok(!html.includes('id="site-currency"'));
+        assert.ok(!html.includes('<option value="USD"'));
+        assert.ok(!html.includes('<option value="GBP"'));
         assert.ok(!html.includes('4242'));
         assert.ok(!html.includes('Trigger Async Webhook'));
     });

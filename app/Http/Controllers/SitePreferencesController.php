@@ -12,7 +12,7 @@ class SitePreferencesController extends Controller
     {
         $validated = $request->validate([
             'locale' => ['sometimes', 'required', 'string', Rule::in(array_keys(config('store.locales')))],
-            'currency' => ['sometimes', 'required', 'string', Rule::in(array_keys(config('store.currencies')))],
+            'currency' => ['sometimes', 'required', 'string', Rule::in(config('store.enabled_currencies'))],
         ]);
 
         $request->session()->put($validated);

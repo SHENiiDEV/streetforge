@@ -57,7 +57,7 @@ class HandleInertiaRequests extends Middleware
                 'locale' => app()->getLocale(),
                 'currency' => app(CurrencyService::class)->selected(),
                 'locales' => config('store.locales'),
-                'currencies' => config('store.currencies'),
+                'currencies' => array_intersect_key(config('store.currencies'), array_flip(config('store.enabled_currencies'))),
             ],
             'auth' => [
                 'user' => $user ? [

@@ -18,7 +18,7 @@ export function t(value, parameters = {}, language = locale()) {
     return result;
 }
 
-export function formatMoney(amount, currency = 'USD', language = locale()) {
+export function formatMoney(amount, currency = 'EUR', language = locale()) {
     return new Intl.NumberFormat(language === 'en' ? 'en-GB' : language, {
         style: 'currency', currency, currencyDisplay: 'code',
     }).format(Number(amount));

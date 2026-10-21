@@ -25,6 +25,7 @@ class CorefyPaymentTest extends TestCase
     {
         parent::setUp();
         $this->configureCorefy();
+        config(['store.enabled_currencies' => ['USD', 'EUR', 'GBP']]);
         Mail::fake();
         Storage::fake('public');
     }
@@ -409,5 +410,26 @@ class CorefyPaymentTest extends TestCase
         $this->assertSame('3250.00', $transaction->user->fresh()->game_balance);
         Storage::disk('public')->assertExists($transaction->fresh()->invoice_path);
         Mail::assertQueuedCount(1);
+    }
+
+    public static function disabledCurrencies(): array
+    {
+        return [['USD'], ['GBP']];
+    }
+
+    #[DataProvider('disabledCurrencies')]
+    public function test_disabled_currency_order_cannot_open_a_new_or_existing_hpp_session(string $currency): void
+    {
+        $transaction = $this->order($currency);
+        $transaction->update(['provider_invoice_id' => 'cpi_existing', 'payment_url' => 'https://hpp.example.test/old-session']);
+        config(['store.enabled_currencies' => ['EUR']]);
+
+        $this->actingAs($transaction->user)->from('/topup')->post('/topup/checkout/'.$transaction->transaction_ref.'/pay')
+            ->assertRedirect('/topup')->assertSessionHas('error');
+        $this->get('/topup/checkout/'.$transaction->transaction_ref)->assertInertia(fn (Assert $page) => $page->where('paymentAvailable', false));
+
+        Http::assertNothingSent();
+        $this->assertSame($currency, $transaction->fresh()->currency);
+        $this->assertSame('500.00', $transaction->user->fresh()->game_balance);
     }
 }

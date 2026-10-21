@@ -33,7 +33,7 @@ class TopupAndInvoiceTest extends TestCase
 
         $this->assertDatabaseHas('transactions', [
             'user_id' => $user->id,
-            'fiat_amount' => 25.00,
+            'fiat_amount' => 23.00,
             'game_credits' => 2750.00,
             'status' => 'pending',
         ]);
@@ -52,7 +52,7 @@ class TopupAndInvoiceTest extends TestCase
             'transaction_ref' => 'TOP-TEST12345',
             'gateway' => 'credit_card',
             'fiat_amount' => 50.00,
-            'currency' => 'USD',
+            'currency' => 'EUR',
             'game_credits' => 6000.00,
             'status' => 'pending',
             'invoice_number' => 'INV-2026-999999',

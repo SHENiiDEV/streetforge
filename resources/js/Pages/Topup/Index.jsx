@@ -140,7 +140,7 @@ export default function Topup({ packages = [], transactions = [], customTopup })
                             </button>
                         </div>
                     </div>
-                <p className="text-xs text-slate-500">{t('Fixed exchange rates: 1 USD = 0.92 EUR = 0.79 GBP.')}</p>
+                <p className="text-xs text-slate-500">{t('All payments are processed in EUR.')}</p>
                 </form>
 
                 {/* Transaction & PDF Invoice History Table */}

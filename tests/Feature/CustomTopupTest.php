@@ -36,11 +36,11 @@ class CustomTopupTest extends TestCase
     public static function customOrders(): array
     {
         return [
-            'minimum' => [100, '1.00'],
-            'exact cents' => [1234, '12.34'],
-            'previous limit' => [10000, '100.00'],
-            'above previous limit' => [10001, '100.01'],
-            'large quantity' => [1000000, '10000.00'],
+            'minimum' => [100, '0.92'],
+            'exact cents' => [1234, '11.35'],
+            'previous limit' => [10000, '92.00'],
+            'above previous limit' => [10001, '92.01'],
+            'large quantity' => [1000000, '9200.00'],
         ];
     }
 
@@ -65,7 +65,7 @@ class CustomTopupTest extends TestCase
             'user_id' => $user->id,
             'fiat_amount' => $price,
             'game_credits' => $credits,
-            'currency' => 'USD',
+            'currency' => 'EUR',
             'gateway' => 'credit_card',
             'status' => 'pending',
         ]);
@@ -154,7 +154,7 @@ class CustomTopupTest extends TestCase
 
         $this->assertDatabaseHas('transactions', [
             'user_id' => $user->id,
-            'fiat_amount' => 100,
+            'fiat_amount' => 92,
             'game_credits' => 15000,
             'status' => 'pending',
         ]);

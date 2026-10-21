@@ -132,7 +132,7 @@ class TopupController extends Controller
         return Inertia::render('Topup/Checkout', [
             'transaction' => $transaction,
             'company' => config('company'),
-            'paymentAvailable' => $client->configured(),
+            'paymentAvailable' => $client->configured() && in_array($transaction->currency, config('store.enabled_currencies'), true),
             'returned' => $request->boolean('returned'),
         ]);
     }

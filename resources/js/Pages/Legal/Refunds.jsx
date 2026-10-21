@@ -84,7 +84,7 @@ export default function Refunds() {
             title: 'How refunds are paid',
             content: (
                 <>
-                    <P>{t("Approved refunds are always returned to the ")}<strong className="text-white">{t("original payment method")}</strong>{t(" through the same Payment Provider that took the payment. We cannot refund to a different card, bank account, wallet or person. Refunds are issued in the currency of the original charge (USD, EUR or GBP); any exchange-rate difference applied by your card issuer is outside our control. ")}</P>
+                    <P>{t("Approved refunds are always returned to the ")}<strong className="text-white">{t("original payment method")}</strong>{t(" through the same Payment Provider that took the payment. We cannot refund to a different card, bank account, wallet or person. Refunds are issued in the currency of the original charge; any exchange-rate difference applied by your card issuer is outside our control. ")}</P>
                     <P>{t("We submit refunds within 2 business days of approval. Your bank normally shows the refund within 5–10 business days. When a refund is made, the related Credits are removed from your wallet; if they have already been spent, the wallet may show a negative balance until it is topped up or earned back. ")}</P>
                 </>
             ),

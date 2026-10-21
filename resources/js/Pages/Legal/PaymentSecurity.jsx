@@ -160,7 +160,7 @@ export default function PaymentSecurity() {
                     <KV
                         rows={[
                             ['Debit & credit cards', 'Visa, Visa Debit, Mastercard, Debit Mastercard, Maestro (where supported)'],
-                            ['Currency', 'Packages are priced in your selected currency (USD, EUR or GBP) using fixed exchange rates. If your card is in another currency, your card issuer converts the amount and may charge a foreign-exchange fee'],
+                            ['Currency', 'Packages are priced in euros (EUR). If your card is in another currency, your card issuer converts the amount and may charge a foreign-exchange fee'],
                             ['Statement descriptor', <><Code>{t("STREETFORGE*CREDITS")}</Code>{t(" or ")}<Code>{t("STREETFORGE LTD")}</Code></>],
                             ['Not accepted', 'Prepaid anonymous cards, cards issued in restricted jurisdictions, third-party cards you are not authorised to use'],
                         ]}

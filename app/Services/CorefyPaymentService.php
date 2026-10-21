@@ -14,6 +14,9 @@ class CorefyPaymentService
 
     public function start(Transaction $transaction): string
     {
+        if (! in_array($transaction->currency, config('store.enabled_currencies'), true)) {
+            throw new RuntimeException('This payment currency is currently unavailable.');
+        }
         if (! $this->client->configured()) {
             throw new RuntimeException('Corefy configuration is incomplete.');
         }

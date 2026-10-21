@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'default_currency' => 'EUR',
+    'enabled_currencies' => ['EUR'],
     'locales' => ['en' => 'English', 'nb' => 'Norsk', 'sv' => 'Svenska'],
     /** Fixed minor currency units per 1 USD; no live exchange-rate lookup. */
     'currencies' => [

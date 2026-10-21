@@ -60,7 +60,7 @@ export default function FAQ() {
         {
             category: 'billing',
             q: 'How do top-up credit purchases work?',
-            a: 'Buy credits by card. Choose a bonus bundle or a custom quantity from 100 CR with no upper limit. Select USD, EUR or GBP. Prices use fixed exchange rates: 1 USD = 0.92 EUR = 0.79 GBP. Your balance updates after successful payment.',
+            a: 'Buy credits by card. Choose a bonus bundle or a custom quantity from 100 CR with no upper limit. All payments are processed in EUR. Your balance updates after successful payment.',
         },
         {
             category: 'billing',
