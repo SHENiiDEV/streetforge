@@ -412,6 +412,68 @@ class CorefyPaymentTest extends TestCase
         Mail::assertQueuedCount(1);
     }
 
+    public function test_paid_invoice_can_be_downloaded_without_a_saved_pdf(): void
+    {
+        $transaction = $this->order('EUR', '0.92');
+        $transaction->update(['status' => 'success', 'completed_at' => now()]);
+
+        $response = $this->actingAs($transaction->user)->get('/invoices/'.$transaction->invoice_number.'/download');
+
+        $response->assertOk()->assertHeader('content-type', 'application/pdf')
+            ->assertDownload('StreetForge_Invoice_INV-COREFY-123.pdf');
+        $this->assertStringStartsWith('%PDF-', $response->getContent());
+        $this->assertSame('500.00', $transaction->user->fresh()->game_balance);
+        Mail::assertNothingQueued();
+    }
+
+    public static function unpaidStatuses(): array
+    {
+        return [['pending'], ['failed'], ['refunded']];
+    }
+
+    #[DataProvider('unpaidStatuses')]
+    public function test_unpaid_orders_cannot_download_invoices(string $status): void
+    {
+        $transaction = $this->order();
+        $transaction->update(['status' => $status]);
+        $this->actingAs($transaction->user)->get('/invoices/'.$transaction->invoice_number.'/download')->assertNotFound();
+    }
+
+    public function test_paid_invoice_cannot_be_downloaded_by_another_user(): void
+    {
+        $transaction = $this->order();
+        $transaction->update(['status' => 'success']);
+        $other = User::factory()->create();
+
+        $this->actingAs($other)->get('/invoices/'.$transaction->invoice_number.'/download')->assertForbidden();
+    }
+
+    public function test_mail_failure_preserves_the_pdf_and_retry_does_not_credit_twice(): void
+    {
+        $transaction = $this->order();
+        $this->fakeCorefy($transaction);
+        $this->start($transaction);
+        $mail = Mail::getFacadeRoot();
+        Mail::shouldReceive('to')->once()->andReturnSelf();
+        Mail::shouldReceive('queue')->once()->andThrow(new \RuntimeException('Mail temporarily unavailable.'));
+
+        $this->confirmCorefy($transaction)->assertServiceUnavailable();
+
+        $transaction->refresh();
+        $this->assertSame('success', $transaction->status);
+        $this->assertNotNull($transaction->invoice_path);
+        Storage::disk('public')->assertExists($transaction->invoice_path);
+        $this->assertNull($transaction->receipt_queued_at);
+        $this->assertSame('3250.00', $transaction->user->fresh()->game_balance);
+
+        $this->get('/invoices/'.$transaction->invoice_number.'/download')->assertOk()->assertHeader('content-type', 'application/pdf');
+        Mail::swap($mail);
+        $this->confirmCorefy($transaction)->assertOk();
+        $this->assertNotNull($transaction->fresh()->receipt_queued_at);
+        $this->assertSame('3250.00', $transaction->user->fresh()->game_balance);
+        Mail::assertQueuedCount(1);
+    }
+
     public static function disabledCurrencies(): array
     {
         return [['USD'], ['GBP']];

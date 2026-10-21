@@ -29,7 +29,7 @@ for (const [status, invoicePath, canDownload] of [
     ['pending', 'invoices/stale.pdf', false],
     ['failed', null, false],
     ['refunded', 'invoices/refunded.pdf', false],
-    ['success', null, false],
+    ['success', null, true],
     ['success', 'invoices/paid.pdf', true],
 ]) {
     test(`history ${status} with ${invoicePath ? 'a PDF' : 'no PDF'} ${canDownload ? 'shows' : 'hides'} invoice download`, async () => {

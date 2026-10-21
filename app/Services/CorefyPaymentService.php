@@ -135,11 +135,15 @@ class CorefyPaymentService
     {
         DB::transaction(function () use ($transaction): void {
             $order = Transaction::query()->lockForUpdate()->findOrFail($transaction->id);
+            if ($order->status === 'success' && ! $order->invoice_path) {
+                $this->invoices->generate($order);
+            }
+        });
+
+        DB::transaction(function () use ($transaction): void {
+            $order = Transaction::query()->lockForUpdate()->findOrFail($transaction->id);
             if ($order->status !== 'success' || $order->receipt_queued_at) {
                 return;
-            }
-            if (! $order->invoice_path) {
-                $this->invoices->generate($order);
             }
             Mail::to($order->customer_snapshot['email'] ?? $order->user->email)
                 ->queue((new PaymentReceiptMail($order))->locale($order->customer_snapshot['locale'] ?? 'en'));
