@@ -13,19 +13,6 @@ class CorefyClient
 {
     public function __construct(private CorefyLogger $logger) {}
 
-    /** Countries currently offered by the registration form; Corefy requires ISO 3166-1 alpha-2. */
-    private const COUNTRY_CODES = [
-        'United States' => 'US', 'United Kingdom' => 'GB', 'Germany' => 'DE', 'France' => 'FR',
-        'Cyprus' => 'CY', 'Canada' => 'CA', 'Australia' => 'AU', 'Netherlands' => 'NL',
-        'Spain' => 'ES', 'Italy' => 'IT', 'Japan' => 'JP', 'South Korea' => 'KR',
-        'Singapore' => 'SG', 'United Arab Emirates' => 'AE', 'Switzerland' => 'CH', 'Sweden' => 'SE',
-        'Norway' => 'NO', 'Finland' => 'FI', 'Denmark' => 'DK', 'Austria' => 'AT',
-        'Belgium' => 'BE', 'Ireland' => 'IE', 'New Zealand' => 'NZ', 'Poland' => 'PL',
-        'Czech Republic' => 'CZ', 'Portugal' => 'PT', 'Greece' => 'GR', 'Estonia' => 'EE',
-        'Latvia' => 'LV', 'Lithuania' => 'LT', 'Brazil' => 'BR', 'Mexico' => 'MX',
-        'Argentina' => 'AR', 'Chile' => 'CL', 'India' => 'IN', 'South Africa' => 'ZA',
-    ];
-
     public function validateCustomer(Transaction $transaction): void
     {
         $this->countryCode($transaction->customer_snapshot['country'] ?? '');
@@ -37,11 +24,12 @@ class CorefyClient
         if ($country === '' || preg_match('/^[A-Z]{2}$/D', $country)) {
             return $country;
         }
-        if (! isset(self::COUNTRY_CODES[$country])) {
+        $countries = config('countries');
+        if (! isset($countries[$country])) {
             throw new RuntimeException('Customer country must be a supported country or ISO code.');
         }
 
-        return self::COUNTRY_CODES[$country];
+        return $countries[$country];
     }
 
     public function configured(): bool

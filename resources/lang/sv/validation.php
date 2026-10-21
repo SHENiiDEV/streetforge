@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'current_password' => 'Lösenordet är felaktigt.',
     'required' => ':Attribute måste fyllas i.',
     'string' => ':Attribute måste vara text.',
     'email' => ':Attribute måste vara en giltig e-postadress.',
@@ -15,5 +16,5 @@ return [
     'min' => ['numeric' => ':Attribute måste vara minst :min.', 'string' => ':Attribute måste ha minst :min tecken.'],
     'max' => ['numeric' => ':Attribute får inte vara större än :max.', 'string' => ':Attribute får ha högst :max tecken.'],
     'password' => ['letters' => ':Attribute måste innehålla minst en bokstav.', 'numbers' => ':Attribute måste innehålla minst en siffra.'],
-    'attributes' => ['name' => 'förnamn', 'surname' => 'efternamn', 'email' => 'e-postadress', 'password' => 'lösenord', 'phone' => 'telefonnummer', 'dob' => 'födelsedatum', 'street' => 'gatuadress', 'city' => 'ort', 'country' => 'land', 'post_code' => 'postnummer', 'terms' => 'villkor', 'custom_credits' => 'antal krediter', 'locale' => 'språk', 'currency' => 'valuta', 'gateway' => 'betalningsmetod', 'package_id' => 'kreditpaket'],
+    'attributes' => ['current_password' => 'nuvarande lösenord', 'name' => 'förnamn', 'surname' => 'efternamn', 'email' => 'e-postadress', 'password' => 'lösenord', 'phone' => 'telefonnummer', 'dob' => 'födelsedatum', 'street' => 'gatuadress', 'city' => 'ort', 'country' => 'land', 'post_code' => 'postnummer', 'terms' => 'villkor', 'custom_credits' => 'antal krediter', 'locale' => 'språk', 'currency' => 'valuta', 'gateway' => 'betalningsmetod', 'package_id' => 'kreditpaket'],
 ];

@@ -41,9 +41,9 @@ export default function MobileBottomNav() {
             icon: Trophy 
         },
         { 
-            name: 'Paddock', 
-            href: '/news', 
-            icon: Newspaper 
+            name: user ? 'Profile' : 'Paddock',
+            href: user ? '/profile' : '/news',
+            icon: user ? UserIcon : Newspaper
         },
     ];
 

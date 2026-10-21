@@ -4,7 +4,7 @@ import { Link, usePage, router } from '@inertiajs/react';
 import {
     Flag, Warehouse, ShoppingBag, CreditCard, Trophy, Newspaper,
     LogOut, Menu, X, Plus, Zap, Shield, ChevronDown, FileText,
-    HelpCircle, ArrowRight,
+    HelpCircle, ArrowRight, User,
 } from 'lucide-react';
 import BrandLogo from './BrandLogo';
 import SitePreferences from './SitePreferences';
@@ -190,6 +190,7 @@ export default function Navbar() {
 
                                                 <div className="py-1.5">
                                                     {[
+                                                        { href: '/profile', icon: User, label: 'My profile', tone: 'text-cyan-400' },
                                                         { href: '/garage', icon: Warehouse, label: 'Garage & Tuning', tone: 'text-cyan-400' },
                                                         { href: '/topup', icon: FileText, label: 'Top-Up & Invoices', tone: 'text-cyan-400' },
                                                         { href: '/leaderboard', icon: Trophy, label: 'Seasonal Standings', tone: 'text-amber-400' },
@@ -314,6 +315,7 @@ export default function Navbar() {
                             <div className="label-tech text-slate-600">{t("Navigation")}</div>
                             <div className="grid grid-cols-2 gap-2">
                                 {[
+                                    ...(user ? [{ name: 'My profile', href: '/profile', icon: User }] : []),
                                     { name: 'Race Lobby', href: '/race/lobby', icon: Flag },
                                     { name: 'Garage & Dyno', href: '/garage', icon: Warehouse },
                                     { name: 'Showroom', href: '/shop', icon: ShoppingBag },
