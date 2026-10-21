@@ -22,8 +22,15 @@ class Transaction extends Model
         'invoice_path',
         'customer_snapshot',
         'gateway_response',
+        'provider_invoice_id',
+        'payment_url',
+        'payment_requested_at',
+        'receipt_queued_at',
+        'credits_reversed_at',
         'completed_at',
     ];
+
+    protected $hidden = ['gateway_response', 'payment_url'];
 
     protected function casts(): array
     {
@@ -33,6 +40,9 @@ class Transaction extends Model
             'customer_snapshot' => 'array',
             'gateway_response' => 'array',
             'completed_at' => 'datetime',
+            'payment_requested_at' => 'datetime',
+            'receipt_queued_at' => 'datetime',
+            'credits_reversed_at' => 'datetime',
         ];
     }
 

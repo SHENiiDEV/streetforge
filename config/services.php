@@ -14,6 +14,15 @@ return [
     |
     */
 
+    'corefy' => [
+        'api_url' => env('COREFY_API_URL', 'https://api.sterling-pay.com'),
+        'account_id' => env('COREFY_ACCOUNT_ID'),
+        'api_key' => env('COREFY_API_KEY'),
+        'webhook_secret' => env('COREFY_WEBHOOK_SECRET'),
+        'service_code' => env('COREFY_SERVICE_CODE', 'auto'),
+        'signature_algorithm' => env('COREFY_SIGNATURE_ALGORITHM', 'corefy'),
+    ],
+
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],

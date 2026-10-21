@@ -141,7 +141,7 @@ export default function PaymentSecurity() {
                     <P>{t("Returning to our site after payment is not, on its own, proof that a payment succeeded — a browser redirect can be interrupted or faked. That is why credits are only issued after a ")}<strong className="text-white">{t("server-to-server notification")}</strong>{t(" (a \"webhook\") from the payment provider. Each notification is: ")}</P>
                     <List
                         items={[
-                            <>{t("Signed with a shared secret using HMAC-SHA256; requests with a missing or invalid signature are rejected and logged.")}</>,
+                            <>{t("Verified using the payment provider’s signing secret; requests with a missing or invalid signature are rejected.")}</>,
                             <>{t("Checked against the original order: reference, amount, currency and account must all match exactly.")}</>,
                             <>{t("Idempotent — a duplicate notification for an order that is already completed is acknowledged but never credits the wallet twice.")}</>,
                             <>{t("Time-stamped and replay-protected, so an old notification cannot be resent to trigger a new credit.")}</>,

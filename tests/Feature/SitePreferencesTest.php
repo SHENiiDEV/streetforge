@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\FakesCorefy;
 use Tests\TestCase;
 
 class SitePreferencesTest extends TestCase
 {
+    use FakesCorefy;
     use RefreshDatabase;
 
     public static function languages(): array
@@ -114,6 +116,7 @@ class SitePreferencesTest extends TestCase
                 ->where('transaction.currency', 'GBP')->where('transaction.fiat_amount', '19.75'));
 
         $this->assertSame('GBP', $transaction->fresh()->currency);
+        $transaction->update(['status' => 'success']);
         $this->get('/invoices/'.$transaction->invoice_number.'/download')->assertOk()
             ->assertDownload('StreetForge_Invoice_'.$transaction->invoice_number.'.pdf');
         $html = view('invoices.pdf', ['transaction' => $transaction, 'company' => config('company'), 'customer' => $transaction->customer_snapshot])->render();
@@ -143,7 +146,9 @@ class SitePreferencesTest extends TestCase
         $transaction = Transaction::sole();
         $this->post('/preferences', ['currency' => 'GBP', 'locale' => 'sv'])->assertRedirect();
 
-        $this->post('/topup/checkout/'.$transaction->transaction_ref.'/pay')->assertRedirect('/topup');
+        $this->fakeCorefy($transaction);
+        $this->post('/topup/checkout/'.$transaction->transaction_ref.'/pay')->assertRedirect('https://hpp.example.test/secure-checkout');
+        $this->confirmCorefy($transaction)->assertOk();
 
         $this->assertSame('2234.00', $user->fresh()->game_balance);
         $this->assertDatabaseHas('transactions', [

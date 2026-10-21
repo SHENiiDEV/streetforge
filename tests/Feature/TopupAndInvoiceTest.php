@@ -4,14 +4,15 @@ namespace Tests\Feature;
 
 use App\Models\Transaction;
 use App\Models\User;
-use App\Services\InvoiceService;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
+use Tests\FakesCorefy;
 use Tests\TestCase;
 
 class TopupAndInvoiceTest extends TestCase
 {
+    use FakesCorefy;
     use RefreshDatabase;
 
     protected function setUp(): void
@@ -38,7 +39,7 @@ class TopupAndInvoiceTest extends TestCase
         ]);
 
         $tx = Transaction::latest('id')->first();
-        $response->assertRedirect('/topup/checkout/' . $tx->transaction_ref);
+        $response->assertRedirect('/topup/checkout/'.$tx->transaction_ref);
     }
 
     public function test_user_can_complete_payment_and_credits_are_added(): void
@@ -62,8 +63,11 @@ class TopupAndInvoiceTest extends TestCase
             ],
         ]);
 
-        $response = $this->actingAs($user)->post('/topup/checkout/' . $tx->transaction_ref . '/pay');
-        $response->assertRedirect('/topup');
+        $this->fakeCorefy($tx);
+        $response = $this->actingAs($user)->post('/topup/checkout/'.$tx->transaction_ref.'/pay');
+        $response->assertRedirect('https://hpp.example.test/secure-checkout');
+        $this->assertSame((string) $initialBalance, $user->fresh()->game_balance);
+        $this->confirmCorefy($tx)->assertOk();
 
         $user->refresh();
         $this->assertEquals($initialBalance + 6000.00, $user->game_balance);
@@ -73,7 +77,7 @@ class TopupAndInvoiceTest extends TestCase
         $this->assertNotNull($tx->invoice_path);
     }
 
-    public function test_webhook_processes_payment_and_generates_invoice(): void
+    public function test_unsigned_legacy_webhook_cannot_credit_balance(): void
     {
         $user = User::first();
         $initialBalance = $user->game_balance;
@@ -99,13 +103,12 @@ class TopupAndInvoiceTest extends TestCase
             'event' => 'payment.succeeded',
         ]);
 
-        $response->assertStatus(200);
-        $response->assertJson(['status' => 'ok']);
+        $response->assertForbidden();
 
         $user->refresh();
-        $this->assertEquals($initialBalance + 15000.00, $user->game_balance);
+        $this->assertSame((string) $initialBalance, $user->game_balance);
 
         $tx->refresh();
-        $this->assertEquals('success', $tx->status);
+        $this->assertSame('pending', $tx->status);
     }
 }

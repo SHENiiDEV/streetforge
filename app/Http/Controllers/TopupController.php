@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\PaymentReceiptMail;
 use App\Models\Transaction;
+use App\Services\CorefyClient;
+use App\Services\CorefyPaymentService;
 use App\Services\CurrencyService;
-use App\Services\InvoiceService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -96,7 +95,7 @@ class TopupController extends Controller
             ? (int) $validated['custom_credits']
             : (int) round($pkg['fiat_amount'] * 100);
         $ref = 'TOP-'.strtoupper(Str::random(10));
-        $invoiceNumber = 'INV-'.date('Y').'-'.str_pad((string) (Transaction::count() + 1001), 6, '0', STR_PAD_LEFT);
+        $invoiceNumber = 'INV-'.date('Y').'-'.strtoupper((string) Str::ulid());
 
         $transaction = Transaction::create([
             'user_id' => $user->id,
@@ -110,6 +109,8 @@ class TopupController extends Controller
             'customer_snapshot' => [
                 'locale' => app()->getLocale(),
                 'name' => $user->full_name,
+                'first_name' => $user->name,
+                'surname' => $user->surname,
                 'email' => $user->email,
                 'phone' => $user->phone,
                 'street' => $user->street,
@@ -122,115 +123,34 @@ class TopupController extends Controller
         return redirect()->route('topup.checkout', ['transaction' => $transaction->transaction_ref]);
     }
 
-    public function checkout(Transaction $transaction, Request $request): Response|RedirectResponse
+    public function checkout(Transaction $transaction, Request $request, CorefyClient $client): Response
     {
         if ($transaction->user_id !== $request->user()->id) {
             abort(403);
-        }
-
-        if ($transaction->status === 'success') {
-            return redirect()->route('topup.index')->with('info', __('This payment has already been completed.'));
         }
 
         return Inertia::render('Topup/Checkout', [
             'transaction' => $transaction,
             'company' => config('company'),
+            'paymentAvailable' => $client->configured(),
+            'returned' => $request->boolean('returned'),
         ]);
     }
 
-    public function processMockPayment(Transaction $transaction, Request $request, InvoiceService $invoiceService): RedirectResponse
+    public function processPayment(Transaction $transaction, Request $request, CorefyPaymentService $payments): \Symfony\Component\HttpFoundation\Response
     {
-        if ($transaction->user_id !== $request->user()->id) {
-            abort(403);
+        abort_unless($transaction->user_id === $request->user()->id, 403);
+        if ($transaction->status !== 'pending') {
+            return redirect()->route('topup.checkout', ['transaction' => $transaction->transaction_ref]);
         }
-
-        if ($transaction->status === 'success') {
-            return redirect()->route('topup.index')->with('info', __('This payment has already been completed.'));
-        }
-
-        $user = $transaction->user;
-
-        // 1. Mark transaction as success
-        $transaction->update([
-            'status' => 'success',
-            'completed_at' => now(),
-            'gateway_response' => [
-                'payment_intent_id' => 'mock_pi_'.Str::random(16),
-                'status' => 'succeeded',
-                'captured_amount' => $transaction->fiat_amount,
-                'payment_method' => $transaction->gateway,
-            ],
-        ]);
-
-        // 2. Credit game balance
-        $user->increment('game_balance', $transaction->game_credits);
-
-        // 3. Generate PDF Invoice
         try {
-            $invoiceService->generate($transaction);
-        } catch (\Throwable $e) {
-            report($e);
+            $url = $payments->start($transaction);
+        } catch (\RuntimeException $exception) {
+            Log::warning('Corefy checkout could not be initialized.', ['transaction_ref' => $transaction->transaction_ref, 'reason' => $exception->getMessage()]);
+
+            return back()->with('error', __('Unable to open secure payment. Please try again later or contact support with your order reference.'));
         }
 
-        // 4. Send Email
-        try {
-            Mail::to($user->email)->queue((new PaymentReceiptMail($transaction))->locale($transaction->customer_snapshot['locale'] ?? 'en'));
-        } catch (\Throwable $e) {
-            // mail logging
-        }
-
-        return redirect()->route('topup.index')->with('success', __('Payment successful! +:credits CR added to your wallet.', ['credits' => number_format($transaction->game_credits)]));
-    }
-
-    /**
-     * Webhook endpoint for automated payment gateway notifications.
-     */
-    public function handleWebhook(Request $request, InvoiceService $invoiceService): JsonResponse
-    {
-        $payload = $request->all();
-        $signature = $request->header('X-Apex-Signature');
-
-        // Optional HMAC signature check
-        $secret = config('services.payment_webhook_secret', 'apex_secret_key_2026');
-        $expectedSignature = hash_hmac('sha256', (string) $request->getContent(), $secret);
-
-        if ($signature && ! hash_equals($expectedSignature, $signature)) {
-            return response()->json(['error' => 'Invalid signature'], 400);
-        }
-
-        $ref = $payload['transaction_ref'] ?? null;
-        if (! $ref) {
-            return response()->json(['error' => 'Missing transaction reference'], 422);
-        }
-
-        $transaction = Transaction::where('transaction_ref', $ref)->first();
-        if (! $transaction) {
-            return response()->json(['error' => 'Transaction not found'], 404);
-        }
-
-        if ($transaction->status === 'success') {
-            return response()->json(['status' => 'already_processed']);
-        }
-
-        $transaction->update([
-            'status' => 'success',
-            'completed_at' => now(),
-            'gateway_response' => $payload,
-        ]);
-
-        $transaction->user->increment('game_balance', $transaction->game_credits);
-
-        try {
-            $invoiceService->generate($transaction);
-            Mail::to($transaction->user->email)->queue((new PaymentReceiptMail($transaction))->locale($transaction->customer_snapshot['locale'] ?? 'en'));
-        } catch (\Throwable $e) {
-            report($e);
-        }
-
-        return response()->json([
-            'status' => 'ok',
-            'message' => 'Transaction processed and balance credited.',
-            'invoice_number' => $transaction->invoice_number,
-        ]);
+        return Inertia::location($url);
     }
 }

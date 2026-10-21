@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CorefyWebhookController;
 use App\Http\Controllers\GarageController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\LeaderboardController;
@@ -79,7 +80,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/topup', [TopupController::class, 'index'])->name('topup.index');
     Route::post('/topup/order', [TopupController::class, 'createOrder'])->name('topup.order');
     Route::get('/topup/checkout/{transaction:transaction_ref}', [TopupController::class, 'checkout'])->name('topup.checkout');
-    Route::post('/topup/checkout/{transaction:transaction_ref}/pay', [TopupController::class, 'processMockPayment'])->name('topup.process');
+    Route::post('/topup/checkout/{transaction:transaction_ref}/pay', [TopupController::class, 'processPayment'])->name('topup.process');
 
     // Invoices
     Route::get('/invoices/{transaction:invoice_number}/download', [InvoiceController::class, 'download'])->name('invoices.download');
@@ -90,4 +91,4 @@ Route::middleware('auth')->group(function () {
 });
 
 // Webhook (Publicly accessible with signature verification)
-Route::post('/topup/webhook', [TopupController::class, 'handleWebhook'])->name('topup.webhook');
+Route::post('/topup/webhook', CorefyWebhookController::class)->name('topup.webhook');

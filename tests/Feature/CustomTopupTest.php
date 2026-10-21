@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\FakesCorefy;
 use Tests\TestCase;
 
 class CustomTopupTest extends TestCase
 {
+    use FakesCorefy;
     use RefreshDatabase;
 
     public function test_store_shows_two_value_bundles_and_custom_credit_limits(): void
@@ -170,8 +172,11 @@ class CustomTopupTest extends TestCase
         ])->assertRedirect();
         $transaction = Transaction::sole();
 
+        $this->fakeCorefy($transaction);
         $this->post('/topup/checkout/'.$transaction->transaction_ref.'/pay')
-            ->assertRedirect('/topup');
+            ->assertRedirect('https://hpp.example.test/secure-checkout');
+        $this->assertSame('500.00', $user->fresh()->game_balance);
+        $this->confirmCorefy($transaction)->assertOk();
 
         $this->assertSame('1734.00', $user->fresh()->game_balance);
         $this->assertSame('success', $transaction->fresh()->status);

@@ -14,6 +14,8 @@ class InvoiceController extends Controller
             abort(403);
         }
 
+        abort_unless($transaction->status === 'success', 404);
+
         return $invoiceService->downloadResponse($transaction);
     }
 }

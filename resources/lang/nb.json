@@ -1353,7 +1353,6 @@
   "Returning to our site after payment is not, on its own, proof that a payment succeeded — a browser redirect can be interrupted or faked. That is why credits are only issued after a": "At du kommer tilbake til nettstedet etter betaling, beviser ikke alene at betalingen lyktes — en videresending kan avbrytes eller forfalskes. Derfor utstedes kreditter bare etter en",
   "server-to-server notification": "server-til-server-varsel",
   "(a \"webhook\") from the payment provider. Each notification is:": "(en «webhook») fra betalingsleverandøren. Hvert varsel er:",
-  "Signed with a shared secret using HMAC-SHA256; requests with a missing or invalid signature are rejected and logged.": "Signert med en delt hemmelighet og HMAC-SHA256; manglende eller ugyldig signatur fører til avvisning og logging.",
   "Checked against the original order: reference, amount, currency and account must all match exactly.": "Kontrollert mot opprinnelig ordre: referanse, beløp, valuta og konto må stemme nøyaktig.",
   "Idempotent — a duplicate notification for an order that is already completed is acknowledged but never credits the wallet twice.": "Idempotent — duplikatvarsler for fullførte ordrer bekreftes, men krediterer aldri lommeboken to ganger.",
   "Time-stamped and replay-protected, so an old notification cannot be resent to trigger a new credit.": "Tidsstemplet og beskyttet mot gjentakelse, slik at gamle varsler ikke kan utløse nye kreditter.",
@@ -1667,5 +1666,17 @@
   ":name — Compliance": ":name — Etterlevelse",
   "13 Oct 2026": "13. okt. 2026",
   "Write to billing@streetforge.co.uk from the email address registered to your account.": "Skriv til billing@streetforge.co.uk fra e-postadressen som er registrert på kontoen din.",
-  "Tell us immediately at security@streetforge.co.uk if you believe your account has been accessed without permission.": "Gi oss beskjed umiddelbart på security@streetforge.co.uk hvis du tror noen har fått tilgang til kontoen din uten tillatelse."
+  "Tell us immediately at security@streetforge.co.uk if you believe your account has been accessed without permission.": "Gi oss beskjed umiddelbart på security@streetforge.co.uk hvis du tror noen har fått tilgang til kontoen din uten tillatelse.",
+  "Credit / Debit Card": "Kreditt- / debetkort",
+  "Payment confirmed": "Betaling bekreftet",
+  "Your credits have been added to your wallet.": "Kredittene er lagt til i lommeboken din.",
+  "This payment has been refunded.": "Denne betalingen er refundert.",
+  "This payment was declined, cancelled or expired. No credits have been added.": "Denne betalingen ble avvist, avbrutt eller utløp. Ingen kreditter er lagt til.",
+  "Waiting for payment confirmation. Credits will appear after the payment provider confirms your payment. You can safely leave this page.": "Venter på betalingsbekreftelse. Kredittene vises når betalingsleverandøren har bekreftet betalingen. Du kan trygt forlate denne siden.",
+  "Continue to the secure payment page to enter your card details. Your card information is handled by the payment provider and never reaches StreetForge.": "Fortsett til den sikre betalingssiden for å oppgi kortopplysningene dine. Kortopplysningene behandles av betalingsleverandøren og når aldri StreetForge.",
+  "Card payments are temporarily unavailable. Please try again later.": "Kortbetaling er midlertidig utilgjengelig. Prøv igjen senere.",
+  "Opening secure payment...": "Åpner sikker betaling ...",
+  "Continue to secure payment": "Fortsett til sikker betaling",
+  "Unable to open secure payment. Please try again later or contact support with your order reference.": "Kunne ikke åpne sikker betaling. Prøv igjen senere eller kontakt kundestøtte med ordrereferansen din.",
+  "Verified using the payment provider’s signing secret; requests with a missing or invalid signature are rejected.": "Verifisert med betalingsleverandørens signeringshemmelighet; forespørsler med manglende eller ugyldig signatur avvises."
 }
