@@ -52,6 +52,16 @@ return [
 
     'channels' => [
 
+        'corefy' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/corefy.log'),
+            'level' => 'info',
+            'max_files' => 14,
+            'permission' => 0600,
+            'locking' => true,
+            'replace_placeholders' => false,
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => explode(',', (string) env('LOG_STACK', 'single')),

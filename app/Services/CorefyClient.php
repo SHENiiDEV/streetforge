@@ -6,10 +6,13 @@ use App\Models\Transaction;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 class CorefyClient
 {
+    public function __construct(private CorefyLogger $logger) {}
+
     /** Countries currently offered by the registration form; Corefy requires ISO 3166-1 alpha-2. */
     private const COUNTRY_CODES = [
         'United States' => 'US', 'United Kingdom' => 'GB', 'Germany' => 'DE', 'France' => 'FR',
@@ -96,13 +99,13 @@ class CorefyClient
                     'metadata' => ['transaction_ref' => $transaction->transaction_ref, 'source' => 'streetforge'],
                 ],
             ],
-        ]);
+        ], ['transaction_ref' => $transaction->transaction_ref]);
     }
 
     /** @return array<string, mixed> */
-    public function invoice(string $invoiceId): array
+    public function invoice(string $invoiceId, ?string $transactionReference = null): array
     {
-        return $this->request('GET', '/payment-invoices/'.rawurlencode($invoiceId));
+        return $this->request('GET', '/payment-invoices/'.rawurlencode($invoiceId), [], ['provider_invoice_id' => $invoiceId, 'transaction_ref' => $transactionReference]);
     }
 
     public function validSignature(string $body, ?string $signature): bool
@@ -143,15 +146,35 @@ class CorefyClient
     }
 
     /** @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $context
      * @return array<string, mixed>
      */
-    private function request(string $method, string $path, array $payload = []): array
+    private function request(string $method, string $path, array $payload = [], array $context = []): array
     {
+        $http = $this->http();
+        $context += [
+            'request_id' => (string) Str::uuid(), 'method' => $method,
+            'path' => rtrim(parse_url(config('services.corefy.api_url'), PHP_URL_PATH) ?? '', '/').$path,
+            'api_host' => parse_url(config('services.corefy.api_url'), PHP_URL_HOST),
+        ];
+        $this->logger->record('api.request', $context + ['payload' => $payload]);
+        $startedAt = hrtime(true);
         try {
-            $response = $method === 'POST' ? $this->http()->post($path, $payload) : $this->http()->get($path);
+            $response = $method === 'POST' ? $http->post($path, $payload) : $http->get($path);
         } catch (ConnectionException) {
+            $this->logger->record('api.connection_failed', $context + ['duration_ms' => round((hrtime(true) - $startedAt) / 1000000, 2)], 'warning');
             throw new RuntimeException('Corefy connection failed.');
         }
+        $body = $response->json();
+        $this->logger->record('api.response', $context + [
+            'http_status' => $response->status(),
+            'provider_request_id' => $response->header('X-Request-ID') ?: $response->header('X-Correlation-ID'),
+            'duration_ms' => round((hrtime(true) - $startedAt) / 1000000, 2),
+            'payload' => is_array($body) ? $body : [
+                'format' => 'non-json', 'bytes' => strlen($response->body()),
+                'sha256' => hash('sha256', $response->body()),
+            ],
+        ], $response->successful() ? 'info' : 'warning');
         if (! $response->successful() || ! is_array($response->json('data'))) {
             throw new RuntimeException('Corefy returned an invalid response (HTTP '.$response->status().').');
         }

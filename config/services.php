@@ -15,6 +15,7 @@ return [
     */
 
     'corefy' => [
+        'log_enabled' => env('COREFY_LOG_ENABLED', true),
         'api_url' => env('COREFY_API_URL', 'https://api.sterling-pay.com'),
         'account_id' => env('COREFY_ACCOUNT_ID'),
         'api_key' => env('COREFY_API_KEY'),

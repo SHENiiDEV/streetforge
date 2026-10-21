@@ -29,7 +29,7 @@ class ReconcileCorefyPayment extends Command
             return self::FAILURE;
         }
         try {
-            $resource = $client->invoice($invoiceId);
+            $resource = $client->invoice($invoiceId, $transaction->transaction_ref);
             if (($resource['id'] ?? null) !== $invoiceId) {
                 throw new RuntimeException('Invoice identifier mismatch.');
             }

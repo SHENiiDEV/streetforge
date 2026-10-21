@@ -13,6 +13,7 @@ trait FakesCorefy
     {
         config(['app.url' => 'https://merchant.example.test']);
         config(['services.corefy' => [
+            'log_enabled' => false,
             'api_url' => 'https://payments.example.test',
             'account_id' => 'coma_test_account', 'api_key' => 'private-test-key',
             'webhook_secret' => 'signature-test-key',
