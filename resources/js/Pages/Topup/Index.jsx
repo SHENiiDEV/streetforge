@@ -197,12 +197,14 @@ export default function Topup({ packages = [], transactions = [], customTopup })
                                                 )}
                                             </td>
                                             <td className="p-3.5 text-right">
-                                                <a
-                                                    href={`/invoices/${tx.invoice_number || tx.id}/download`}
-                                                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-800 text-cyan-400 font-medium text-xs transition-all"
-                                                    title={t("Download Official PDF Tax Invoice")}
-                                                >
-                                                    <Download className="w-3.5 h-3.5" />{t(" PDF ")}</a>
+                                                {tx.status === 'success' && tx.invoice_path && tx.invoice_number ? (
+                                                    <a
+                                                        href={`/invoices/${tx.invoice_number}/download`}
+                                                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-800 text-cyan-400 font-medium text-xs transition-all"
+                                                        title={t("Download Official PDF Tax Invoice")}
+                                                    >
+                                                        <Download className="w-3.5 h-3.5" />{t(" PDF ")}</a>
+                                                ) : <span className="text-slate-600">—</span>}
                                             </td>
                                         </tr>
                                     ))}
