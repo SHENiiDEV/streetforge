@@ -1,5 +1,6 @@
 import { t } from '../../localization';
 import React from 'react';
+import SocialLinks from '../../Components/SocialLinks';
 import { LifeBuoy, CreditCard, Shield, Scale, Database, Flag } from 'lucide-react';
 import LegalShell, { P, KV, A, useCompany } from '../../Components/Legal/LegalShell';
 
@@ -37,6 +38,16 @@ export default function Contact() {
                             </a>
                         ))}
                     </div>
+                </>
+            ),
+        },
+        {
+            id: 'social-media',
+            title: 'Social media',
+            content: (
+                <>
+                    <P>{t('Follow StreetForge on LinkedIn and Instagram.')}</P>
+                    <SocialLinks />
                 </>
             ),
         },

@@ -3,6 +3,7 @@ import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { ShieldCheck, Mail, MapPin, FileText, Lock, ArrowUpRight, Clock, Building2, KeyRound } from 'lucide-react';
 import BrandLogo from './BrandLogo';
+import SocialLinks from './SocialLinks';
 import { LEGAL_GROUPS } from './Legal/legalDocs';
 
 const RACE_HUB = {
@@ -81,6 +82,10 @@ export default function Footer() {
                     <div className="lg:col-span-3 space-y-6">
                         <BrandLogo size="md" />
                         <p className="text-[13px] text-slate-500 leading-relaxed max-w-xs">{t("Browser motorsport simulation with real-time tuning, vehicle ownership, custom liveries and competitive circuits. No downloads, no plugins. ")}</p>
+                        <div className="space-y-3">
+                            <p className="label-tech text-slate-400">{t('Social media')}</p>
+                            <SocialLinks />
+                        </div>
                         <div className="surface p-4 space-y-3 max-w-xs">
                             <div className="label-tech text-slate-400">{t("Need help?")}</div>
                             <a href={`mailto:${companyEmail}`} className="flex items-center gap-2 text-sm text-cyan-300 hover:text-white transition-colors break-all">
