@@ -191,9 +191,11 @@ Vite находится в devDependencies, поэтому `npm ci --omit=dev` �
 ```bash
 cd /var/www/streetforge
 sudo -u www-data php8.4 artisan migrate --force --no-interaction
-sudo -u www-data php8.4 artisan storage:link --no-interaction
+sudo php8.4 artisan storage:link --no-interaction
 sudo -u www-data php8.4 artisan optimize
 ```
+
+`storage:link` выполняется с `sudo`, поскольку создаёт ссылку внутри `public`, где у `www-data` намеренно нет прав записи. Остальные runtime-команды выполняются от `www-data`.
 
 Не запускайте `composer run setup`: этот сценарий предназначен для первоначальной разработки и включает генерацию ключа.
 
@@ -429,6 +431,38 @@ sudo -u www-data php8.4 artisan payments:reconcile TOP_ORDER_REFERENCE --invoice
 При неудаче оставьте maintenance mode, изучите ошибку и восстановите совместимый релиз. Откат Git не откатывает схему и данные: применённые миграции требуют отдельного плана восстановления. Не восстанавливайте старую копию SQLite поверх новых платежей без их сверки.
 
 ## 11. Частые ошибки
+
+### Permission denied после установки от root
+
+Если лог, кеш или SQLite принадлежат `root`, запустите следующий блок **от root**. Он не создаёт, не очищает и не заменяет базу. Если файла базы нет, блок останавливается: сначала найдите и перенесите существующую базу или выполните шаг новой установки из раздела 3. При другом `DB_DATABASE` замените путь ниже.
+
+```bash
+bash <<'BASH'
+set -e
+cd /var/www/streetforge
+if [ ! -f database/database.sqlite ]; then
+    echo 'База database/database.sqlite отсутствует. Остановлено без создания пустой базы.'
+    exit 1
+fi
+mkdir -p storage/logs storage/framework/cache/data storage/framework/sessions storage/framework/views storage/fonts bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache
+find storage bootstrap/cache -type d -exec chmod 2770 {} +
+find storage bootstrap/cache -type f -exec chmod 660 {} +
+chown www-data:www-data database/database.sqlite
+chmod 660 database/database.sqlite
+chgrp www-data database
+chmod g+rwx database
+chgrp www-data .env
+chmod 640 .env
+sudo -u www-data php8.4 artisan config:clear
+sudo -u www-data php8.4 artisan migrate --force --no-interaction
+php8.4 artisan storage:link --no-interaction
+sudo -u www-data php8.4 artisan optimize
+BASH
+```
+
+Не передавайте `www-data` владение всем репозиторием. Если после исправления остаётся ошибка чтения, проверьте проход по родительским каталогам командой `namei -l /var/www/streetforge/database/database.sqlite` и чтение `.env` пользователем `www-data`.
+
 
 | Симптом | Что проверить |
 | --- | --- |
