@@ -1,6 +1,6 @@
 # StreetForge: деплой на VPS
 
-Гайд для **Ubuntu 24.04 LTS**, Nginx, PHP-FPM 8.4 и MySQL 8. Проект: `/var/www/streetforge`, ветка `main`, репозиторий [SHENiiDEV/streetforge](https://github.com/SHENiiDEV/streetforge.git).
+Гайд для **Ubuntu 24.04 LTS**, Nginx, PHP-FPM 8.4 и SQLite. Проект: `/var/www/streetforge`, ветка `main`, репозиторий [SHENiiDEV/streetforge](https://github.com/SHENiiDEV/streetforge.git).
 
 Пример домена — `streetforge.co.uk`. Если домен другой, замените его во всех командах, `.env` и Nginx-конфиге. Для Debian установка PHP отличается: Ubuntu PPA туда добавлять нельзя.
 
@@ -8,18 +8,18 @@
 
 ## 1. Подготовка сервера
 
-Нужен пользователь с `sudo`. A-запись домена должна указывать на IPv4 VPS; AAAA добавляйте только при работающем IPv6. В firewall сервера и панели VPS откройте HTTP/HTTPS и сохраните доступ к вашему SSH-порту. MySQL наружу открывать не нужно.
+Нужен пользователь с `sudo`. A-запись домена должна указывать на IPv4 VPS; AAAA добавляйте только при работающем IPv6. В firewall сервера и панели VPS откройте HTTP/HTTPS и сохраните доступ к вашему SSH-порту. Отдельный сервер базы данных не нужен.
 
 Установка пакетов, включая сторонний [PHP PPA Ondřej Surý](https://launchpad.net/~ondrej/+archive/ubuntu/php):
 
 ```bash
 sudo apt update
-sudo apt install -y software-properties-common ca-certificates curl git unzip acl nginx mysql-server
+sudo apt install -y software-properties-common ca-certificates curl git unzip acl nginx sqlite3
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt update
-sudo apt install -y php8.4-cli php8.4-fpm php8.4-mysql php8.4-mbstring php8.4-xml php8.4-curl php8.4-zip php8.4-bcmath php8.4-gd php8.4-intl composer
+sudo apt install -y php8.4-cli php8.4-fpm php8.4-sqlite3 php8.4-mbstring php8.4-xml php8.4-curl php8.4-zip php8.4-bcmath php8.4-gd php8.4-intl composer
 sudo update-alternatives --set php /usr/bin/php8.4
-sudo systemctl enable --now nginx php8.4-fpm mysql
+sudo systemctl enable --now nginx php8.4-fpm
 php8.4 -v
 composer --version
 ```
@@ -70,24 +70,34 @@ find storage bootstrap/cache -type d -exec setfacl -m d:u:deploy:rwx,d:u:www-dat
 
 Не используйте `chmod -R 777` и не делайте весь код доступным для записи веб-серверу.
 
-## 3. MySQL
+## 3. SQLite: существующая или новая база
 
-В отдельной оболочке пользователя с `sudo` откройте MySQL:
+В проекте используется SQLite. В этом гайде путь к файлу — `/var/www/streetforge/database/database.sqlite`, стандартное расположение Laravel. Если рабочая база уже находится в другом месте, сохраните её путь и подставьте его в `.env` и команды резервного копирования ниже.
+
+**При переносе действующего сайта:** до миграций перенесите согласованную резервную копию существующей базы в этот путь, исходный `APP_KEY` и `storage/app`, включая инвойсы. Создавайте копию исходной базы командой `sqlite3 /путь/к/исходной/базе.sqlite ".backup '/путь/к/копии.sqlite'"`. Не копируйте только основной файл работающей базы обычным `cp`: свежие изменения могут находиться в WAL. Во время окончательного переноса остановите записи на исходном сайте и его очередь, чтобы после снимка не потерять новые платежи.
+
+**Только для новой установки без существующих данных**, в оболочке `deploy`:
 
 ```bash
-sudo mysql
+cd /var/www/streetforge
+test -e database/database.sqlite || touch database/database.sqlite
 ```
 
-Выполните SQL, заменив пароль на собственный длинный случайный. Это пример, а не готовый пароль:
+Для новой и перенесённой базы настройте права из оболочки `deploy`:
 
-```sql
-CREATE DATABASE streetforge CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'streetforge'@'localhost' IDENTIFIED BY 'REPLACE_WITH_RANDOM_DATABASE_PASSWORD';
-GRANT ALL PRIVILEGES ON streetforge.* TO 'streetforge'@'localhost';
-EXIT;
+```bash
+cd /var/www/streetforge
+chmod 660 database/database.sqlite
+setfacl -m u:www-data:rw database/database.sqlite
+setfacl -m u:www-data:rwx database
+php8.4 -m | grep -E 'pdo_sqlite|sqlite3'
 ```
 
-При переносе действующего сайта восстановите его согласованный MySQL-дамп в пустую целевую базу **до миграций**. Сохраните исходный `APP_KEY` и перенесите `storage/app`, включая инвойсы. Если исходная база SQLite, её нельзя импортировать в MySQL как MySQL-дамп: нужен отдельный перенос данных.
+PHP-FPM и worker должны иметь право записи не только в файл, но и в его родительский каталог: SQLite создаёт рядом journal/WAL/SHM-файлы. Каталог `database` находится вне Nginx document root и не публикуется в интернете.
+
+При переносе резервной копии через `sudo` сначала верните владельца файла: `sudo chown deploy:www-data /var/www/streetforge/database/database.sqlite`. Никогда не подменяйте рабочую базу пустым файлом и не добавляйте её в Git.
+
+См. [настройку SQLite в Laravel](https://laravel.com/framework/docs/13.x/database#sqlite-configuration) и [CLI SQLite](https://www.sqlite.org/cli.html).
 
 ## 4. Настройка .env
 
@@ -112,12 +122,9 @@ LOG_CHANNEL=stack
 LOG_STACK=single
 LOG_LEVEL=warning
 
-DB_CONNECTION=mysql
-DB_HOST=localhost
-DB_PORT=3306
-DB_DATABASE=streetforge
-DB_USERNAME=streetforge
-DB_PASSWORD="REPLACE_WITH_RANDOM_DATABASE_PASSWORD"
+DB_CONNECTION=sqlite
+DB_DATABASE=/var/www/streetforge/database/database.sqlite
+DB_FOREIGN_KEYS=true
 
 SESSION_DRIVER=database
 SESSION_SECURE_COOKIE=true
@@ -150,6 +157,8 @@ COREFY_LOG_ENABLED=true
 
 VITE_APP_NAME="${APP_NAME}"
 ```
+
+Удалите старый `DB_URL`, если он задан: он может переопределить выбранное соединение. Для SQLite параметры `DB_HOST`, `DB_PORT`, `DB_USERNAME` и `DB_PASSWORD` не нужны.
 
 Впишите реальные юридические реквизиты: они попадут на сайт, в письма и PDF. Настройки SMTP выше относятся к PrivateEmail на порту 465; для другого провайдера используйте его настройки. Текущий `config/mail.php` читает `MAIL_SCHEME`, а не `MAIL_ENCRYPTION`.
 
@@ -188,7 +197,7 @@ sudo -u www-data php8.4 artisan optimize
 
 Не запускайте `composer run setup`: этот сценарий предназначен для первоначальной разработки и включает генерацию ключа.
 
-**Начальные игровые данные:** текущий `DatabaseSeeder` создаёт не только каталог машин и трасс, но и демо-аккаунты с известными паролями, балансы и примерные платежи. Не запускайте `db:seed` или `migrate --seed` на production. Для новой пустой базы до открытия игры нужно импортировать подготовленный игровой каталог либо добавить отдельный production-сидер без демо-пользователей и платежей. В текущем репозитории отдельного такого сидера нет. При переносе существующей рабочей базы каталог уже будет в дампе.
+**Начальные игровые данные:** текущий `DatabaseSeeder` создаёт не только каталог машин и трасс, но и демо-аккаунты с известными паролями, балансы и примерные платежи. Не запускайте `db:seed` или `migrate --seed` на production. Для новой пустой базы до открытия игры нужно импортировать подготовленный игровой каталог либо добавить отдельный production-сидер без демо-пользователей и платежей. В текущем репозитории отдельного такого сидера нет. При переносе существующей рабочей базы каталог уже будет в перенесённом файле SQLite.
 
 ## 6. Nginx
 
@@ -282,7 +291,7 @@ Certbot добавит HTTPS и перенаправление HTTP → HTTPS. �
 ```ini
 [Unit]
 Description=StreetForge Laravel queue worker
-After=network.target mysql.service
+After=network.target
 
 [Service]
 Type=simple
@@ -339,11 +348,11 @@ sudo tail -n 100 /var/log/nginx/streetforge-error.log
 sudo journalctl -u streetforge-queue -n 100 --no-pager
 ```
 
-Диагностика Corefy — `storage/logs/corefy-YYYY-MM-DD.log`. Файлы имеют права 0600; просматривайте через `sudo`. Не публикуйте `.env`, дампы базы и журналы с персональными данными.
+Диагностика Corefy — `storage/logs/corefy-YYYY-MM-DD.log`. Файлы имеют права 0600; просматривайте через `sudo`. Не публикуйте `.env`, файлы и резервные копии базы и журналы с персональными данными.
 
 ## 10. Обновление из main
 
-Это простой деплой с коротким режимом обслуживания, без обещания zero downtime. Перед изменениями сохраните проверяемый бэкап MySQL, `.env` и `storage/app` вне web-root. Сохраните хеш текущего коммита. Не выполняйте `migrate:fresh`.
+Это простой деплой с коротким режимом обслуживания, без обещания zero downtime. Перед изменениями сохраните проверяемый бэкап SQLite, `.env` и `storage/app` вне web-root. Сохраните хеш текущего коммита. Не выполняйте `migrate:fresh`.
 
 Перед обновлением проверьте в оболочке `deploy`:
 
@@ -361,6 +370,21 @@ cd /var/www/streetforge
 sudo -u www-data php8.4 artisan down --retry=60
 sudo systemctl stop streetforge-queue
 ```
+
+В той же административной оболочке создайте резервную копию. Путь к исходной базе должен совпадать с `DB_DATABASE`:
+
+```bash
+STREETFORGE_BACKUP_DIR="/var/backups/streetforge/$(date -u +%Y%m%dT%H%M%SZ)"
+sudo install -d -m 700 "$STREETFORGE_BACKUP_DIR"
+sudo test -f /var/www/streetforge/database/database.sqlite
+sudo sqlite3 /var/www/streetforge/database/database.sqlite ".backup '$STREETFORGE_BACKUP_DIR/database.sqlite'"
+sudo sqlite3 "$STREETFORGE_BACKUP_DIR/database.sqlite" 'PRAGMA integrity_check;'
+sudo cp /var/www/streetforge/.env "$STREETFORGE_BACKUP_DIR/.env"
+sudo tar -C /var/www/streetforge -czf "$STREETFORGE_BACKUP_DIR/storage-app.tar.gz" storage/app
+```
+
+`integrity_check` должен вернуть `ok`. При любой ошибке остановитесь и не выполняйте миграции. Копию храните также вне VPS; доступ к ней ограничен владельцем каталога. Старые снимки не заменяются этим обновлением: для каждого создаётся отдельный каталог.
+
 
 В оболочке `deploy` выполните последовательно, останавливаясь при первой ошибке:
 
@@ -402,14 +426,16 @@ sudo -u www-data php8.4 artisan payments:reconcile TOP_ORDER_REFERENCE --invoice
 
 Сверка не создаёт новое списание. Не подставляйте номер PDF `INV-…` вместо Corefy ID.
 
-При неудаче оставьте maintenance mode, изучите ошибку и восстановите совместимый релиз. Откат Git не откатывает схему и данные: применённые миграции требуют отдельного плана восстановления. Не восстанавливайте старый дамп поверх новых платежей без их сверки.
+При неудаче оставьте maintenance mode, изучите ошибку и восстановите совместимый релиз. Откат Git не откатывает схему и данные: применённые миграции требуют отдельного плана восстановления. Не восстанавливайте старую копию SQLite поверх новых платежей без их сверки.
 
 ## 11. Частые ошибки
 
 | Симптом | Что проверить |
 | --- | --- |
 | 502 Bad Gateway | Запущен ли `php8.4-fpm`, совпадает ли сокет с Nginx-конфигом |
-| 500 | `laravel.log`, PHP-расширения, соединение с БД, права `storage` и `bootstrap/cache` |
+| 500 | `laravel.log`, расширение `pdo_sqlite`, путь `DB_DATABASE`, права файла базы, `storage` и `bootstrap/cache` |
+| SQLite: readonly database / unable to open database | Абсолютный путь, наличие файла, права `www-data` на файл и родительский каталог |
+| SQLite: database is locked | Долгие записи/параллельные worker; не удаляйте WAL/SHM-файлы, оставьте один worker и изучите активные процессы |
 | 419 / выход из аккаунта | HTTPS, `APP_URL`, secure cookie, таблицу `sessions`, постоянный `APP_KEY` |
 | Vite manifest not found / пустая страница | Успешность `npm ci --include=dev` и `npm run build`, файл `public/build/manifest.json` |
 | Браузер пытается подключиться к Vite dev server | Удалите оставшийся от разработки `public/hot`; в production он не нужен |
