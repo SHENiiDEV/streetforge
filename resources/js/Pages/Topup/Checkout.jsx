@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import { t, locale, formatMoney } from '../../localization';
 import AppLayout from '../../Layouts/AppLayout';
 import { useForm, usePoll, Link } from '@inertiajs/react';
-import { CreditCard, ShieldCheck, CheckCircle2, Lock, ChevronLeft, ArrowUpRight, RefreshCw, AlertCircle } from 'lucide-react';
+import { CreditCard, ShieldCheck, CheckCircle2, Lock, ChevronLeft, Wallet, ArrowUpRight, RefreshCw, AlertCircle } from 'lucide-react';
 
 export default function Checkout({ transaction, paymentAvailable, returned }) {
     const form = useForm({});
+    const googlePay = transaction.gateway === 'google_pay';
+    const PaymentIcon = googlePay ? Wallet : CreditCard;
     const pending = transaction.status === 'pending';
     const paid = transaction.status === 'success';
     const { start, stop } = usePoll(4000, { only: ['transaction'] }, { autoStart: false });
@@ -40,7 +42,7 @@ export default function Checkout({ transaction, paymentAvailable, returned }) {
                         {[
                             ['Transaction Reference:', transaction.transaction_ref],
                             ['Credits to Receive:', `${Number(transaction.game_credits).toLocaleString(locale())} CR`],
-                            ['Payment Method:', t('Credit / Debit Card')],
+                            ['Payment Method:', t(googlePay ? 'Google Pay' : 'Credit / Debit Card')],
                             ['Total Due:', formatMoney(transaction.fiat_amount, transaction.currency)],
                         ].map(([label, value]) => (
                             <div key={label} className="flex justify-between gap-4 flex-wrap">
@@ -70,14 +72,14 @@ export default function Checkout({ transaction, paymentAvailable, returned }) {
                             )}
                             <div className="flex gap-3 text-sm text-slate-400 leading-relaxed">
                                 <ShieldCheck className="w-6 h-6 shrink-0 text-cyan-400" />
-                                <p>{t('Continue to the secure payment page to enter your card details. Your card information is handled by the payment provider and never reaches StreetForge.')}</p>
+                                <p>{t(googlePay ? 'Continue to the secure payment page to pay with Google Pay. Your payment information is handled by the payment provider and never reaches StreetForge.' : 'Continue to the secure payment page to enter your card details. Your card information is handled by the payment provider and never reaches StreetForge.')}</p>
                             </div>
                             {!paymentAvailable ? (
-                                <p className="text-sm text-amber-300 flex gap-2" role="alert"><AlertCircle className="w-5 h-5 shrink-0" />{t('Card payments are temporarily unavailable. Please try again later.')}</p>
+                                <p className="text-sm text-amber-300 flex gap-2" role="alert"><AlertCircle className="w-5 h-5 shrink-0" />{t(googlePay ? 'Google Pay is temporarily unavailable. Please try again later.' : 'Card payments are temporarily unavailable. Please try again later.')}</p>
                             ) : (
                                 <form onSubmit={handlePay}>
                                     <button type="submit" disabled={form.processing} className="w-full py-4 rounded-2xl bg-cyan-400 hover:bg-cyan-300 disabled:opacity-60 text-slate-950 font-orbitron font-extrabold text-sm flex items-center justify-center gap-2 transition-colors">
-                                        <CreditCard className="w-5 h-5" />
+                                        <PaymentIcon className="w-5 h-5" />
                                         {t(form.processing ? 'Opening secure payment...' : 'Continue to secure payment')}
                                         <ArrowUpRight className="w-4 h-4" />
                                     </button>

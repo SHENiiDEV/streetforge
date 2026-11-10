@@ -79,6 +79,68 @@ class CorefyPaymentTest extends TestCase
         Mail::assertNothingQueued();
     }
 
+    public static function googlePayOrders(): array
+    {
+        return [['racer_pack', null, '23.00', 2750], ['custom', 100, '0.92', 100]];
+    }
+
+    #[DataProvider('googlePayOrders')]
+    public function test_google_pay_order_uses_its_own_service_and_credits_once(string $package, ?int $credits, string $amount, int $expectedCredits): void
+    {
+        $user = User::factory()->create(['game_balance' => 500, 'country' => 'Norway']);
+        $this->actingAs($user)->withSession(['currency' => 'EUR'])->post('/topup/order', [
+            'package_id' => $package, 'custom_credits' => $credits, 'gateway' => 'google_pay',
+            'service' => 'untrusted_service', 'fiat_amount' => 0.01,
+        ])->assertRedirect()->assertSessionHasNoErrors();
+        $transaction = Transaction::sole();
+        $this->assertSame('google_pay', $transaction->gateway);
+        $this->assertSame('EUR', $transaction->currency);
+        $this->assertSame($amount, $transaction->fiat_amount);
+        $this->fakeCorefy($transaction);
+        config(['services.corefy.service_code' => 'payment_card_eur_hpp']);
+
+        $this->post('/topup/checkout/'.$transaction->transaction_ref.'/pay', ['gateway' => 'credit_card'])
+            ->assertRedirect('https://hpp.example.test/secure-checkout');
+        Http::assertSent(fn (ClientRequest $request): bool => $request->method() === 'POST'
+            && $request['data']['attributes']['service'] === 'googlepay_eur_hpp'
+            && $request['data']['attributes']['currency'] === 'EUR'
+            && $request['data']['attributes']['amount'] === (float) $amount);
+        $this->assertSame('500.00', $user->fresh()->game_balance);
+        $this->start($transaction);
+        Http::assertSentCount(1);
+
+        $this->confirmCorefy($transaction)->assertOk();
+        $this->confirmCorefy($transaction)->assertOk();
+        $this->assertSame('success', $transaction->fresh()->status);
+        $this->assertSame((string) ($expectedCredits + 500).'.00', $user->fresh()->game_balance);
+        Storage::disk('public')->assertExists($transaction->fresh()->invoice_path);
+        Mail::assertQueuedCount(1);
+    }
+
+    public function test_google_pay_non_eur_order_is_rejected_before_payment_reservation(): void
+    {
+        $transaction = $this->order('USD');
+        $transaction->update(['gateway' => 'google_pay']);
+        $this->fakeCorefy($transaction);
+
+        $this->actingAs($transaction->user)->from('/topup/checkout/'.$transaction->transaction_ref)
+            ->post('/topup/checkout/'.$transaction->transaction_ref.'/pay')->assertSessionHas('error');
+
+        $this->get('/topup/checkout/'.$transaction->transaction_ref)->assertInertia(fn (Assert $page) => $page->where('paymentAvailable', false));
+        Http::assertNothingSent();
+        $this->assertNull($transaction->fresh()->payment_requested_at);
+        $this->assertSame('500.00', $transaction->user->fresh()->game_balance);
+    }
+
+    public function test_card_service_override_is_preserved_for_card_orders(): void
+    {
+        $transaction = $this->order('EUR', '23.00');
+        $this->fakeCorefy($transaction);
+        config(['services.corefy.service_code' => 'merchant_card_eur_hpp']);
+        $this->start($transaction);
+        Http::assertSent(fn (ClientRequest $request): bool => $request['data']['attributes']['service'] === 'merchant_card_eur_hpp');
+    }
+
     public function test_repeated_pay_click_reuses_the_existing_hpp_invoice(): void
     {
         $transaction = $this->order();

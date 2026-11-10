@@ -20,6 +20,7 @@ class CorefyPaymentService
         if (! $this->client->configured()) {
             throw new RuntimeException('Corefy configuration is incomplete.');
         }
+        $this->client->paymentServiceCode($transaction);
         $this->client->validateCustomer($transaction);
         $existingUrl = DB::transaction(function () use ($transaction): ?string {
             $order = Transaction::query()->lockForUpdate()->findOrFail($transaction->id);

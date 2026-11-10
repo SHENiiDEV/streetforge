@@ -123,7 +123,21 @@ export default function Topup({ packages = [], transactions = [], customTopup })
 
                     <div className="rounded-2xl border border-white/10 bg-carbon-900 p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                         <div className="space-y-3">
-                            <div className="flex items-center gap-3 text-white font-semibold text-sm"><CreditCard className="w-5 h-5 text-cyan-400" />{t(" Credit / debit card")}</div>
+                            <fieldset className="space-y-3">
+                                <legend className="mb-2 text-sm font-semibold text-white">{t('Payment method')}</legend>
+                                <div className="flex flex-wrap gap-3">
+                                    {[
+                                        { value: 'credit_card', label: 'Credit / Debit Card', icon: CreditCard },
+                                        { value: 'google_pay', label: 'Google Pay', icon: Wallet },
+                                    ].map(({ value, label, icon: Icon }) => (
+                                        <label key={value} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-colors ${data.gateway === value ? 'border-cyan-400/60 bg-cyan-400/10 text-cyan-200' : 'border-white/10 text-slate-400 hover:border-white/25 hover:text-white'}`}>
+                                            <input type="radio" name="gateway" value={value} checked={data.gateway === value} onChange={() => setData('gateway', value)} disabled={processing} className="h-4 w-4 accent-cyan-400 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-400" />
+                                            <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                                            {t(label)}
+                                        </label>
+                                    ))}
+                                </div>
+                            </fieldset>
                             <div className="flex items-center gap-3">
                                 <img src="/images/payments/visa.png" alt={t("Visa")} className="h-5 w-auto object-contain" />
                                 <img src="/images/payments/mastercard.png" alt={t("Mastercard")} className="h-6 w-auto object-contain" />
@@ -185,7 +199,7 @@ export default function Topup({ packages = [], transactions = [], customTopup })
                                                 {t(money(tx.fiat_amount, tx.currency))}
                                             </td>
                                             <td className="p-3.5 uppercase text-slate-400 font-mono">
-                                                {t(tx.gateway)}
+                                                {t(tx.gateway === 'google_pay' ? 'Google Pay' : tx.gateway === 'credit_card' ? 'Credit / Debit Card' : tx.gateway)}
                                             </td>
                                             <td className="p-3.5">
                                                 {tx.status === 'success' ? (

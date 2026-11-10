@@ -1699,5 +1699,9 @@
   "Saving...": "Lagrer...",
   "Profile updated.": "Profilen er oppdatert.",
   "Social media": "Sosiale medier",
-  "Follow StreetForge on LinkedIn and Instagram.": "Følg StreetForge på LinkedIn og Instagram."
+  "Follow StreetForge on LinkedIn and Instagram.": "Følg StreetForge på LinkedIn og Instagram.",
+  "Payment method": "Betalingsmåte",
+  "Google Pay": "Google Pay",
+  "Continue to the secure payment page to pay with Google Pay. Your payment information is handled by the payment provider and never reaches StreetForge.": "Fortsett til den sikre betalingssiden for å betale med Google Pay. Betalingsopplysningene dine behandles av betalingsleverandøren og når aldri StreetForge.",
+  "Google Pay is temporarily unavailable. Please try again later.": "Google Pay er midlertidig utilgjengelig. Prøv igjen senere."
 }

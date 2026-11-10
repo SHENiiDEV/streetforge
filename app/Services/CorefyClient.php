@@ -41,14 +41,29 @@ class CorefyClient
             && $this->validPaymentUrl(config('app.url'));
     }
 
+    public function paymentServiceCode(Transaction $transaction): string
+    {
+        if ($transaction->gateway === 'google_pay') {
+            if ($transaction->currency !== 'EUR') {
+                throw new RuntimeException('Google Pay is only available in EUR.');
+            }
+
+            return 'googlepay_eur_hpp';
+        }
+        if ($transaction->gateway !== 'credit_card') {
+            throw new RuntimeException('This payment method is unavailable.');
+        }
+
+        $service = config('services.corefy.service_code', 'auto');
+
+        return $service === 'auto' ? 'payment_card_'.strtolower($transaction->currency).'_hpp' : $service;
+    }
+
     /** @return array<string, mixed> */
     public function createInvoice(Transaction $transaction): array
     {
         $customer = $transaction->customer_snapshot;
-        $service = config('services.corefy.service_code', 'auto');
-        if ($service === 'auto') {
-            $service = 'payment_card_'.strtolower($transaction->currency).'_hpp';
-        }
+        $service = $this->paymentServiceCode($transaction);
         $merchantUrl = rtrim((string) config('app.url'), '/');
         if (! $this->validPaymentUrl($merchantUrl)) {
             throw new RuntimeException('APP_URL must be the public HTTPS merchant URL.');

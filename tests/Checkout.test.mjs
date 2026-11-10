@@ -106,3 +106,25 @@ for (const [status, message] of [
         assert.equal(html.includes('/invoices/INV-UI/download'), status === 'success');
     });
 }
+
+for (const language of ['en', 'nb', 'sv']) {
+    test(`Google Pay checkout in ${language} identifies the selected wallet`, async () => {
+        const html = await renderCheckout(language, { transaction: {
+            transaction_ref: 'TOP-GOOGLE', fiat_amount: '0.92', currency: 'EUR',
+            game_credits: '100.00', status: 'pending', gateway: 'google_pay',
+        } });
+        assert.ok(html.includes('Google Pay'));
+        assert.ok(!html.includes('Credit / Debit Card'));
+        assert.ok(!html.includes('enter your card details'));
+        assert.ok(!html.includes('type="text"'));
+    });
+}
+
+test('Google Pay checkout uses a wallet-specific unavailable message', async () => {
+    const html = await renderCheckout('en', {
+        transaction: { transaction_ref: 'TOP-GOOGLE', status: 'pending', gateway: 'google_pay', currency: 'EUR', fiat_amount: '0.92', game_credits: 100 },
+        paymentAvailable: false,
+    });
+    assert.ok(html.includes('Google Pay is temporarily unavailable.'));
+    assert.ok(!html.includes('Continue to secure payment'));
+});

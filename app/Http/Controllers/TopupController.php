@@ -72,7 +72,7 @@ class TopupController extends Controller
     {
         $validated = $request->validate([
             'package_id' => ['required', 'string', Rule::in([...array_column($this->packages, 'id'), 'custom'])],
-            'gateway' => ['required', 'string', 'in:credit_card'],
+            'gateway' => ['required', 'string', 'in:credit_card,google_pay'],
             'custom_credits' => [
                 'exclude_unless:package_id,custom',
                 'required',
@@ -100,7 +100,7 @@ class TopupController extends Controller
         $transaction = Transaction::create([
             'user_id' => $user->id,
             'transaction_ref' => $ref,
-            'gateway' => 'credit_card',
+            'gateway' => $validated['gateway'],
             'fiat_amount' => $currencyService->fromUsdCents($usdCents, $currency),
             'currency' => $currency,
             'game_credits' => $pkg['game_credits'],
@@ -132,7 +132,8 @@ class TopupController extends Controller
         return Inertia::render('Topup/Checkout', [
             'transaction' => $transaction,
             'company' => config('company'),
-            'paymentAvailable' => $client->configured() && in_array($transaction->currency, config('store.enabled_currencies'), true),
+            'paymentAvailable' => $client->configured() && in_array($transaction->currency, config('store.enabled_currencies'), true)
+                && ($transaction->gateway !== 'google_pay' || $transaction->currency === 'EUR'),
             'returned' => $request->boolean('returned'),
         ]);
     }

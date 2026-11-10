@@ -24,15 +24,16 @@ after(async () => {
     await vite?.close();
 });
 
-for (const [status, invoicePath, canDownload] of [
+for (const [status, invoicePath, canDownload, gateway = 'credit_card'] of [
     ['pending', null, false],
     ['pending', 'invoices/stale.pdf', false],
     ['failed', null, false],
     ['refunded', 'invoices/refunded.pdf', false],
     ['success', null, true],
     ['success', 'invoices/paid.pdf', true],
+    ['success', 'invoices/google.pdf', true, 'google_pay'],
 ]) {
-    test(`history ${status} with ${invoicePath ? 'a PDF' : 'no PDF'} ${canDownload ? 'shows' : 'hides'} invoice download`, async () => {
+    test(`history ${gateway} ${status} with ${invoicePath ? 'a PDF' : 'no PDF'} ${canDownload ? 'shows' : 'hides'} invoice download`, async () => {
         globalThis.document = {
             documentElement: { lang: 'en' },
             querySelector: () => null,
@@ -51,7 +52,7 @@ for (const [status, invoicePath, canDownload] of [
             transactions: [{
                 id: 1, invoice_number: 'INV-HISTORY', invoice_path: invoicePath,
                 status, currency: 'EUR', fiat_amount: '23.00', game_credits: 2750,
-                created_at: '2026-10-21T08:00:00Z', gateway: 'credit_card',
+                created_at: '2026-10-21T08:00:00Z', gateway,
             }],
         };
 
@@ -64,5 +65,9 @@ for (const [status, invoicePath, canDownload] of [
 
         assert.equal(body.includes('href="/invoices/INV-HISTORY/download"'), canDownload);
         assert.ok(body.includes('INV-HISTORY'));
+        const inputs = body.match(/<input[^>]*>/g) ?? [];
+        assert.ok(inputs.some(input => input.includes('name="gateway"') && input.includes('value="credit_card"') && input.includes('checked=""')));
+        assert.ok(inputs.some(input => input.includes('name="gateway"') && input.includes('value="google_pay"') && !input.includes('checked=""')));
+        if (gateway === 'google_pay') assert.match(body, /<td[^>]*>\s*Google Pay\s*<\/td>/);
     });
 }
