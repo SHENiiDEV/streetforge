@@ -125,7 +125,7 @@ export default function Topup({ packages = [], transactions = [], customTopup })
                         <div className="space-y-3">
                             <fieldset className="space-y-3">
                                 <legend className="mb-2 text-sm font-semibold text-white">{t('Payment method')}</legend>
-                                <div className="flex flex-wrap gap-3">
+                                <div className="flex flex-col gap-3">
                                     {[
                                         { value: 'credit_card', label: 'Credit / Debit Card', icon: CreditCard },
                                         { value: 'google_pay', label: 'Google Pay', icon: Wallet },
