@@ -1703,5 +1703,8 @@
   "Payment method": "Betalingsmåte",
   "Google Pay": "Google Pay",
   "Continue to the secure payment page to pay with Google Pay. Your payment information is handled by the payment provider and never reaches StreetForge.": "Fortsett til den sikre betalingssiden for å betale med Google Pay. Betalingsopplysningene dine behandles av betalingsleverandøren og når aldri StreetForge.",
-  "Google Pay is temporarily unavailable. Please try again later.": "Google Pay er midlertidig utilgjengelig. Prøv igjen senere."
+  "Google Pay is temporarily unavailable. Please try again later.": "Google Pay er midlertidig utilgjengelig. Prøv igjen senere.",
+  "Minimum purchase: :amount": "Minstekjøp: :amount",
+  "· No bonus credits.": "· Ingen bonuskreditter.",
+  "Buy credits by card or Google Pay. Choose a bonus bundle or a custom quantity from 951 CR (EUR 10.50) with no upper limit. All payments are processed in EUR. Your balance updates after successful payment.": "Kjøp kreditter med kort eller Google Pay. Velg en bonuspakke eller et valgfritt antall fra 951 CR (EUR 10,50) uten øvre grense. Alle betalinger behandles i EUR. Saldoen oppdateres etter vellykket betaling."
 }

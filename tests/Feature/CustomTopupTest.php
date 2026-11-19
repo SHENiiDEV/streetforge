@@ -28,7 +28,13 @@ class CustomTopupTest extends TestCase
                 ->has('packages', 2)
                 ->where('packages.0.id', 'racer_pack')
                 ->where('packages.1.id', 'hyper_pack')
-                ->where('customTopup.min_credits', 100)
+                ->where('customTopup.min_credits', 951)
+                ->where('customTopup.minimum_amount', '10.50')
+                ->where('customTopup.price_percent', 120)
+                ->where('packages.0.fiat_amount', '27.60')
+                ->where('packages.1.fiat_amount', '110.40')
+                ->where('packages.0.base_credits', 2500)
+                ->where('packages.1.base_credits', 10000)
                 ->missing('customTopup.max_credits')
                 ->where('customTopup.credits_per_usd', 100));
     }
@@ -36,11 +42,12 @@ class CustomTopupTest extends TestCase
     public static function customOrders(): array
     {
         return [
-            'minimum' => [100, '0.92'],
-            'exact cents' => [1234, '11.35'],
-            'previous limit' => [10000, '92.00'],
-            'above previous limit' => [10001, '92.01'],
-            'large quantity' => [1000000, '9200.00'],
+            'minimum' => [951, '10.50'],
+            'just above minimum' => [952, '10.51'],
+            'exact cents' => [1234, '13.62'],
+            'previous limit' => [10000, '110.40'],
+            'above previous limit' => [10001, '110.41'],
+            'large quantity' => [1000000, '11040.00'],
         ];
     }
 
@@ -57,6 +64,8 @@ class CustomTopupTest extends TestCase
             'fiat_amount' => 0.01,
             'game_credits' => 999999,
             'currency' => 'EUR',
+            'price_percent' => 1,
+            'min_credits' => 1,
         ]);
 
         $transaction = Transaction::sole();
@@ -76,9 +85,10 @@ class CustomTopupTest extends TestCase
     {
         return [
             'missing' => [null],
-            'below minimum' => [99],
+            'below minimum' => [950],
+            'previous minimum' => [100],
             'negative' => [-100],
-            'fractional' => [100.5],
+            'fractional' => [951.5],
             'text' => ['credits'],
         ];
     }
@@ -154,7 +164,7 @@ class CustomTopupTest extends TestCase
 
         $this->assertDatabaseHas('transactions', [
             'user_id' => $user->id,
-            'fiat_amount' => 92,
+            'fiat_amount' => 110.40,
             'game_credits' => 15000,
             'status' => 'pending',
         ]);

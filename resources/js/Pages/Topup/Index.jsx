@@ -8,7 +8,7 @@ export default function Topup({ packages = [], transactions = [], customTopup })
     const { auth, company, preferences } = usePage().props;
     const { data, setData, post, processing, errors, clearErrors } = useForm({
         package_id: packages[0]?.id || 'custom',
-        custom_credits: 1000,
+        custom_credits: customTopup.min_credits,
         gateway: 'credit_card',
     });
     const isCustom = data.package_id === 'custom';
@@ -20,7 +20,7 @@ export default function Topup({ packages = [], transactions = [], customTopup })
     const credits = isCustom ? (validCustomCredits ? customCredits : 0) : Number(selectedPackage?.game_credits || 0);
     const currency = preferences.currency;
     const rate = preferences.currencies[currency].rate;
-    const customPrice = convertUsdCents(validCustomCredits ? customCredits : 0, rate);
+    const customPrice = convertUsdCents(validCustomCredits ? customCredits : 0, rate, customTopup.price_percent);
     const amount = isCustom ? customPrice : Number(selectedPackage?.fiat_amount || 0);
     const money = (value, code = currency) => formatMoney(value, code);
     const selectPackage = (id) => {
@@ -109,7 +109,7 @@ export default function Topup({ packages = [], transactions = [], customTopup })
                                     />
                                     <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{t("CR")}</span>
                                 </div>
-                                <p id="custom-help" className="text-xs text-slate-400 leading-relaxed">{t("From ")}{t(customTopup.min_credits.toLocaleString(locale()))}{t(" CR · No upper limit")}<br />{t(money(convertUsdCents(100, rate)))} = {t(customTopup.credits_per_usd)}{t(" CR · No bonus credits.")}</p>
+                                <p id="custom-help" className="text-xs text-slate-400 leading-relaxed">{t("From ")}{t(customTopup.min_credits.toLocaleString(locale()))}{t(" CR · No upper limit")}<br />{t('Minimum purchase: :amount', { amount: money(customTopup.minimum_amount) })}{t(' · No bonus credits.')}</p>
                                 <p id="custom-error" className="text-xs text-red-400" role="status">{t(isCustom && (errors.custom_credits || (!validCustomCredits ? t('Enter a whole number of at least :credits credits.', { credits: customTopup.min_credits }) : '')))}</p>
                             </div>
                             <div className="border-t border-white/10 pt-5 mt-auto flex items-center justify-between gap-3">

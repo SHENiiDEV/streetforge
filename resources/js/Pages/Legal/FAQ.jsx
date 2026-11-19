@@ -60,7 +60,7 @@ export default function FAQ() {
         {
             category: 'billing',
             q: 'How do top-up credit purchases work?',
-            a: 'Buy credits by card. Choose a bonus bundle or a custom quantity from 100 CR with no upper limit. All payments are processed in EUR. Your balance updates after successful payment.',
+            a: 'Buy credits by card or Google Pay. Choose a bonus bundle or a custom quantity from 951 CR (EUR 10.50) with no upper limit. All payments are processed in EUR. Your balance updates after successful payment.',
         },
         {
             category: 'billing',

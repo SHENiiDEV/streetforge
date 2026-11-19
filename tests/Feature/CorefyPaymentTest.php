@@ -81,7 +81,7 @@ class CorefyPaymentTest extends TestCase
 
     public static function googlePayOrders(): array
     {
-        return [['racer_pack', null, '23.00', 2750], ['custom', 100, '0.92', 100]];
+        return [['racer_pack', null, '27.60', 2750], ['custom', 951, '10.50', 951]];
     }
 
     #[DataProvider('googlePayOrders')]

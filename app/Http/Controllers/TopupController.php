@@ -40,7 +40,6 @@ class TopupController extends Controller
     ];
 
     private array $customTopup = [
-        'min_credits' => 100,
         'credits_per_usd' => 100,
         'currency' => 'USD',
     ];
@@ -55,15 +54,22 @@ class TopupController extends Controller
             ->get();
 
         $currency = $currencyService->selected();
+        $pricePercent = config('store.pricing.price_percent');
+        $minimumCredits = config('store.pricing.minimum_custom_credits');
         $packages = array_map(fn (array $package): array => array_merge($package, [
-            'fiat_amount' => $currencyService->fromUsdCents((int) round($package['fiat_amount'] * 100), $currency),
+            'fiat_amount' => $currencyService->fromUsdCents((int) round($package['fiat_amount'] * 100), $currency, $pricePercent),
             'currency' => $currency,
             'base_credits' => (int) round($package['fiat_amount'] * 100),
         ]), $this->packages);
 
         return Inertia::render('Topup/Index', [
             'packages' => $packages,
-            'customTopup' => array_merge($this->customTopup, ['currency' => $currency]),
+            'customTopup' => array_merge($this->customTopup, [
+                'currency' => $currency,
+                'min_credits' => $minimumCredits,
+                'price_percent' => $pricePercent,
+                'minimum_amount' => $currencyService->fromUsdCents($minimumCredits, $currency, $pricePercent),
+            ]),
             'transactions' => $transactions,
         ]);
     }
@@ -77,7 +83,7 @@ class TopupController extends Controller
                 'exclude_unless:package_id,custom',
                 'required',
                 'integer',
-                'min:'.$this->customTopup['min_credits'],
+                'min:'.config('store.pricing.minimum_custom_credits'),
             ],
         ]);
 
@@ -101,7 +107,7 @@ class TopupController extends Controller
             'user_id' => $user->id,
             'transaction_ref' => $ref,
             'gateway' => $validated['gateway'],
-            'fiat_amount' => $currencyService->fromUsdCents($usdCents, $currency),
+            'fiat_amount' => $currencyService->fromUsdCents($usdCents, $currency, config('store.pricing.price_percent')),
             'currency' => $currency,
             'game_credits' => $pkg['game_credits'],
             'status' => 'pending',

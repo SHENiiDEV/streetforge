@@ -24,6 +24,6 @@ export function formatMoney(amount, currency = 'EUR', language = locale()) {
     }).format(Number(amount));
 }
 
-export function convertUsdCents(cents, rate) {
-    return Math.floor((Number(cents) * rate + 50) / 100) / 100;
+export function convertUsdCents(cents, rate, pricePercent = 100) {
+    return Math.floor((Number(cents) * rate * pricePercent + 5000) / 10000) / 100;
 }

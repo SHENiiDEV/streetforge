@@ -66,16 +66,16 @@ class SitePreferencesTest extends TestCase
     public static function prices(): array
     {
         return [
-            'USD bundle' => ['USD', 'racer_pack', null, '23.00', 2750],
-            'EUR bundle' => ['EUR', 'racer_pack', null, '23.00', 2750],
-            'GBP bundle' => ['GBP', 'racer_pack', null, '23.00', 2750],
-            'EUR hyper bundle' => ['EUR', 'hyper_pack', null, '92.00', 15000],
-            'GBP hyper bundle' => ['GBP', 'hyper_pack', null, '92.00', 15000],
-            'USD custom' => ['USD', 'custom', 1234, '11.35', 1234],
-            'EUR custom' => ['EUR', 'custom', 1234, '11.35', 1234],
-            'GBP custom' => ['GBP', 'custom', 1234, '11.35', 1234],
-            'stale GBP preference uses EUR conversion' => ['GBP', 'custom', 1250, '11.50', 1250],
-            'EUR above previous limit' => ['EUR', 'custom', 1000000, '9200.00', 1000000],
+            'USD bundle' => ['USD', 'racer_pack', null, '27.60', 2750],
+            'EUR bundle' => ['EUR', 'racer_pack', null, '27.60', 2750],
+            'GBP bundle' => ['GBP', 'racer_pack', null, '27.60', 2750],
+            'EUR hyper bundle' => ['EUR', 'hyper_pack', null, '110.40', 15000],
+            'GBP hyper bundle' => ['GBP', 'hyper_pack', null, '110.40', 15000],
+            'USD custom' => ['USD', 'custom', 1234, '13.62', 1234],
+            'EUR custom' => ['EUR', 'custom', 1234, '13.62', 1234],
+            'GBP custom' => ['GBP', 'custom', 1234, '13.62', 1234],
+            'stale GBP preference uses EUR conversion' => ['GBP', 'custom', 1250, '13.80', 1250],
+            'EUR above previous limit' => ['EUR', 'custom', 1000000, '11040.00', 1000000],
         ];
     }
 
@@ -111,12 +111,12 @@ class SitePreferencesTest extends TestCase
 
         $this->actingAs($user)->withSession(['currency' => 'GBP'])->get('/topup')
             ->assertInertia(fn (Assert $page) => $page
-                ->where('packages.0.fiat_amount', '23.00')->where('packages.0.currency', 'EUR')
+                ->where('packages.0.fiat_amount', '27.60')->where('packages.0.currency', 'EUR')
                 ->where('packages.0.base_credits', 2500)
                 ->where('preferences.currency', 'EUR')->has('preferences.currencies', 1)
                 ->missing('preferences.currencies.USD')->missing('preferences.currencies.GBP'));
         $this->post('/topup/order', ['package_id' => 'racer_pack', 'gateway' => 'credit_card'])->assertRedirect();
-        $this->assertDatabaseHas('transactions', ['currency' => 'EUR', 'fiat_amount' => '23.00', 'status' => 'pending']);
+        $this->assertDatabaseHas('transactions', ['currency' => 'EUR', 'fiat_amount' => '27.60', 'status' => 'pending']);
         $this->get('/topup/checkout/'.$legacy->transaction_ref)->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->where('preferences.currency', 'EUR')
@@ -136,7 +136,7 @@ class SitePreferencesTest extends TestCase
 
         $this->actingAs($user)->withSession(['locale' => 'sv'])->post('/topup/order', [
             'package_id' => 'custom', 'custom_credits' => 99, 'gateway' => 'credit_card',
-        ])->assertSessionHasErrors(['custom_credits' => 'Antal krediter måste vara minst 100.']);
+        ])->assertSessionHasErrors(['custom_credits' => 'Antal krediter måste vara minst 951.']);
 
         $this->assertDatabaseCount('transactions', 0);
     }
@@ -158,12 +158,12 @@ class SitePreferencesTest extends TestCase
 
         $this->assertSame('2234.00', $user->fresh()->game_balance);
         $this->assertDatabaseHas('transactions', [
-            'id' => $transaction->id, 'currency' => 'EUR', 'fiat_amount' => '11.35', 'status' => 'success',
+            'id' => $transaction->id, 'currency' => 'EUR', 'fiat_amount' => '13.62', 'status' => 'success',
         ]);
         Mail::assertQueued(PaymentReceiptMail::class, fn (PaymentReceiptMail $mail): bool => $mail->locale === 'nb');
         $html = (new PaymentReceiptMail($transaction->fresh()))->locale('nb')->render();
         $this->assertStringContainsString('Betalingsbekreftelse og faktura', $html);
-        $this->assertStringContainsString('€11.35 EUR', $html);
+        $this->assertStringContainsString('€13.62 EUR', $html);
     }
 
     public static function disabledCurrencies(): array
